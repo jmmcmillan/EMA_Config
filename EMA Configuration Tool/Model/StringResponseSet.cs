@@ -10,12 +10,12 @@ namespace EMA_Configuration_Tool.Model
     public class StringResponseSet
     {
         [XmlIgnore]
-        public Guid ResponseSetID { get; set; }
+        public Guid ID { get; set; }
 
         [XmlIgnore]
-        public List<string> Responses { get; set; }
+        public List<string> StringResponses { get; set; }
 
-        [XmlIgnore]
+        [XmlAttribute("startsWithZero")]
         public bool IsZeroBased { get; set; }
 
         [XmlAttribute("index")]
@@ -23,13 +23,13 @@ namespace EMA_Configuration_Tool.Model
 
         public StringResponseSet() : base()
         {
-            ResponseSetID = Guid.NewGuid();
+            ID = Guid.NewGuid();
         }
 
         public StringResponseSet(Guid id, List<string> responses) : this()
         {
-            ResponseSetID = id;
-            Responses = responses;
+            ID = id;
+            StringResponses = responses;
         }
 
         [XmlIgnore]
@@ -42,15 +42,28 @@ namespace EMA_Configuration_Tool.Model
             { 
                 xmlContent = value;
 
-                if (Responses == null) //returning from serialization
+                if (StringResponses == null) //returning from serialization
                 {
-                    foreach (string s in xmlContent.Split('\n'))
-                        Responses.Add(s);
+                    StringResponses = new List<string>();
+
+                    foreach (string s in xmlContent.Split('|'))
+                        StringResponses.Add(s);
+
                 }
             }
             get
             {
-                xmlContent = this.ToString();
+                string xmlContent = String.Empty;
+
+                foreach (string s in StringResponses)
+                {
+                    xmlContent += String.Format("{0}|", s);
+                }
+
+                if (StringResponses.Count() > 0)
+                    xmlContent = xmlContent.Remove(xmlContent.Length - 1);  //strip out last pipe
+
+               
                 return xmlContent;
             }
         }
@@ -64,7 +77,7 @@ namespace EMA_Configuration_Tool.Model
 
                 int score = (IsZeroBased) ? 0 : 1;  
 
-                foreach (string s in Responses)
+                foreach (string s in StringResponses)
                 {
                     result += String.Format("{0} ({1}), ", s, score);
                     score++;
@@ -81,14 +94,14 @@ namespace EMA_Configuration_Tool.Model
             string result = String.Empty;
 
             int i = 0;
-            int responseCount = Responses.Count;
+            int responseCount = StringResponses.Count;
 
-            foreach (string s in Responses)
+            foreach (string s in StringResponses)
             {
-                result += s;
+                result += String.Format("{0}", s);
 
-                if (i < responseCount - 1)
-                    result += ",";
+                if (i < responseCount - 2)
+                    result += ", ";
 
                 i++;
             }

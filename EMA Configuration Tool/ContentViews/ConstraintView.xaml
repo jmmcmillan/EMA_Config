@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="EMA_Configuration_Tool.ContentViews.ConstraintView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:response="clr-namespace:EMA_Configuration_Tool.Model.Responses"
+             xmlns:constraint="clr-namespace:EMA_Configuration_Tool.Model.Constraints"
+             xmlns:model="clr-namespace:EMA_Configuration_Tool.Model"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" MinHeight="300" MinWidth="300"
+             d:DesignHeight="300" d:DesignWidth="300" Margin="20">
+    
+    <UserControl.Resources>
+
+        <DataTemplate DataType="{x:Type response:StringChoice}">
+
+            <StackPanel Orientation="Vertical">
+
+               
+                <ItemsControl ItemsSource="{Binding Responses.StringResponses}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+
+                                <CheckBox cal:Message.Attach="[Event Checked] = [Action Checked($source)]; [Event Unchecked] = [Action Unchecked($source)]">
+                                    <TextBlock Text="{Binding .}"></TextBlock>
+                                </CheckBox>
+                                
+
+                            </WrapPanel>
+                        </DataTemplate>
+
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+               
+
+              
+
+            </StackPanel>
+
+        </DataTemplate>
+
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical">
+
+
+
+        <Label>Add Constraint</Label>
+
+        <ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}"
+                         x:Name="QuestionList" cal:Message.Attach="SwitchSelectedQuestion($this)">
+
+            <ComboBox.ItemTemplate>
+
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="12" Text="{Binding Label}" FontWeight="Bold"/>
+                        <TextBlock FontSize="12" Text="{Binding Text}" Margin="3,0,0,0"/>
+                    </StackPanel>
+                </DataTemplate>
+
+            </ComboBox.ItemTemplate>
+
+        </ComboBox>
+
+
+        
+        <ContentControl Content="{Binding SelectedQuestion.Response}" x:Name="ReqResponses"/>
+
+
+        <StackPanel HorizontalAlignment="Center">
+            <Button  cal:Message.Attach="Save($view)">Save Constraint</Button>
+            <Button  x:Name="Cancel">Cancel</Button>
+        </StackPanel>
+
+
+
+    </StackPanel>
+</UserControl>

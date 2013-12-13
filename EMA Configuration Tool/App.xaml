@@ -9,7 +9,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <local:Bootstrapper x:Key="bootstrapper" />
-                </ResourceDictionary>               
+                </ResourceDictionary>
+                <ResourceDictionary Source="Themes/Metro.MSControls.Core.Implicit.xaml" />                
+                <ResourceDictionary Source="Themes/EMA.xaml" />
+                
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

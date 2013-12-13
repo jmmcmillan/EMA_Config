@@ -5,14 +5,18 @@ using System.Text;
 
 namespace EMA_Configuration_Tool.Model.Responses
 {
-    public class Dropdown : StringChoice
+    public class DynamicGroup : ResponseBase
     {
         public override string ResponseXMLType
-        { get { return "Dropdown"; } }
+        { get { return "DynamicGroup"; } }
 
-        public Dropdown()
+        
+        public Question ReferenceQuestion { get; set; }
+
+        public DynamicGroup()
             : base()
         {
         }
+
     }
 }

@@ -5,13 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:service="clr-namespace:EMA_Configuration_Tool.Services"
              xmlns:response="clr-namespace:EMA_Configuration_Tool.Model.Responses"
+             xmlns:constraint="clr-namespace:EMA_Configuration_Tool.Model.Constraints"
              xmlns:model="clr-namespace:EMA_Configuration_Tool.Model"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     
     <UserControl.Resources>
-        
+
+
+
+        <BooleanToVisibilityConverter x:Key="boolToVis" />
+
         <Style TargetType="StackPanel">
             <Setter Property="Margin" Value="5"/>
         </Style>
@@ -32,7 +37,7 @@
 
             <StackPanel Orientation="Vertical">
                 
-                <TextBlock Text="{Binding Description}"/>
+                <!--<TextBlock Text="{Binding Description}"/>-->
 
                 <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.StringResponseSets}"
                       cal:Message.Attach="SwitchStringResponseSet($this)">
@@ -60,24 +65,58 @@
             <StackPanel Orientation="Horizontal">
 
                 <Label>Default Integer: </Label>
-                <TextBox Text="{Binding DefaultIntegerString}"/>
+                <TextBox Text="{Binding DefaultInteger}"/>
 
             </StackPanel>
 
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type response:Time}">
+
+            <StackPanel Orientation="Horizontal">
+
+                <Label>Default Time:</Label>
+                <TextBox Text="{Binding DefaultTime}"/>
+
+            </StackPanel>
+
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type response:DynamicGroup}">
+            
+            <ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}" Margin="20,0,0,0"
+                              SelectedItem="{Binding SelectedConstraint}" 
+                              HorizontalAlignment="Left" MinWidth="300"
+                         x:Name="ConstraintList" cal:Message.Attach="SelectedReferenceQuestionChanged($this)">
 
 
 
+            </ComboBox>
+
+
+        </DataTemplate>
     </UserControl.Resources>
     
-    <StackPanel Orientation="Vertical">
-        
-        <StackPanel Orientation="Horizontal">
-            
-            <Label>Question ID:</Label>
+    <DockPanel>
 
-            <TextBox Text="{Binding Question.ID, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Bottom">
+            <Button Name="SaveQuestion" HorizontalAlignment="Center">Save Question</Button>
+            <Button Name="Cancel" HorizontalAlignment="Center">Cancel</Button>
+        </StackPanel>
+        
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top"
+                    Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DockPanel}}, Path=ActualWidth}">
+
+        <TextBlock Style="{StaticResource questionHeader}" Margin="0,0,0,20">
+                Question
+        </TextBlock>
+
+        <StackPanel Orientation="Horizontal"
+                    Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DockPanel}}, Path=ActualWidth}">
+            
+            <Label>Question Label:</Label>
+
+            <TextBox Text="{Binding Question.Label, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch"></TextBox>
             
         </StackPanel>
 
@@ -85,33 +124,77 @@
 
             <Label>Question Text:</Label>
 
-            <TextBox Text="{Binding Question.Text, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Text="{Binding Question.Text, UpdateSourceTrigger=PropertyChanged}"
+                     MinLines="4" AcceptsReturn="True" HorizontalAlignment="Stretch"></TextBox>
 
         </StackPanel>
-        
-        <StackPanel Orientation="Vertical">
 
-            <ComboBox Name="ResponseTypeCB" ItemsSource="{Binding Source={x:Static service:ResponseService.ResponseTypes}}"
-                      cal:Message.Attach="SwitchResponseType($this)">
+        <Expander>
+
+            <Expander.Header>
+                <TextBlock Style="{StaticResource questionHeader}">
+                Responses
+                </TextBlock>
+
+            </Expander.Header>
+
+            <StackPanel Orientation="Vertical">
+
+                <ComboBox Name="ResponseTypeCB" ItemsSource="{Binding Source={x:Static service:ResponseService.ResponseTypes}}"
+                      cal:Message.Attach="SwitchResponseType($this)" SelectedItem="{Binding SelectedResponseType}">
+
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+
+                </ComboBox>
+
+                <ContentControl Content="{Binding Question.Response}"></ContentControl>
+
+            </StackPanel>
+        </Expander>
+
+        <Expander>
+
+            <Expander.Header>
+                <TextBlock Style="{StaticResource questionHeader}">
+                Skipping Patterns
+                </TextBlock>
                 
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
+            </Expander.Header>
+
+                <StackPanel Orientation="Vertical" >
                 
-            </ComboBox>
-            
-            <ContentControl Content="{Binding Response}"></ContentControl>
-            
-        </StackPanel>
-        
-        <Button Name="SaveQuestion" HorizontalAlignment="Center">Save Question</Button>
-        <Button Name="Cancel" HorizontalAlignment="Center">Cancel</Button>
+              
+                <TextBlock FontWeight="Bold">Select the condition that makes this question visible.</TextBlock>
+
+                    <ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Constraints}" Margin="20,0,0,0"
+                              SelectedItem="{Binding SelectedConstraint}" Visibility="{Binding ConstraintCBVisible, Converter={StaticResource boolToVis}}"
+                              HorizontalAlignment="Left" MinWidth="300"
+                         x:Name="ConstraintList" cal:Message.Attach="SelectedConstraintChanged($this)">
+                        
+                       
+                        
+                    </ComboBox>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                    <Button Name="AddConstraint">Add Constraint</Button>
+                    <Button Name="EditConstraint" cal:Message.Attach="EditConstraint($view)">Edit Constraint</Button>
+                    
+                </StackPanel>
+
+            </StackPanel>
+
+
+        </Expander>
 
        
+       
     </StackPanel>
-    
+    </DockPanel>
     
     
 </UserControl>

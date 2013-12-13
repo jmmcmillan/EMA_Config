@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2DFA62B0-EFF3-4DD1-874F-1DC4F10600F6}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EMA_Configuration_Tool</RootNamespace>
+    <AssemblyName>EMA Configuration Tool</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>lib\Caliburn.Micro.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>lib\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WPFToolkit">
+      <HintPath>lib\WPFToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="WPFToolkit.Design">
+      <HintPath>lib\WPFToolkit.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="WPFToolkit.Extended">
+      <HintPath>lib\WPFToolkit.Extended.dll</HintPath>
+    </Reference>
+    <Reference Include="WPFToolkit.VisualStudio.Design">
+      <HintPath>lib\WPFToolkit.VisualStudio.Design.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="ContentViews\ConstraintView.xaml.cs">
+      <DependentUpon>ConstraintView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ContentViews\ConstraintViewModel.cs" />
+    <Compile Include="ContentViews\ContentShellView.xaml.cs">
+      <DependentUpon>ContentShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ContentViews\ContentShellViewModel.cs" />
+    <Compile Include="ContentViews\ResponseSetView.xaml.cs">
+      <DependentUpon>ResponseSetView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ContentViews\ResponseSetViewModel.cs" />
+    <Compile Include="GroupViews\GroupShellView.xaml.cs">
+      <DependentUpon>GroupShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GroupViews\GroupShellViewModel.cs" />
+    <Compile Include="GroupViews\PeopleView.xaml.cs">
+      <DependentUpon>PeopleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GroupViews\PeopleViewModel.cs" />
+    <Compile Include="GroupViews\PersonView.xaml.cs">
+      <DependentUpon>PersonView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GroupViews\PersonViewModel.cs" />
+    <Compile Include="Model\Constraints\StringConstraint.cs" />
+    <Compile Include="Model\Groups\Group.cs" />
+    <Compile Include="Model\Groups\Person.cs" />
+    <Compile Include="Model\Groups\PersonGroup.cs" />
+    <Compile Include="Model\Responses\Dropdown.cs" />
+    <Compile Include="Model\Responses\DynamicGroup.cs" />
+    <Compile Include="Model\Responses\Integer.cs" />
+    <Compile Include="Model\Responses\MultipleChoiceList.cs" />
+    <Compile Include="Model\Responses\SingleChoiceList.cs" />
+    <Compile Include="Model\Responses\Time.cs" />
+    <Compile Include="Model\StringResponseSet.cs" />
+    <Compile Include="RootView.xaml.cs">
+      <DependentUpon>RootView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RootViewModel.cs" />
+    <Compile Include="Services\ConstraintService.cs" />
+    <Compile Include="Services\ResponseService.cs" />
+    <Page Include="ContentViews\ConstraintView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ContentViews\ContentShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ContentViews\ContentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ContentViews\QuestionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="ContentViews\ContentView.xaml.cs">
+      <DependentUpon>ContentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ContentViews\ContentViewModel.cs" />
+    <Compile Include="ContentViews\QuestionView.xaml.cs">
+      <DependentUpon>QuestionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ContentViews\QuestionViewModel.cs" />
+    <Page Include="ContentViews\ResponseSetView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GroupViews\GroupShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GroupViews\PeopleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GroupViews\PersonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RootView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\EMA.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Metro.MSControls.Core.Implicit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Styles.Shared.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Styles.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Theme.Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\Constraints\Constraint.cs" />
+    <Compile Include="Model\EMAInterview.cs" />
+    <Compile Include="Model\Question.cs" />
+    <Compile Include="Model\Responses\ResponseBase.cs" />
+    <Compile Include="Model\Responses\StringChoice.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

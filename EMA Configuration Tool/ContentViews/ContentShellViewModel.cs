@@ -6,8 +6,13 @@ using Caliburn.Micro;
 
 namespace EMA_Configuration_Tool.ContentViews
 {
-    public class ContentShellViewModel : Conductor<object>, IHandle<QuestionViewModel>, IHandle<ContentViewModel>, IHandle<ResponseSetViewModel>
+    public class ContentShellViewModel : Conductor<object>, IHandle<QuestionViewModel>, IHandle<ContentViewModel>
     {
+        public string TabName
+        {
+            get { return "Content"; }
+        }
+
         public ContentShellViewModel()
         {
             App.EventAggregator.Subscribe(this);
@@ -27,11 +32,7 @@ namespace EMA_Configuration_Tool.ContentViews
             ActivateItem(qvm);
         }
 
-        public void Handle(ResponseSetViewModel rvm)
-        {
-           
-        }
-
+       
        
 
     }

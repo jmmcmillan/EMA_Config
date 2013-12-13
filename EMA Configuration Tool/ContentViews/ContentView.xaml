@@ -11,25 +11,34 @@
     
     <UserControl.Resources>
 
+        <BooleanToVisibilityConverter x:Key="boolToVis" />
+
         <DataTemplate DataType="{x:Type model:Question}">
             
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding Text}"/>
+            <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+
+                <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="10,20,20,0"/>
                 
-                <ContentControl Content="{Binding Response}"/>
+                <ContentControl Content="{Binding Response}" Margin="30,20,20,0"/>
+
+                <StackPanel Orientation="Vertical" Margin="10,20,20,0" Visibility="{Binding HasConstraints, Converter={StaticResource boolToVis}}">
+                    <TextBlock FontStyle="Italic" TextWrapping="Wrap">This question will only appear if the following condition(s) are met:</TextBlock>
+                    <ItemsControl ItemsSource="{Binding Constraints}" Margin="20,10,20,0"></ItemsControl>
+                </StackPanel>
+
             </StackPanel>
             
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type response:Dropdown}">
-                
-                <ComboBox ItemsSource="{Binding Responses.Responses}"></ComboBox>
+
+            <ComboBox ItemsSource="{Binding Responses.StringResponses}"></ComboBox>
             
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type response:SingleChoiceList}">
 
-            <ItemsControl ItemsSource="{Binding Responses.Responses}">
+            <ItemsControl ItemsSource="{Binding Responses.StringResponses}">
                 
                 <ItemsControl.ItemTemplate>
                     
@@ -45,7 +54,7 @@
 
         <DataTemplate DataType="{x:Type response:MultipleChoiceList}">
 
-            <ItemsControl ItemsSource="{Binding Responses.Responses}">
+            <ItemsControl ItemsSource="{Binding Responses.StringResponses}">
 
                 <ItemsControl.ItemTemplate>
 
@@ -65,7 +74,18 @@
             <StackPanel Orientation="Horizontal">
 
                 <Label>Default Integer:</Label>
-                <TextBox Text="{Binding DefaultIntegerString}"/>
+                <TextBox Text="{Binding DefaultInteger}" IsEnabled="False"/>
+
+            </StackPanel>
+
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type response:Time}">
+
+            <StackPanel Orientation="Horizontal">
+
+                <Label>Default Time:</Label>
+                <TextBox Text="{Binding DefaultTime}" IsEnabled="False"/>
 
             </StackPanel>
 
@@ -77,47 +97,70 @@
     </UserControl.Resources>
     
     <DockPanel LastChildFill="True">
+
+        <StackPanel Orientation="Horizontal" Margin="20" DockPanel.Dock="Bottom" HorizontalAlignment="Center">
+
+            <Button Name="AddQuestion">Add Question</Button>
+            <Button Name="EditQuestion" cal:Message.Attach="EditQuestion($view)">Edit Question</Button>
+            <Button Name="DeleteQuestion">Delete Question</Button>
+        </StackPanel>
         
-               
-        <StackPanel Orientation="Horizontal">
+        <Grid DockPanel.Dock="Top" Margin="20">
             
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50*"></ColumnDefinition>
+                <ColumnDefinition Width="50*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+               
+        
             <!-- Question creation panel -->
             
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" Grid.Column="0">
 
-                <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}" MinWidth="300"
+                <TextBlock Style="{StaticResource headerTB}">Interview Questions</TextBlock>
+                <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}"
                          MinHeight="300" x:Name="QuestionList" cal:Message.Attach="SwitchSelectedQuestion($this)">
                     
                     <ListBox.ItemTemplate>
                         
                         <DataTemplate>
-                            <TextBlock FontSize="12" Text="{Binding ID}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="12" Text="{Binding Label}" FontWeight="Bold"/>
+                                <TextBlock FontSize="12" Text="{Binding Text}" Margin="3,0,0,0"/>
+                            </StackPanel>
                         </DataTemplate>
                         
                     </ListBox.ItemTemplate>
-                    
+
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add Question Before"/>                            
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+
                 </ListBox>
                 
-                <StackPanel Orientation="Horizontal">
-
-                    <Button Name="AddQuestion">Add Question</Button>
-                    <Button Name="EditQuestion" cal:Message.Attach="EditQuestion($view)"> Edit Question</Button>
-                    <Button Name="DeleteQuestion">Delete Question</Button>
-                </StackPanel>
+               
                 
             </StackPanel>
             
             <!-- Question preview panel -->
-            <StackPanel>
+            <StackPanel Grid.Column="1" Margin="20,0,0,0">               
 
-                <ContentControl Content="{Binding SelectedQuestion}"/>
+                <TextBlock Style="{StaticResource headerTB}">Question Preview Panel</TextBlock>
+
+                <Border Background="White" BorderBrush="#FFB2E1EF" BorderThickness="1" CornerRadius="5" >
+                    <ContentControl Content="{Binding SelectedQuestion}" MinHeight="300"/>
+                </Border>
+                
                 
             </StackPanel>
             
-        </StackPanel>
-        
-        
-        
+       
+
+        </Grid>
+
+
     </DockPanel>
     
 </UserControl>

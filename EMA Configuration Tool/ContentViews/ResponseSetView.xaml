@@ -6,7 +6,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical" Margin="20">
 
         
 
@@ -17,10 +17,14 @@
       
         <Label>Type each response on its own line</Label>
         <TextBox MinLines="10" MinWidth="200" x:Name="ResponseLines" AcceptsReturn="True"></TextBox>
-        
-        <Button HorizontalAlignment="Center" cal:Message.Attach="Save($view)">Save Response Set</Button>
-        
-        
-        
+
+
+        <StackPanel HorizontalAlignment="Center">
+            <Button  cal:Message.Attach="Save($view)">Save Response Set</Button>
+            <Button  x:Name="Cancel"></Button>
+        </StackPanel>
+
+
+
     </StackPanel>
 </UserControl>

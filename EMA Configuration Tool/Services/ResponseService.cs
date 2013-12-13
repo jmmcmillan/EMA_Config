@@ -38,5 +38,25 @@ namespace EMA_Configuration_Tool.Services
 
             return responseTypes;
         }
+
+        public static ResponseBase GetMeOneOfThese(string response)
+        {
+            int underscore = response.IndexOf('_');
+            string typeName = (underscore > 0) ? response.Substring(0, underscore) : response;
+
+
+            Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+            foreach (Type type in types)
+            {
+                if (type.IsSubclassOf(typeof(ResponseBase)))
+                {
+                    if (type.Name.Equals(typeName))
+                        return (ResponseBase)Activator.CreateInstance(type);
+                }
+            }
+
+            return null;
+
+        }
     }
 }

@@ -7,26 +7,42 @@ namespace EMA_Configuration_Tool.Model.Responses
 {
     public class Integer : ResponseBase
     {
-        private int defaultInteger;
+        public override string ResponseXMLType
+        { get { return "Integer"; } }
 
-        private string defaultIntegerString;
-        public string DefaultIntegerString
-        {
-            get { return defaultIntegerString; }
+        
+        public override string ResponseXMLDefaults
+        { 
+            get
+            {
+                int integer;
+                bool parseOK;
+                parseOK = Int32.TryParse(DefaultInteger, out integer);
 
+                if (!parseOK)
+                    return "";
+                else return DefaultInteger;
+                
+            }
             set
             {
-                bool parseOK;
-                parseOK = Int32.TryParse(value, out defaultInteger);
-
-                
-
+                DefaultInteger = value; 
             }
         }
 
-        public Integer()
+        public override bool DefaultIsValid
         {
-            defaultInteger = Int32.MinValue;
+            get
+            {
+                int integer;
+                return Int32.TryParse(DefaultInteger, out integer);
+            }
+        }
+        public string DefaultInteger { get; set; }
+
+        public Integer() : base()
+        {
+            DefaultInteger = "";
         }
     }
 }

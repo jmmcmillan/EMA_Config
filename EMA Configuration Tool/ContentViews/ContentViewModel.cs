@@ -7,11 +7,27 @@ using EMA_Configuration_Tool.Model;
 
 namespace EMA_Configuration_Tool.ContentViews
 {
-    public class ContentViewModel 
+    public class ContentViewModel : PropertyChangedBase
     {
-        public ContentViewModel() { }
+        public ContentViewModel() 
+        { 
+        }
 
-        public Question SelectedQuestion { get; set; }
+
+       
+
+        private Question selectedQuestion;
+        public Question SelectedQuestion
+        {
+            set { 
+                selectedQuestion = value;
+                NotifyOfPropertyChange(() => SelectedQuestion);                
+            }
+            get
+            {
+                return selectedQuestion;
+            }
+        }
 
         public void AddQuestion()
         {
