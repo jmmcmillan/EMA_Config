@@ -11,7 +11,7 @@
 
     <DockPanel LastChildFill="True">
 
-        <StackPanel Orientation="Horizontal" Margin="20" DockPanel.Dock="Bottom" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Margin="10" DockPanel.Dock="Bottom" HorizontalAlignment="Center">
 
             <Button Name="AddPerson">Add Person</Button>
             <Button Name="EditPerson" cal:Message.Attach="EditPerson($view)">Edit Person</Button>
@@ -19,7 +19,31 @@
         </StackPanel>
 
 
-        <DataGrid ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.People}" Margin="20" Name="PersonDataGrid"></DataGrid>
+        <DataGrid ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.People}" Margin="20" Name="PersonDataGrid" 
+                  AutoGenerateColumns="False" SelectionUnit="FullRow" AlternatingRowBackground="#1100AADE"  AlternationCount="2">
+
+            
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Name" Width="20*" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" Margin="6,3,0,3"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Groups" Width="80*" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Groups}" Margin="6,3,0,3"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+            </DataGrid.Columns>
+
+          
+        </DataGrid>
 
     </DockPanel>
 

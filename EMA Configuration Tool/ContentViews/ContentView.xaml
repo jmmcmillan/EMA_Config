@@ -118,7 +118,7 @@
             <StackPanel Orientation="Vertical" Grid.Column="0">
 
                 <TextBlock Style="{StaticResource headerTB}">Interview Questions</TextBlock>
-                <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}"
+                <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}" 
                          MinHeight="400" x:Name="QuestionList" cal:Message.Attach="SwitchSelectedQuestion($this)">
                     
                     <ListBox.ItemTemplate>

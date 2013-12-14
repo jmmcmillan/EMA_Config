@@ -173,7 +173,7 @@ namespace EMA_Configuration_Tool.Model
         {
             foreach (Question question in Questions)
             {
-                if (question.ResponseType != "Prompt" && question.Response == null)
+                if (question.Response == null)
                 {
                     question.Response = EMA_Configuration_Tool.Services.ResponseService.GetMeOneOfThese(question.ResponseType);
 
@@ -292,6 +292,7 @@ namespace EMA_Configuration_Tool.Model
             SocialGroupNames = new string[] { "Spouse/partner", "Child", "Parent", "In-law", "Other relative", "Coworker", "Neighbor", "Classmate", "Church/temple/religious group", "Volunteer work group", "Other group", "Service professional", "Friend", "Stranger" };
 
             OutputSalivaScreens = true;
+            Timeout = 900000;
         }
     }
 }

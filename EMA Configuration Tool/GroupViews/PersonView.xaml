@@ -14,9 +14,9 @@
             <Button Name="Cancel" HorizontalAlignment="Center">Cancel</Button>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" DockPanel.Dock="Top" Margin="20">
-            <TextBlock>Name</TextBlock>
-            <TextBox MinWidth="300" Margin="3,0,0,0" Text="{Binding Person.Name}"></TextBox>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Top" Margin="20">
+            <TextBlock VerticalAlignment="Center" FontWeight="Bold">Name</TextBlock>
+            <TextBox MinWidth="300" Margin="10,0,0,0" Text="{Binding Person.Name}"></TextBox>
         </StackPanel>
 
 
@@ -41,9 +41,9 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-       
 
-            <ItemsControl ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.SocialGroupNames}" Margin="20">
+
+            <ItemsControl ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.SocialGroupNames}" Margin="0,25,0,20">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -55,7 +55,7 @@
                     <DataTemplate>
 
                         <StackPanel Height="30" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding .}" ></TextBlock>
+                            <TextBlock Text="{Binding .}" VerticalAlignment="Center"></TextBlock>
                         </StackPanel>
                        
                     </DataTemplate>

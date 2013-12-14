@@ -11,22 +11,7 @@ namespace EMA_Configuration_Tool.Model.Groups
     {
         public string Name { get; set; }
 
-        //private bool[] groupMembership;
-        //public bool[] GroupMembership 
-        //{
-        //    get
-        //    {
-
-        //        return groupMembership;
-                
-        //    }
-
-        //    set { 
-        //        groupMembership = value;
-        //        NotifyOfPropertyChange(() => GroupMembership);
-        //    }
-        //}
-
+     
   
         public ObservableCollection<PersonGroup> GroupsForBinding { get; set; }
 

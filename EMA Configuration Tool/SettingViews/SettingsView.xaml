@@ -5,43 +5,76 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel Orientation="Vertical">
+   
+    <DockPanel LastChildFill="True">
+    
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Left" Margin="50,20,0,0" HorizontalAlignment="Right">
         
         <StackPanel.Resources>
             
-            <Style TargetType="{x:Type StackPanel}">
-                
-                
-                
-            </Style>
-            
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Margin" Value="20,20,0,20"/>
+                <Setter Property="FontSize" Value="18"/>
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                </Style>
+
+         
+
         </StackPanel.Resources>
-        
-        <StackPanel Orientation="Horizontal" Margin="20">
+
+
+
             <TextBlock VerticalAlignment="Center">Interview Timeout (minutes)</TextBlock>
-            <TextBox VerticalAlignment="Center" Margin="5,0,0,0" Text="{Binding TimeoutInMinutes, UpdateSourceTrigger=PropertyChanged}" MinWidth="40"></TextBox>
-        </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Margin="20">
             <TextBlock>Start Message</TextBlock>
-            <TextBox Margin="5,0,0,0" Text="{Binding Source={x:Static Application.Current}, Path=Interview.StartMessage, UpdateSourceTrigger=PropertyChanged}"
-                     MinWidth="300"></TextBox>
-        </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Margin="20">
             <TextBlock>Interview Can Be Canceled</TextBlock>
-            <CheckBox Margin="5,0,0,0" IsChecked="{Binding Source={x:Static Application.Current}, Path=Interview.CanCancel, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
-        </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Margin="20">
             <TextBlock>Interview Can Be Delayed</TextBlock>
-            <CheckBox Margin="5,0,0,0" IsChecked="{Binding Source={x:Static Application.Current}, Path=Interview.CanDelay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
-        </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Margin="20,40,20,0">
             <TextBlock>Output Saliva Pre/Post Content</TextBlock>
-            <CheckBox Margin="5,0,0,0" IsChecked="{Binding Source={x:Static Application.Current}, Path=Interview.OutputSalivaScreens, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+
         </StackPanel>
 
-    </StackPanel>
+        <StackPanel Orientation="Vertical" Margin="20,20,0,0" HorizontalAlignment="Left">
+
+            <StackPanel.Resources>
+
+              
+
+                <Style TargetType="{x:Type TextBox}">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="0,20,0,20"/>
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                </Style>
+
+                <Style TargetType="{x:Type CheckBox}">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="0,22,0,20"/>
+                    <Setter Property="Height" Value="20"/>
+                    <Setter Property="Width" Value="20"/>
+                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                </Style>
+
+            </StackPanel.Resources>
+
+
+
+            <TextBox Text="{Binding TimeoutInMinutes, UpdateSourceTrigger=PropertyChanged}" MinWidth="40"></TextBox>
+
+            <TextBox Text="{Binding Source={x:Static Application.Current}, Path=Interview.StartMessage, UpdateSourceTrigger=PropertyChanged}"
+                     MinWidth="450" MaxWidth="450"></TextBox>
+
+            <CheckBox IsChecked="{Binding Source={x:Static Application.Current}, Path=Interview.CanCancel, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+
+            <CheckBox IsChecked="{Binding Source={x:Static Application.Current}, Path=Interview.CanDelay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+
+            <CheckBox IsChecked="{Binding Source={x:Static Application.Current}, Path=Interview.OutputSalivaScreens, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+
+        </StackPanel>
+        
+    </DockPanel>
 </UserControl>
