@@ -10,6 +10,7 @@ using EMA_Configuration_Tool.ContentViews;
 using EMA_Configuration_Tool.Groups;
 using Microsoft.Win32;
 using EMA_Configuration_Tool.GroupViews;
+using EMA_Configuration_Tool.SettingViews;
 
 namespace EMA_Configuration_Tool
 {
@@ -19,6 +20,9 @@ namespace EMA_Configuration_Tool
 
         public ContentShellViewModel ContentDisplay { get; set; }
         public GroupShellViewModel PeopleDisplay { get; set; }
+        public SettingsViewModel SettingsDisplay { get; set; }
+
+
         public bool HasContent { get; set; }
 
         public RootViewModel()
@@ -96,6 +100,9 @@ namespace EMA_Configuration_Tool
 
             PeopleDisplay = new GroupShellViewModel();
             NotifyOfPropertyChange(() => PeopleDisplay);
+
+            SettingsDisplay = new SettingsViewModel();
+            NotifyOfPropertyChange(() => SettingsDisplay);
         }
 
 

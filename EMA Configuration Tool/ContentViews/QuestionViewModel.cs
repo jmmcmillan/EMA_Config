@@ -116,6 +116,11 @@ namespace EMA_Configuration_Tool.ContentViews
                 Question.Constraints = new List<Constraint>();
                 Question.Constraints.Add(constraint as Constraint);
             }
+
+            else
+            {
+                Question.Constraints = new List<Constraint>();
+            }
         }
 
         public void AddConstraint()

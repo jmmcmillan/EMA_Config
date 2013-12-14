@@ -20,8 +20,13 @@ namespace EMA_Configuration_Tool.Services
                 return;
 
             bool done = false;
-            foreach (Constraint c in App.Interview.Constraints)
+            foreach (object obj in App.Interview.Constraints)
             {
+                if (!(obj is Constraint))
+                    continue;
+
+                Constraint c = obj as Constraint;
+
                 if (c.FollowupForGuid == followupForQuestion.ID)  //references same ID
                 {
                     if ((c as StringConstraint).FollowupValueIndexesAsString == question.FollowupForValue)

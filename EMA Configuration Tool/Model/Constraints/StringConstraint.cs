@@ -26,7 +26,7 @@ namespace EMA_Configuration_Tool.Model.Constraints
                     i++;
                 }
 
-                result.Remove(result.LastIndexOf(','));
+                result.Remove(result.Length - 1);
 
                 return result;
             }

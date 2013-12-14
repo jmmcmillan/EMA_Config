@@ -115,6 +115,10 @@
     <Compile Include="RootViewModel.cs" />
     <Compile Include="Services\ConstraintService.cs" />
     <Compile Include="Services\ResponseService.cs" />
+    <Compile Include="SettingViews\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingViews\SettingsViewModel.cs" />
     <Page Include="ContentViews\ConstraintView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -161,6 +165,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RootView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingViews\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -14,42 +14,67 @@ namespace EMA_Configuration_Tool.Model
     [XmlRoot("interview")]
     public class EMAInterview : PropertyChangedBase
     {
-        //[XmlArray(ElementName = "groups")]
-        //[XmlArrayItem("group")]
-        //public List<Group> XmlGroups
-        //{
-        //    get
-        //    {
-        //        List<Group> myGroups = new List<Group>();
-   
-        //        for (int i = 0; i < SocialGroupNames.Count(); i++)
-        //        {
-        //            Group thisGroup = new Group() { GroupName = SocialGroupNames[i] };
+        #region settings
 
-        //            foreach (Person p in People)
-        //            {
-        //                if (p.GroupMembership[i] == true)
-        //                {
-        //                    thisGroup.Names.Add(p.Name);
-        //                }
-        //            }
+        [XmlAttribute("timeout")]
+        public int Timeout { get; set; }
 
-        //            myGroups.Add(thisGroup);
-        //        }
+        [XmlAttribute("startMessage")]
+        public string StartMessage { get; set; }
 
-        //        return myGroups;
-               
-        //    }
+        [XmlAttribute("canCancel")]
+        public string XMLCanCancel 
+        {
+            get
+            {
+                if (CanCancel)
+                    return "true";
+                else return "false";
+            }
 
-        //    set 
-        //    { 
-        //        Groups = value; 
-        //    }
-        //}
+            set
+            {
+                if (value.Contains("true"))
+                    CanCancel = true;
+                else CanCancel = false;
+            }
+        }
+
+        [XmlIgnore]
+        public bool CanCancel { get; set; }
+
+        [XmlAttribute("canDelay")]
+        public string XMLCanDelay
+        {
+            get
+            {
+                if (CanDelay)
+                    return "true";
+                else return "false";
+            }
+
+            set
+            {
+                if (value.Contains("true"))
+                    CanDelay = true;
+                else CanDelay = false;
+            }
+        }
+
+        [XmlIgnore]
+        public bool CanDelay { get; set; }
+
+        [XmlIgnore]
+        public bool OutputSalivaScreens { get; set; }
+
+        #endregion
+
 
         [XmlArray(ElementName = "groups")]
         [XmlArrayItem("group")]
         public List<Group> Groups { get; set; }
+
+       
 
         public void ConstructGroups()
         {
@@ -100,10 +125,23 @@ namespace EMA_Configuration_Tool.Model
         }
 
 
+        //[XmlIgnore]
+        //private ObservableCollection<Constraint> constraints;
+        //[XmlIgnore]
+        //public ObservableCollection<Constraint> Constraints
+        //{
+        //    get { return constraints; }
+        //    set
+        //    {
+        //        constraints = value;
+        //        NotifyOfPropertyChange(() => Constraints);
+        //    }
+        //}
+
         [XmlIgnore]
-        private ObservableCollection<Constraint> constraints;
+        private ObservableCollection<object> constraints;
         [XmlIgnore]
-        public ObservableCollection<Constraint> Constraints
+        public ObservableCollection<object> Constraints
         {
             get { return constraints; }
             set
@@ -243,12 +281,17 @@ namespace EMA_Configuration_Tool.Model
         public EMAInterview()
         {
             Questions = new List<Question>();
-            Constraints = new ObservableCollection<Constraint>();            
+            //Constraints = new ObservableCollection<Constraint>();
+            Constraints = new ObservableCollection<object>();
+
+            Constraints.Add("None (question always appears)");
+
             StringResponseSets = new ObservableCollection<StringResponseSet>();
             People = new ObservableCollection<Person>();
 
             SocialGroupNames = new string[] { "Spouse/partner", "Child", "Parent", "In-law", "Other relative", "Coworker", "Neighbor", "Classmate", "Church/temple/religious group", "Volunteer work group", "Other group", "Service professional", "Friend", "Stranger" };
 
+            OutputSalivaScreens = true;
         }
     }
 }

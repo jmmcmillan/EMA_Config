@@ -98,7 +98,7 @@
     
     <DockPanel LastChildFill="True">
 
-        <StackPanel Orientation="Horizontal" Margin="20" DockPanel.Dock="Bottom" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Margin="10" DockPanel.Dock="Bottom" HorizontalAlignment="Center">
 
             <Button Name="AddQuestion">Add Question</Button>
             <Button Name="EditQuestion" cal:Message.Attach="EditQuestion($view)">Edit Question</Button>
@@ -119,14 +119,14 @@
 
                 <TextBlock Style="{StaticResource headerTB}">Interview Questions</TextBlock>
                 <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}"
-                         MinHeight="300" x:Name="QuestionList" cal:Message.Attach="SwitchSelectedQuestion($this)">
+                         MinHeight="400" x:Name="QuestionList" cal:Message.Attach="SwitchSelectedQuestion($this)">
                     
                     <ListBox.ItemTemplate>
                         
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=ActualWidth}">
                                 <TextBlock FontSize="12" Text="{Binding Label}" FontWeight="Bold"/>
-                                <TextBlock FontSize="12" Text="{Binding Text}" Margin="3,0,0,0"/>
+                                <TextBlock FontSize="12" Text="{Binding Text}" TextWrapping="NoWrap" Margin="3,0,0,0"/>
                             </StackPanel>
                         </DataTemplate>
                         
@@ -150,7 +150,7 @@
                 <TextBlock Style="{StaticResource headerTB}">Question Preview Panel</TextBlock>
 
                 <Border Background="White" BorderBrush="#FFB2E1EF" BorderThickness="1" CornerRadius="5" >
-                    <ContentControl Content="{Binding SelectedQuestion}" MinHeight="300"/>
+                    <ContentControl Content="{Binding SelectedQuestion}" MinHeight="400"/>
                 </Border>
                 
                 
