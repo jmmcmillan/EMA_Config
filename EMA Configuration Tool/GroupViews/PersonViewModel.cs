@@ -5,36 +5,77 @@ using System.Text;
 using EMA_Configuration_Tool.Model.Groups;
 using Caliburn.Micro;
 using EMA_Configuration_Tool.Model;
+using System.Collections.ObjectModel;
 
 namespace EMA_Configuration_Tool.Groups
 {
-    public class PersonViewModel
+    public class PersonViewModel : PropertyChangedBase
     {
         public Person Person { get; set; }
+
+        public ObservableCollection<BindableBool> GroupsForBinding { get; set; }
 
         public PersonViewModel()
         {
             Person = new Person();
+            initGroupData();
         }
 
 
         public PersonViewModel(Person p)
         {
             Person = p;
+            initGroupData();
+        }
+
+        private void initGroupData()
+        {
+            GroupsForBinding = new ObservableCollection<BindableBool>();
+
+            foreach (bool b in Person.GroupMembership)
+            {
+                GroupsForBinding.Add(new BindableBool(b));
+            }
+
+            
+
+        }
+
+        private bool okayToSave()
+        {
+            if (String.IsNullOrEmpty(Person.Name))
+            {
+                System.Windows.MessageBox.Show(String.Format("Please enter a name for the person."));
+                return false;
+            }
+
+            foreach (Person p in App.Interview.People)
+            {
+                if (p.Name == Person.Name)
+                {
+                    if (p.ID != Person.ID)
+                    {
+                        System.Windows.MessageBox.Show(String.Format("Another person with the name {0} already exists. Please choose a different name.", Person.Name));
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+
         }
 
         public void SavePerson()
         {
+            if (!okayToSave())
+                return;
+
             bool[] newMemberships = new bool[EMAInterview.SocialGroupNames.Count()];
 
             int i = 0;
-            foreach (PersonGroup pg in Person.GroupsForBinding)
+            foreach (BindableBool b in GroupsForBinding)
             {
-                if (pg.IsMember)
-                {
-                    newMemberships[i] = true;
-                }
-
+                newMemberships[i] = b.Value;
                 i++;
             }
 
@@ -59,20 +100,7 @@ namespace EMA_Configuration_Tool.Groups
             Cancel();
         }
 
-        public void Checked(object source)
-        {
-            if (source is PersonView)
-            {
-                PersonView pv = source as PersonView;
-
-                foreach (object o in pv.GroupMemberships.Items)
-                {
-
-                }
-
-            }
-
-        }
+       
 
         public void Cancel()
         {

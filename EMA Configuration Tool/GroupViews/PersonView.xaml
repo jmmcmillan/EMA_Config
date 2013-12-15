@@ -10,7 +10,7 @@
     <DockPanel LastChildFill="True">
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Bottom">
-            <Button Name="SavePerson" HorizontalAlignment="Center">Done</Button>
+            <Button Name="SavePerson" HorizontalAlignment="Center">Save Person</Button>
             <Button Name="Cancel" HorizontalAlignment="Center">Cancel</Button>
         </StackPanel>
 
@@ -20,9 +20,9 @@
         </StackPanel>
 
 
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Margin="50,0,0,0">
 
-            <ItemsControl ItemsSource="{Binding Person.GroupsForBinding}" Margin="20,20,0,20" x:Name="GroupMemberships">
+            <ItemsControl ItemsSource="{Binding GroupsForBinding}" Margin="20,20,0,20" x:Name="GroupMemberships">
 
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -34,7 +34,7 @@
 
                     <DataTemplate>
                         <StackPanel Height="30" VerticalAlignment="Center">
-                            <CheckBox IsChecked="{Binding IsMember}"  />
+                            <CheckBox IsChecked="{Binding Value}"  />
                         </StackPanel>
                     </DataTemplate>
 

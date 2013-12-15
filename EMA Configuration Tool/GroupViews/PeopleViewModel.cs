@@ -10,7 +10,8 @@ namespace EMA_Configuration_Tool.Groups
 {
     public class PeopleViewModel : PropertyChangedBase
     {
-        
+
+        public Person SelectedPerson { get; set; }
 
         public PeopleViewModel()
         {
@@ -39,6 +40,10 @@ namespace EMA_Configuration_Tool.Groups
 
         public void DeletePerson()
         {
+            if (SelectedPerson != null)
+            {
+                App.Interview.People.Remove(SelectedPerson);
+            }
         }
 
 

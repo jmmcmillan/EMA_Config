@@ -9,11 +9,8 @@ namespace EMA_Configuration_Tool.Model.Groups
 {
     public class Person : PropertyChangedBase
     {
+        public Guid ID { get; set; }
         public string Name { get; set; }
-
-     
-  
-        public ObservableCollection<PersonGroup> GroupsForBinding { get; set; }
 
         public bool[] GroupMembership
         {
@@ -45,21 +42,15 @@ namespace EMA_Configuration_Tool.Model.Groups
 
         public Person()
         {
+            ID = Guid.NewGuid();
+
             GroupMembership = new bool[EMAInterview.SocialGroupNames.Count()];
-
-            GroupsForBinding = new ObservableCollection<PersonGroup>();
-
-            int i = 0;
-            foreach (string s in EMAInterview.SocialGroupNames)
-            {
-                GroupMembership[i] = false;
-                GroupsForBinding.Add(new PersonGroup() { IsMember = false });
-
-                i++;
-            }
-               
-
-            GroupMembership[5] = true;
+           
+            //foreach (string s in EMAInterview.SocialGroupNames)
+            //{
+            //    GroupMembership[i] = false;
+            //    i++;
+            //}
             
         }
     }
