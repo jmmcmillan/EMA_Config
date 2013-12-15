@@ -12,10 +12,7 @@ namespace EMA_Configuration_Tool.ContentViews
         public ContentViewModel() 
         { 
         }
-
-
-       
-
+        
         private Question selectedQuestion;
         public Question SelectedQuestion
         {
@@ -49,6 +46,7 @@ namespace EMA_Configuration_Tool.ContentViews
 
         public void DeleteQuestion()
         {
+            App.Interview.Questions.Remove(SelectedQuestion);
         }
 
         public void SaveInterview()
@@ -61,6 +59,22 @@ namespace EMA_Configuration_Tool.ContentViews
             {
                 SelectedQuestion = sender as Question;
             }
+        }
+
+        public void AddQuestionBefore()
+        {
+            int thisIndex = App.Interview.Questions.FindIndex(q => q.ID == SelectedQuestion.ID);
+
+            App.EventAggregator.Publish(new QuestionViewModel(thisIndex));
+
+        }
+
+        public void AddQuestionAfter()
+        {
+            int thisIndex = App.Interview.Questions.FindIndex(q => q.ID == SelectedQuestion.ID);
+
+            App.EventAggregator.Publish(new QuestionViewModel(thisIndex + 1));
+
         }
     }
 }

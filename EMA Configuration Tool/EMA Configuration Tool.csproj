@@ -39,6 +39,12 @@
     <Reference Include="Caliburn.Micro">
       <HintPath>lib\Caliburn.Micro.dll</HintPath>
     </Reference>
+    <Reference Include="Kent.Boogaart.Converters">
+      <HintPath>lib\Kent.Boogaart.Converters.dll</HintPath>
+    </Reference>
+    <Reference Include="Kent.Boogaart.HelperTrinity">
+      <HintPath>lib\Kent.Boogaart.HelperTrinity.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
@@ -99,6 +105,7 @@
     </Compile>
     <Compile Include="GroupViews\PersonViewModel.cs" />
     <Compile Include="Model\Constraints\StringConstraint.cs" />
+    <Compile Include="Model\Groups\BindableBool.cs" />
     <Compile Include="Model\Groups\Group.cs" />
     <Compile Include="Model\Groups\Person.cs" />
     <Compile Include="Model\Groups\PersonGroup.cs" />
@@ -106,6 +113,7 @@
     <Compile Include="Model\Responses\DynamicGroup.cs" />
     <Compile Include="Model\Responses\Integer.cs" />
     <Compile Include="Model\Responses\MultipleChoiceList.cs" />
+    <Compile Include="Model\Responses\Prompt.cs" />
     <Compile Include="Model\Responses\SingleChoiceList.cs" />
     <Compile Include="Model\Responses\Time.cs" />
     <Compile Include="Model\StringResponseSet.cs" />

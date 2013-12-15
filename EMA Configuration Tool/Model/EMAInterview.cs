@@ -123,20 +123,7 @@ namespace EMA_Configuration_Tool.Model
                 NotifyOfPropertyChange(() => StringResponseSets);
             }
         }
-
-
-        //[XmlIgnore]
-        //private ObservableCollection<Constraint> constraints;
-        //[XmlIgnore]
-        //public ObservableCollection<Constraint> Constraints
-        //{
-        //    get { return constraints; }
-        //    set
-        //    {
-        //        constraints = value;
-        //        NotifyOfPropertyChange(() => Constraints);
-        //    }
-        //}
+        
 
         [XmlIgnore]
         private ObservableCollection<object> constraints;
@@ -281,14 +268,12 @@ namespace EMA_Configuration_Tool.Model
         public EMAInterview()
         {
             Questions = new List<Question>();
-            //Constraints = new ObservableCollection<Constraint>();
-            Constraints = new ObservableCollection<object>();
-
-            Constraints.Add("None (question always appears)");
-
             StringResponseSets = new ObservableCollection<StringResponseSet>();
             People = new ObservableCollection<Person>();
 
+            Constraints = new ObservableCollection<object>();
+            Constraints.Add("None (This question always appears.)");
+            
             SocialGroupNames = new string[] { "Spouse/partner", "Child", "Parent", "In-law", "Other relative", "Coworker", "Neighbor", "Classmate", "Church/temple/religious group", "Volunteer work group", "Other group", "Service professional", "Friend", "Stranger" };
 
             OutputSalivaScreens = true;

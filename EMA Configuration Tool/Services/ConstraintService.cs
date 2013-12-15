@@ -42,8 +42,8 @@ namespace EMA_Configuration_Tool.Services
             if (!done)
             {
                 StringConstraint sc = new StringConstraint(followupForQuestion.ID, question.FollowupForValue);
+                
                 question.Constraints.Add(sc);
-
                 App.Interview.Constraints.Add(sc);
             }
         }

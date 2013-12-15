@@ -120,7 +120,7 @@ namespace EMA_Configuration_Tool.Model
                     int underscore = xmlLabel.IndexOf('_');
 
                     if (underscore > 0)
-                        Label = xmlLabel.Substring(0, underscore - 1);
+                        Label = xmlLabel.Substring(0, underscore);
                     else Label = xmlLabel;
                 }
             }
@@ -147,7 +147,9 @@ namespace EMA_Configuration_Tool.Model
                         result += String.Format("{0}_{1},", Label, Regex.Replace(p.Name, @"\s+", ""));
                     }
 
-                    result.Remove(result.Length - 1);
+                    if (result.Length > 0)
+                        result = result.Remove(result.Length - 1);
+
                     return result;
                 }
 

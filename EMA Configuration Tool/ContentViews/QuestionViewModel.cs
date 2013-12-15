@@ -19,6 +19,7 @@ namespace EMA_Configuration_Tool.ContentViews
         public Question Question { get; set; }
         public Type SelectedResponseType { get; set; }
 
+        private int requestedIndex = -1;
 
         public bool ConstraintCBVisible
         {
@@ -45,14 +46,27 @@ namespace EMA_Configuration_Tool.ContentViews
             Question = new Question();
 
             this.DisplayName = "Add/Edit Question";
-
             
+        }
+
+        public QuestionViewModel(int index) : base()
+        {
+            requestedIndex = index;
+            Question = new Question();           
+
         }
 
         public void SaveQuestion()
         {
+            //context menu "Insert Before" or "Insert After" was used to get here
+            if (requestedIndex > -1)
+            {
+                App.Interview.Questions.Insert(requestedIndex, Question);
+            }
+
             bool inserted = false;
 
+            //if we're editing an existing question it needs to go back in the same spot
             for (int i = 0; i < App.Interview.Questions.Count; i++)
             {                
                 if (App.Interview.Questions[i].ID == Question.ID)
@@ -65,6 +79,7 @@ namespace EMA_Configuration_Tool.ContentViews
                 }
             }
 
+            //tack it on at the end of the list
             if (!inserted)
                 App.Interview.Questions.Add(Question); 
                         

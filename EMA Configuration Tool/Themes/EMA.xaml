@@ -46,7 +46,7 @@
 
 
             <WrapPanel VerticalAlignment="Center">
-                <TextBlock FontWeight="Bold" Text="Must have one of these values: "/>
+                <TextBlock FontWeight="Bold" Text="Has one of these answers: "/>
                 <TextBlock Text="{Binding FollowupValueLabels}" Margin="3,0,0,0" TextWrapping="Wrap"/>
             </WrapPanel>
         </StackPanel>
