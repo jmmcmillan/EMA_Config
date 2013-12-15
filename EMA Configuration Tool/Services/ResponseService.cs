@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using EMA_Configuration_Tool.Model.Responses;
+using EMA_Configuration_Tool.Model;
 
 namespace EMA_Configuration_Tool.Services
 {
@@ -57,6 +58,26 @@ namespace EMA_Configuration_Tool.Services
 
             return null;
 
+        }
+
+        public static StringResponseSet GetStringResponseSet(List<string> responseLabels)
+        {
+            foreach (StringResponseSet sts in App.Interview.StringResponseSets)
+            {
+                bool foundIt = true;
+
+                foreach (string s in responseLabels)
+                {
+                    foundIt = foundIt && sts.StringResponses.Contains(s);
+                }
+
+                if (foundIt)
+                    return sts;
+            }
+
+            StringResponseSet newSTS = new StringResponseSet();
+            newSTS.StringResponses.AddRange(responseLabels);
+            return newSTS;
         }
     }
 }

@@ -11,6 +11,7 @@ using EMA_Configuration_Tool.Groups;
 using Microsoft.Win32;
 using EMA_Configuration_Tool.GroupViews;
 using EMA_Configuration_Tool.SettingViews;
+using EMA_Configuration_Tool.Model.Adapters;
 
 namespace EMA_Configuration_Tool
 {
@@ -53,17 +54,40 @@ namespace EMA_Configuration_Tool
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.DefaultExt = ".xml";
+            sfd.Filter = "EMA Interview (*.xml)|*.xml";
+            sfd.Title = "Save EMA Interview";
 
             if ((bool)sfd.ShowDialog())
             {
-                App.SerializeInterview(sfd.FileName);                
+                App.SerializeInterview(sfd.FileName);
+
+                if (App.Interview.OutputSalivaScreens)
+                    SaveInterviewWithAdapter(sfd.FileName);
             }
+        }
+
+        private void SaveInterviewWithAdapter(string originalFileName)
+        {
+            SalivaContentAdapter salivaQuestions = new SalivaContentAdapter();
+
+            salivaQuestions.AdaptInterview();
+
+            string fileName = Path.GetFileNameWithoutExtension(originalFileName);
+            string directory = Path.GetDirectoryName(originalFileName);
+            string newFileName = Path.Combine(directory, String.Format("{0}_saliva.xml", fileName));
+
+            App.SerializeInterview(newFileName);
+
+            salivaQuestions.RevertInterview();
+
         }
 
         public void LoadInterview()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.DefaultExt = ".xml";
+            ofd.Filter = "EMA Interview (*.xml)|*.xml";
+            ofd.Title = "Open Existing EMA Interview";
 
             if ((bool)ofd.ShowDialog())
             {

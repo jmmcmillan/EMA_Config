@@ -104,6 +104,7 @@
       <DependentUpon>PersonView.xaml</DependentUpon>
     </Compile>
     <Compile Include="GroupViews\PersonViewModel.cs" />
+    <Compile Include="Model\Adapters\SalivaContentAdapter.cs" />
     <Compile Include="Model\Constraints\StringConstraint.cs" />
     <Compile Include="Model\Groups\BindableBool.cs" />
     <Compile Include="Model\Groups\Group.cs" />
