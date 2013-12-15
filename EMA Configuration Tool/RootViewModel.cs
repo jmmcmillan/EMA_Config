@@ -52,40 +52,22 @@ namespace EMA_Configuration_Tool
         public void SaveInterview()
         {
             SaveFileDialog sfd = new SaveFileDialog();
+            sfd.DefaultExt = ".xml";
 
             if ((bool)sfd.ShowDialog())
             {
-
-                App.Interview.PrepareForSerialization();
-
-                try
-                {  
-                    XmlSerializer serializer = new XmlSerializer(typeof(EMAInterview));
-                    TextWriter textWriter = new StreamWriter(sfd.FileName);
-                    serializer.Serialize(textWriter, App.Interview);
-                    textWriter.Close();
-                }
-
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
+                App.SerializeInterview(sfd.FileName);                
             }
         }
 
         public void LoadInterview()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.DefaultExt = ".xml";
 
             if ((bool)ofd.ShowDialog())
             {
-                XmlSerializer deserializer = new XmlSerializer(typeof(EMAInterview));
-                TextReader textReader = new StreamReader(ofd.FileName);
-                App.Interview = (EMAInterview)deserializer.Deserialize(textReader);
-                textReader.Close();
-
-                App.Interview.RecoverFromSerialization();
-
+                App.DeserializeInterview(ofd.FileName);
                 initAll();
             }
         }

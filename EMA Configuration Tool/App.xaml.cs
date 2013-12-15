@@ -6,6 +6,9 @@ using System.Linq;
 using System.Windows;
 using EMA_Configuration_Tool.Model;
 using Caliburn.Micro;
+using Microsoft.Win32;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace EMA_Configuration_Tool
 {
@@ -35,6 +38,34 @@ namespace EMA_Configuration_Tool
             }
         }
 
+
+        public static void DeserializeInterview(string fileName)
+        {
+            XmlSerializer deserializer = new XmlSerializer(typeof(EMAInterview));
+            TextReader textReader = new StreamReader(fileName);
+            App.Interview = (EMAInterview)deserializer.Deserialize(textReader);
+            textReader.Close();
+
+            Interview.RecoverFromSerialization();
+        }
+
+        public static void SerializeInterview(string fileName)
+        {
+            Interview.PrepareForSerialization();
+
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(EMAInterview));
+                TextWriter textWriter = new StreamWriter(fileName);
+                serializer.Serialize(textWriter, Interview);
+                textWriter.Close();
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
      
     }
 }
