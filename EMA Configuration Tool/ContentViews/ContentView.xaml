@@ -6,6 +6,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:response="clr-namespace:EMA_Configuration_Tool.Model.Responses"
              xmlns:model="clr-namespace:EMA_Configuration_Tool.Model"
+             xmlns:con="http://schemas.kent.boogaart.com/converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     
@@ -92,6 +93,25 @@
         </DataTemplate>
 
 
+        <DataTemplate DataType="{x:Type response:Prompt}">
+
+           
+
+        </DataTemplate>
+
+
+        <DataTemplate DataType="{x:Type response:DynamicGroup}">
+
+            <StackPanel Orientation="Vertical">                
+            <TextBlock TextWrapping="Wrap">Participants will view a list of people who are in the groups they specified in this question:</TextBlock>
+                
+                <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                    <TextBlock Text="{Binding ReferenceQuestion.Label}" FontWeight="Bold"></TextBlock>
+                    <TextBlock Text="{Binding ReferenceQuestion.Text}" TextWrapping="Wrap" ></TextBlock>
+                </StackPanel>
+            </StackPanel>
+
+        </DataTemplate>
 
 
     </UserControl.Resources>
@@ -105,7 +125,7 @@
             <Button Name="DeleteQuestion">Delete Question</Button>
         </StackPanel>
         
-        <Grid DockPanel.Dock="Top" Margin="20">
+        <Grid DockPanel.Dock="Top" Margin="20,0,20,0">
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50*"></ColumnDefinition>
@@ -119,12 +139,13 @@
 
                 <TextBlock Style="{StaticResource headerTB}">Interview Questions</TextBlock>
                 <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}" 
-                         MinHeight="400" x:Name="QuestionList" cal:Message.Attach="SwitchSelectedQuestion($this)">
+                         MinHeight="480" MaxHeight="480" x:Name="QuestionList" cal:Message.Attach="SwitchSelectedQuestion($this)">
                     
                     <ListBox.ItemTemplate>
                         
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=ActualWidth}">
+                            <StackPanel Orientation="Horizontal" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=ActualWidth, 
+                                Converter={con:ExpressionConverter {}{0} - 48}}">
                                 <TextBlock FontSize="12" Text="{Binding Label}" FontWeight="Bold"/>
                                 <TextBlock FontSize="12" Text="{Binding Text}" TextWrapping="NoWrap" Margin="3,0,0,0"/>
                             </StackPanel>
@@ -134,7 +155,8 @@
 
                     <ListBox.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Add Question Before"/>                            
+                            <MenuItem Header="Add Question Before" cal:Message.Attach="[Event Click] = [Action AddQuestionBefore()]"/>
+                            <MenuItem Header="Add Question After" cal:Message.Attach="[Event Click] = [Action AddQuestionAfter()]"/>                            
                         </ContextMenu>
                     </ListBox.ContextMenu>
 
@@ -150,8 +172,11 @@
                 <TextBlock Style="{StaticResource headerTB}">Question Preview Panel</TextBlock>
 
                 <Border Background="White" BorderBrush="#FFB2E1EF" BorderThickness="1" CornerRadius="5" >
-                    <ContentControl Content="{Binding SelectedQuestion}" MinHeight="400"/>
+                    <ScrollViewer >
+                        <ContentControl Content="{Binding SelectedQuestion}" MinHeight="480" MaxHeight="480" />
+                    </ScrollViewer>
                 </Border>
+                    
                 
                 
             </StackPanel>
