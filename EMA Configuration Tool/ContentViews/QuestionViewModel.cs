@@ -20,6 +20,7 @@ namespace EMA_Configuration_Tool.ContentViews
         public Type SelectedResponseType { get; set; }
 
         private int requestedIndex = -1;
+        private Question unchangedQuestion = null;
 
         public bool ConstraintCBVisible
         {
@@ -31,9 +32,18 @@ namespace EMA_Configuration_Tool.ContentViews
 
         public QuestionViewModel(Question q) : this()
         {
-            Question = q;
+            
+            //keep this question untouched in case they want to cancel, and make a copy for modification
+            unchangedQuestion = q;
 
-            SelectedConstraint = q.Constraints.FirstOrDefault();
+            Question.Text = q.Text;
+            Question.Label = q.Label;
+            Question.Response = q.Response.Copy();
+            
+            foreach (Constraint c in q.Constraints)
+                Question.Constraints.Add(c);
+
+            SelectedConstraint = Question.Constraints.FirstOrDefault();
 
             if (Question.Response != null)
             {
@@ -58,31 +68,29 @@ namespace EMA_Configuration_Tool.ContentViews
 
         public void SaveQuestion()
         {
+            if (Question.Label.Contains('_'))
+            {
+                System.Windows.MessageBox.Show("Question labels can't contain underscores. Please enter a different label.");
+                return;
+            }
+
             //context menu "Insert Before" or "Insert After" was used to get here
             if (requestedIndex > -1)
             {
                 App.Interview.Questions.Insert(requestedIndex, Question);
             }
 
-            bool inserted = false;
-
-            //if we're editing an existing question it needs to go back in the same spot
-            for (int i = 0; i < App.Interview.Questions.Count; i++)
-            {                
-                if (App.Interview.Questions[i].ID == Question.ID)
-                {
-                    App.Interview.Questions.RemoveAt(i);
-                    App.Interview.Questions.Insert(i, Question);
-
-                    inserted = true;
-                    break;
-                }
+            //editing an existing question
+            else if (unchangedQuestion != null)
+            {
+                int indexOf = App.Interview.Questions.IndexOf(unchangedQuestion);
+                App.Interview.Questions.RemoveAt(indexOf);
+                App.Interview.Questions.Insert(indexOf, Question);
             }
 
-            //tack it on at the end of the list
-            if (!inserted)
-                App.Interview.Questions.Add(Question); 
-                        
+            //else tack it on at the end
+            else App.Interview.Questions.Add(Question); 
+            
 
             App.EventAggregator.Publish(new ContentViewModel());
         }
@@ -134,6 +142,7 @@ namespace EMA_Configuration_Tool.ContentViews
 
             else
             {
+                //they picked the "No constraints" string
                 Question.Constraints = new List<Constraint>();
             }
         }

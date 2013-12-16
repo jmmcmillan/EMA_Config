@@ -14,5 +14,12 @@ namespace EMA_Configuration_Tool.Model.Responses
             : base()
         {
         }
+
+        public override ResponseBase Copy()
+        {
+            Dropdown dd = new Dropdown();
+            dd.Responses = Responses;
+            return dd;
+        }
     }
 }

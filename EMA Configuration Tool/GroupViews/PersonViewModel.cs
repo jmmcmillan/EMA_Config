@@ -15,6 +15,8 @@ namespace EMA_Configuration_Tool.Groups
 
         public ObservableCollection<BindableBool> GroupsForBinding { get; set; }
 
+        private string previousPersonName = "";
+
         public PersonViewModel()
         {
             Person = new Person();
@@ -25,6 +27,7 @@ namespace EMA_Configuration_Tool.Groups
         public PersonViewModel(Person p)
         {
             Person = p;
+            previousPersonName = p.Name;
             initGroupData();
         }
 
@@ -55,7 +58,7 @@ namespace EMA_Configuration_Tool.Groups
                 {
                     if (p.ID != Person.ID)
                     {
-                        System.Windows.MessageBox.Show(String.Format("Another person with the name {0} already exists. Please choose a different name.", Person.Name));
+                        System.Windows.MessageBox.Show(String.Format("A person named {0} already exists. Please enter a different name.", Person.Name));
                         return false;
                     }
                 }
@@ -104,6 +107,9 @@ namespace EMA_Configuration_Tool.Groups
 
         public void Cancel()
         {
+            //restore previous person name
+            Person.Name = previousPersonName;
+
             App.EventAggregator.Publish(new PeopleViewModel());
         }
 

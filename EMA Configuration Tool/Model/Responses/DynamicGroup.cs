@@ -18,5 +18,12 @@ namespace EMA_Configuration_Tool.Model.Responses
         {
         }
 
+        public override ResponseBase Copy()
+        {
+            DynamicGroup dg = new DynamicGroup();
+            dg.ReferenceQuestion = ReferenceQuestion;
+            return dg;
+        }
+
     }
 }

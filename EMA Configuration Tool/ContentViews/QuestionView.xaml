@@ -37,7 +37,8 @@
 
 
             <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.StringResponseSets}"
-                      cal:Message.Attach="SwitchStringResponseSet($this)" MaxHeight="200">
+                      cal:Message.Attach="SwitchStringResponseSet($this)" MaxHeight="200"
+                     SelectedItem="{Binding Responses}">
 
                 <ListBox.ItemTemplate>
 

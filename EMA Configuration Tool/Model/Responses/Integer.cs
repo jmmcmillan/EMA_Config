@@ -44,5 +44,12 @@ namespace EMA_Configuration_Tool.Model.Responses
         {
             DefaultInteger = "";
         }
+
+        public override ResponseBase Copy()
+        {
+            Integer ir = new Integer();
+            ir.DefaultInteger = DefaultInteger;
+            return ir;
+        }
     }
 }

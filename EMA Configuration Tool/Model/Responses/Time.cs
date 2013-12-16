@@ -74,5 +74,12 @@ namespace EMA_Configuration_Tool.Model.Responses
             DefaultTime = "";
         }
 
+        public override ResponseBase Copy()
+        {
+            Time tr = new Time();
+            tr.DefaultTime = DefaultTime;
+            return tr;
+        }
+
     }
 }

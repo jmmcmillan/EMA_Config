@@ -8,6 +8,7 @@ namespace EMA_Configuration_Tool.Model.Responses
 {
     public abstract class ResponseBase : PropertyChangedBase
     {
+        public virtual ResponseBase Copy() { return null; }
         public virtual string ResponseXMLType { get; set; }
         public virtual string ResponseXMLDefaults { get; set; }
         public bool IsExclusive { get; set; }

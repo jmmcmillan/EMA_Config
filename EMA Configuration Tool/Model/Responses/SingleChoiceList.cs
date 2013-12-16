@@ -21,8 +21,13 @@ namespace EMA_Configuration_Tool.Model.Responses
         public SingleChoiceList() : base()
         {
             Description = "Single Choice List";
+        }
 
-            
+        public override ResponseBase Copy()
+        {
+            SingleChoiceList scl = new SingleChoiceList();
+            scl.Responses = Responses;
+            return scl;
         }
     }
 }

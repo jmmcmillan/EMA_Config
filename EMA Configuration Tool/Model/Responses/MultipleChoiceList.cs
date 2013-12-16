@@ -21,5 +21,12 @@ namespace EMA_Configuration_Tool.Model.Responses
             : base()
         {
         }
+
+        public override ResponseBase Copy()
+        {
+            MultipleChoiceList mcl = new MultipleChoiceList();
+            mcl.Responses = Responses;
+            return mcl;
+        }
     }
 }

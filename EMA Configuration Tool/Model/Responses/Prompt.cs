@@ -15,5 +15,11 @@ namespace EMA_Configuration_Tool.Model.Responses
             }
         }
 
+        public override ResponseBase Copy()
+        {
+            return new Prompt();
+        }
+
+
     }
 }
