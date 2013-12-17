@@ -180,6 +180,10 @@ namespace EMA_Configuration_Tool.Model
             }
         }
 
+        public void RefreshResponses()
+        {
+            NotifyOfPropertyChange(() => Response);
+        }
 
         #region dynamic groups
 

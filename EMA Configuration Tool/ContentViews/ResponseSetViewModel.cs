@@ -11,44 +11,34 @@ namespace EMA_Configuration_Tool.ContentViews
 {
     public class ResponseSetViewModel : Screen
     {
-        //private StringResponseSet unchangedSTS;
-
-        private StringChoice unchangedSC;
-
+        private StringResponseSet unchangedSTS;
+        private Question question;
+      
         public string Responses { get; set; }
         public bool StartsWithZero { get; set; }
         public bool StartsWithOne { get; set; }
 
-        //public ResponseSetViewModel(StringResponseSet sts) : this()
-        //{
-        //    unchangedSTS = sts;
-
-        //    foreach (string s in sts.StringResponses)
-        //    {
-        //        Responses += String.Format("{0}\n", s);
-        //    }
-
-        //    StartsWithZero = sts.IsZeroBased;
-        //    StartsWithOne = !sts.IsZeroBased;
-        //}
-
-        public ResponseSetViewModel(StringChoice sc)
-            : this()
+        public ResponseSetViewModel(StringResponseSet sts, Question q)
+            : this(q)
         {
+            unchangedSTS = sts;           
 
-            unchangedSC = sc;
-
-            foreach (string s in sc.Responses.StringResponses)
+            foreach (string s in sts.StringResponses)
             {
                 Responses += String.Format("{0}\n", s);
             }
 
-            StartsWithZero = sc.Responses.IsZeroBased;
-            StartsWithOne = sc.Responses.IsZeroBased;
+            StartsWithZero = sts.IsZeroBased;
+            StartsWithOne = !StartsWithZero;
         }
 
-        public ResponseSetViewModel() : base()
+
+
+        public ResponseSetViewModel(Question q)
+            : base()
         {
+            question = q;
+
             Responses = "";
 
             StartsWithZero = true;
@@ -56,18 +46,18 @@ namespace EMA_Configuration_Tool.ContentViews
 
         public void Save(object sender)
         {
-            ObservableCollection<string> responseList = new ObservableCollection<string>();
-
-            foreach (string s in Responses.Trim().Split('\n').Select(s => s.Trim()).ToList())
-                responseList.Add(s);
+            List<string> responseList = Responses.Trim().Split('\n').Select(s => s.Trim()).ToList();
             
             //editing existing
-            if (unchangedSC != null)
+            if (unchangedSTS != null)
             {
-                unchangedSC.Responses.StringResponses = responseList;
-                unchangedSC.Responses.IsZeroBased = StartsWithZero;
+                unchangedSTS.StringResponses = responseList;
+                unchangedSTS.IsZeroBased = StartsWithZero;
+               
+                unchangedSTS.Refresh();  //to update existing Question View listbox
             }
 
+            //creating new
             else
             {
                 StringResponseSet responseSet = new StringResponseSet();
@@ -75,6 +65,10 @@ namespace EMA_Configuration_Tool.ContentViews
                 responseSet.IsZeroBased = StartsWithZero;
 
                 App.Interview.StringResponseSets.Add(responseSet);
+
+                (question.Response as StringChoice).Responses = responseSet;
+
+                
             }
 
             TryClose();

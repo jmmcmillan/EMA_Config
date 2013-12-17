@@ -21,7 +21,7 @@
 
         <StackPanel HorizontalAlignment="Center">
             <Button  cal:Message.Attach="Save($view)">Save Response Set</Button>
-            <Button  x:Name="Cancel"></Button>
+            <Button  x:Name="Cancel">Cancel</Button>
         </StackPanel>
 
 

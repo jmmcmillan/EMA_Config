@@ -18,6 +18,7 @@ namespace EMA_Configuration_Tool.Model.Responses
             }
         }
 
+      
         
         
         public string Description { get; set; }

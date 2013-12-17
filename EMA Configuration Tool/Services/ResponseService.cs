@@ -57,8 +57,9 @@ namespace EMA_Configuration_Tool.Services
             }
 
             return null;
-
         }
+
+
 
         public static StringResponseSet GetStringResponseSet(List<string> responseLabels)
         {

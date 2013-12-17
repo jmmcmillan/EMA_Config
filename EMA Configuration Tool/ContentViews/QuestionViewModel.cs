@@ -32,8 +32,7 @@ namespace EMA_Configuration_Tool.ContentViews
         }
 
         public QuestionViewModel(Question q) : this()
-        {
-            
+        {   
             //keep this question untouched in case they want to cancel, and make a copy for modification
             unchangedQuestion = q;
 
@@ -125,19 +124,12 @@ namespace EMA_Configuration_Tool.ContentViews
             Question.Response = (ResponseBase)Activator.CreateInstance(rt as Type);
         }
 
-        public void SwitchStringResponseSet(object srs)
-        {
-            if (Question.Response is StringChoice)
-            {
-                (Question.Response as StringChoice).Responses = srs as StringResponseSet;
-            }
-        }
-
+       
         public void AddResponseSet()
         {   
             //bad form, but accessing the global one requires jumping through some DI hoops I haven't figured out yet
             WindowManager windowManager = new WindowManager();
-            windowManager.ShowDialog(new ResponseSetViewModel());
+            windowManager.ShowDialog(new ResponseSetViewModel(Question));
         }
 
         public void EditResponseSet(object dataContext)
@@ -149,7 +141,7 @@ namespace EMA_Configuration_Tool.ContentViews
                 //bad form, but accessing the global one requires jumping through some DI hoops I haven't figured out yet
                 WindowManager windowManager = new WindowManager();
                 //windowManager.ShowDialog(new ResponseSetViewModel(sc.Responses));
-                windowManager.ShowDialog(new ResponseSetViewModel(sc));
+                windowManager.ShowDialog(new ResponseSetViewModel(sc.Responses, Question));
                 
             }
         }
@@ -165,14 +157,7 @@ namespace EMA_Configuration_Tool.ContentViews
             }
         }
 
-        public void SelectedReferenceQuestionChanged(object question)
-        {
-            if (question is Question)
-            {
-                (Question.Response as DynamicGroup).ReferenceQuestion = question as Question;
-            }
-        }
-
+      
 
         public void SelectedConstraintChanged(object constraint)
         {
@@ -212,7 +197,7 @@ namespace EMA_Configuration_Tool.ContentViews
             if (SelectedConstraint == null)
                 return;
 
-            if (MessageBox.Show("Are you sure you want to delete this skipping pattern?", "Delete Skipping Pattern", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Are you sure you want to delete this constraint?", "Delete Constraint", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 App.Interview.Constraints.Remove(SelectedConstraint);
             }

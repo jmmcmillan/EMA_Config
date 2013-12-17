@@ -15,9 +15,9 @@ namespace EMA_Configuration_Tool.Model
         public Guid ID { get; set; }
 
         [XmlIgnore]
-        private ObservableCollection<string> stringResponses;
+        private List<string> stringResponses;
         [XmlIgnore]
-        public ObservableCollection<string> StringResponses
+        public List<string> StringResponses
         {
             get { return stringResponses; }
             set
@@ -44,7 +44,7 @@ namespace EMA_Configuration_Tool.Model
         {
             ID = id;
 
-            StringResponses = new ObservableCollection<string>();
+            StringResponses = new List<string>();
             foreach (String s in responses)
                 StringResponses.Add(s);
         }
@@ -61,7 +61,7 @@ namespace EMA_Configuration_Tool.Model
 
                 if (StringResponses == null) //returning from serialization
                 {
-                    StringResponses = new ObservableCollection<string>();
+                    StringResponses = new List<string>();
 
                     foreach (string s in xmlContent.Split('|'))
                         StringResponses.Add(s);
@@ -100,7 +100,8 @@ namespace EMA_Configuration_Tool.Model
                     score++;
                 }
 
-                result = result.Remove(result.Length - 2); //strip last comma and space
+                if (result.Length > 0)
+                    result = result.Remove(result.Length - 2); //strip last comma and space
 
                 return result;
             }
@@ -109,19 +110,14 @@ namespace EMA_Configuration_Tool.Model
         public override string ToString()
         {
             string result = String.Empty;
-
-            int i = 0;
-            int responseCount = StringResponses.Count;
-
+                       
             foreach (string s in StringResponses)
             {
-                result += String.Format("{0}", s);
-
-                if (i < responseCount - 2)
-                    result += ", ";
-
-                i++;
+                result += String.Format("{0},", s);
             }
+
+            if (result.Length > 0)
+                result = result.Remove(result.Length - 1); //strip last comma
 
             return result;
         }

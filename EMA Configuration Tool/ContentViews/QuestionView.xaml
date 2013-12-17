@@ -45,16 +45,15 @@
                         </Style>
                     </StackPanel.Resources>
 
-                    <Button Name="AddResponseSet">Add Response Set</Button>
+                    <Button x:Name="AddResponseSet" cal:Message.Attach="AddResponseSet()">Add Response Set</Button>
                     <Button Name="EditResponseSet" cal:Message.Attach="EditResponseSet($dataContext)">Edit Response Set</Button>
                     <!--<Button Name="DeleteResponseSet" cal:Message.Attach="DeleteResponseSet($dataContext)">Delete Response Set</Button>-->
 
                 </StackPanel>
 
 
-                <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.StringResponseSets}"
-                      cal:Message.Attach="SwitchStringResponseSet($this)" MaxHeight="200" Width="700" MaxWidth="700"
-                     SelectedItem="{Binding Responses}">
+                <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.StringResponseSets}" SelectedItem="{Binding Responses}"
+                      MaxHeight="200" Width="700" MaxWidth="700">
 
                 <ListBox.ItemTemplate>
 
@@ -103,8 +102,8 @@
                 
                 <Label>Choose the question where the participant will pick the groups</Label>
             <ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}"
-                              HorizontalAlignment="Left" MinWidth="300"
-                         x:Name="GroupList" cal:Message.Attach="SelectedReferenceQuestionChanged($this)">
+                              HorizontalAlignment="Left" MinWidth="300" SelectedItem="{Binding ReferenceQuestion}"
+                         x:Name="GroupList">
                     
                     <ComboBox.ItemTemplate>
                     
@@ -139,6 +138,7 @@
             <Button Name="Cancel" HorizontalAlignment="Center">Cancel</Button>
         </StackPanel>
         
+        <ScrollViewer>
                 <StackPanel Orientation="Vertical" DockPanel.Dock="Top"
                     Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DockPanel}}, Path=ActualWidth}">
 
@@ -164,7 +164,7 @@
 
         </StackPanel>
 
-        <Expander>
+        <Expander Margin="0,-5,0,0">
 
             <Expander.Header>
                 <TextBlock Style="{StaticResource questionHeader}">
@@ -204,16 +204,16 @@
               
         </Expander>
 
-        <Expander>
+                <Expander Margin="0,-15,0,0">
 
             <Expander.Header>
                 <TextBlock Style="{StaticResource questionHeader}">
-                Skipping Patterns
+                Constraints
                 </TextBlock>
                 
             </Expander.Header>
 
-                <DockPanel LastChildFill="True" >
+                    <DockPanel LastChildFill="True" Margin="0,-5,0,0">
 
                     <StackPanel Orientation="Vertical" DockPanel.Dock="Right">
 
@@ -253,6 +253,9 @@
        
        
     </StackPanel>
+
+        </ScrollViewer>
+        
     </DockPanel>
     
     
