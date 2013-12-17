@@ -16,6 +16,9 @@ namespace EMA_Configuration_Tool.Model
     {
         #region settings
 
+        [XmlAttribute("participantID")]
+        public string ParticipantID { get; set; }
+
         [XmlAttribute("timeout")]
         public int Timeout { get; set; }
 
@@ -112,6 +115,8 @@ namespace EMA_Configuration_Tool.Model
         [XmlArrayItem("question")]        
         public List<Question> Questions { get; set; }
 
+
+
         [XmlArray(ElementName = "responses")]
         [XmlArrayItem("response")]
         public ObservableCollection<StringResponseSet> StringResponseSets
@@ -123,7 +128,8 @@ namespace EMA_Configuration_Tool.Model
                 NotifyOfPropertyChange(() => StringResponseSets);
             }
         }
-        
+
+      
 
         [XmlIgnore]
         private ObservableCollection<object> constraints;

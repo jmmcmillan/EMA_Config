@@ -76,7 +76,7 @@ namespace EMA_Configuration_Tool.Services
             }
 
             StringResponseSet newSTS = new StringResponseSet();
-            newSTS.StringResponses.AddRange(responseLabels);
+            newSTS.StringResponses.Concat(responseLabels);
             return newSTS;
         }
     }

@@ -13,8 +13,8 @@ namespace EMA_Configuration_Tool.Model.Responses
         public virtual string ResponseXMLDefaults { get; set; }
         public bool IsExclusive { get; set; }
 
-        private bool HasDefaults { get; set; }
-        public virtual bool DefaultIsValid { get { return true; } }
+        //private bool HasDefaults { get; set; }
+        //public virtual bool DefaultIsValid { get { return true; } }
 
         public int ResponseXMLIndex
         {

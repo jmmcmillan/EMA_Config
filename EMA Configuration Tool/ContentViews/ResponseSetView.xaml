@@ -11,12 +11,12 @@
         
 
             <Label>These items are scored starting with:</Label>
-            <RadioButton GroupName="0or1" x:Name="StartZero" IsChecked="True">Zero</RadioButton>
-            <RadioButton GroupName="0or1" x:Name="StartOne">One</RadioButton>
+            <RadioButton GroupName="0or1" x:Name="StartZero" IsChecked="{Binding StartsWithZero}">Zero</RadioButton>
+        <RadioButton GroupName="0or1" x:Name="StartOne" IsChecked="{Binding StartsWithOne}">One</RadioButton>
             
       
         <Label>Type each response on its own line</Label>
-        <TextBox MinLines="10" MinWidth="200" x:Name="ResponseLines" AcceptsReturn="True"></TextBox>
+        <TextBox MinLines="10" MinWidth="200" Text="{Binding Responses}" AcceptsReturn="True"></TextBox>
 
 
         <StackPanel HorizontalAlignment="Center">

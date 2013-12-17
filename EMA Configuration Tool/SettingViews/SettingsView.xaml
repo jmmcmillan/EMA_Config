@@ -25,6 +25,7 @@
         </StackPanel.Resources>
 
 
+            <TextBlock VerticalAlignment="Center">Participant ID</TextBlock>
 
             <TextBlock VerticalAlignment="Center">Interview Timeout (minutes)</TextBlock>
 
@@ -61,7 +62,7 @@
 
             </StackPanel.Resources>
 
-
+            <TextBox Text="{Binding Source={x:Static Application.Current}, Path=Interview.ParticipantID, UpdateSourceTrigger=PropertyChanged}" MinWidth="120"></TextBox>
 
             <TextBox Text="{Binding TimeoutInMinutes, UpdateSourceTrigger=PropertyChanged}" MinWidth="40"></TextBox>
 

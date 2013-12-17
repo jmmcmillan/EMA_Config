@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AvalonLibrary">
+      <HintPath>lib\AvalonLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Caliburn.Micro">
       <HintPath>lib\Caliburn.Micro.dll</HintPath>
     </Reference>
@@ -45,6 +48,7 @@
     <Reference Include="Kent.Boogaart.HelperTrinity">
       <HintPath>lib\Kent.Boogaart.HelperTrinity.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
@@ -112,6 +116,7 @@
     <Compile Include="Model\Groups\PersonGroup.cs" />
     <Compile Include="Model\Responses\Dropdown.cs" />
     <Compile Include="Model\Responses\DynamicGroup.cs" />
+    <Compile Include="Model\Responses\IHaveDefault.cs" />
     <Compile Include="Model\Responses\Integer.cs" />
     <Compile Include="Model\Responses\MultipleChoiceList.cs" />
     <Compile Include="Model\Responses\Prompt.cs" />

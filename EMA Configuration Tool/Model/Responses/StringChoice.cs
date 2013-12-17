@@ -17,6 +17,8 @@ namespace EMA_Configuration_Tool.Model.Responses
                 NotifyOfPropertyChange(() => Responses);
             }
         }
+
+        
         
         public string Description { get; set; }
 

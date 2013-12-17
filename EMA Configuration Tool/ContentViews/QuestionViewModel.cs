@@ -8,6 +8,7 @@ using EMA_Configuration_Tool.Model.Responses;
 using System.ComponentModel.Composition;
 using System.Windows.Controls;
 using EMA_Configuration_Tool.Model.Constraints;
+using System.Windows;
 
 namespace EMA_Configuration_Tool.ContentViews
 {
@@ -66,13 +67,32 @@ namespace EMA_Configuration_Tool.ContentViews
 
         }
 
-        public void SaveQuestion()
+        private bool okayToSave()
         {
             if (Question.Label.Contains('_'))
             {
                 System.Windows.MessageBox.Show("Question labels can't contain underscores. Please enter a different label.");
-                return;
+                return false;
             }
+
+            if (Question.Response is IHaveDefault)
+            {
+                IHaveDefault def = Question.Response as IHaveDefault;
+
+                if (!def.DefaultIsValid())
+                {
+                    System.Windows.MessageBox.Show(def.GetBadDefaultMessage());
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public void SaveQuestion()
+        {
+            if (!okayToSave())
+                return;
 
             //context menu "Insert Before" or "Insert After" was used to get here
             if (requestedIndex > -1)
@@ -120,6 +140,31 @@ namespace EMA_Configuration_Tool.ContentViews
             windowManager.ShowDialog(new ResponseSetViewModel());
         }
 
+        public void EditResponseSet(object dataContext)
+        {
+            if (dataContext is StringChoice)
+            {
+                StringChoice sc = dataContext as StringChoice;
+
+                //bad form, but accessing the global one requires jumping through some DI hoops I haven't figured out yet
+                WindowManager windowManager = new WindowManager();
+                //windowManager.ShowDialog(new ResponseSetViewModel(sc.Responses));
+                windowManager.ShowDialog(new ResponseSetViewModel(sc));
+                
+            }
+        }
+
+        public void DeleteResponseSet(object dataContext)
+        {
+            if (!(dataContext is StringChoice))
+                return;
+
+            if (MessageBox.Show("Are you sure you want to delete this set of responses?", "Delete Response Set", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                App.Interview.StringResponseSets.Remove((dataContext as StringChoice).Responses);
+            }
+        }
+
         public void SelectedReferenceQuestionChanged(object question)
         {
             if (question is Question)
@@ -156,14 +201,23 @@ namespace EMA_Configuration_Tool.ContentViews
             NotifyOfPropertyChange(() => ConstraintCBVisible);
         }
 
-        public void EditConstraint(object view)
+        public void EditConstraint(object dataContext)
         {
            
 
         }
 
-        public void DeleteConstraint()
+        public void DeleteConstraint(object dataContext)
         {
+            if (SelectedConstraint == null)
+                return;
+
+            if (MessageBox.Show("Are you sure you want to delete this skipping pattern?", "Delete Skipping Pattern", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                App.Interview.Constraints.Remove(SelectedConstraint);
+            }
+
+
         }
 
     

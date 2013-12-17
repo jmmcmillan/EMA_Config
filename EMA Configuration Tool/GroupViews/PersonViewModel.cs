@@ -100,7 +100,7 @@ namespace EMA_Configuration_Tool.Groups
                 App.Interview.People.Insert(0, Person);
             }
 
-            Cancel();
+            App.EventAggregator.Publish(new PeopleViewModel());
         }
 
        

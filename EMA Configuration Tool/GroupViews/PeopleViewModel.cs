@@ -5,6 +5,7 @@ using System.Text;
 using EMA_Configuration_Tool.Model.Groups;
 using Caliburn.Micro;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace EMA_Configuration_Tool.Groups
 {
@@ -42,7 +43,12 @@ namespace EMA_Configuration_Tool.Groups
         {
             if (SelectedPerson != null)
             {
-                App.Interview.People.Remove(SelectedPerson);
+                
+                if (MessageBox.Show(String.Format("Are you sure you want to delete {0}?", SelectedPerson.Name), "Delete Person", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    App.Interview.People.Remove(SelectedPerson);
+                }
+                
             }
         }
 

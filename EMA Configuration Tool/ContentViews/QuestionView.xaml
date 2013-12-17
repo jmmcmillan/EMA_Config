@@ -35,9 +35,25 @@
 
         <DataTemplate DataType="{x:Type response:StringChoice}">
 
+            <DockPanel LastChildFill="True">
 
-            <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.StringResponseSets}"
-                      cal:Message.Attach="SwitchStringResponseSet($this)" MaxHeight="200"
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Right" Margin="35,0,0,0">
+
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Margin" Value="5"/>
+                        </Style>
+                    </StackPanel.Resources>
+
+                    <Button Name="AddResponseSet">Add Response Set</Button>
+                    <Button Name="EditResponseSet" cal:Message.Attach="EditResponseSet($dataContext)">Edit Response Set</Button>
+                    <!--<Button Name="DeleteResponseSet" cal:Message.Attach="DeleteResponseSet($dataContext)">Delete Response Set</Button>-->
+
+                </StackPanel>
+
+
+                <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.StringResponseSets}"
+                      cal:Message.Attach="SwitchStringResponseSet($this)" MaxHeight="200" Width="700" MaxWidth="700"
                      SelectedItem="{Binding Responses}">
 
                 <ListBox.ItemTemplate>
@@ -49,6 +65,9 @@
                 </ListBox.ItemTemplate>
 
             </ListBox>
+
+            </DockPanel>
+
 
         </DataTemplate>
 
@@ -120,7 +139,7 @@
             <Button Name="Cancel" HorizontalAlignment="Center">Cancel</Button>
         </StackPanel>
         
-        <StackPanel Orientation="Vertical" DockPanel.Dock="Top"
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Top"
                     Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DockPanel}}, Path=ActualWidth}">
 
         <TextBlock Style="{StaticResource questionHeader}" Margin="0,0,0,10">
@@ -136,12 +155,12 @@
             
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,-5">
 
             <Label>Question Text:</Label>
 
-            <TextBox Text="{Binding Question.Text, UpdateSourceTrigger=PropertyChanged}"
-                     MinLines="2" AcceptsReturn="True" HorizontalAlignment="Stretch" MinWidth="500" MaxWidth="500"></TextBox>
+            <TextBox Text="{Binding Question.Text, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" 
+                     MinLines="3" AcceptsReturn="True" HorizontalAlignment="Stretch" MinWidth="500" MaxWidth="500"></TextBox>
 
         </StackPanel>
 
@@ -154,27 +173,14 @@
 
             </Expander.Header>
 
-                <DockPanel LastChildFill="True" >
+                <DockPanel LastChildFill="True" Margin="0,-5,0,0">
 
-                    <StackPanel Orientation="Vertical" DockPanel.Dock="Right">
-
-                        <StackPanel.Resources>
-                            <Style TargetType="Button">
-                                <Setter Property="Margin" Value="5"/>
-                            </Style>
-                        </StackPanel.Resources>
-
-                        <Button Name="AddResponse">Add Response Set</Button>
-                        <Button Name="EditResponse" cal:Message.Attach="EditResponse($view)">Edit Response Set</Button>
-                        <Button Name="DeleteResponse" cal:Message.Attach="DeleteResponse($view)">Delete Response Set</Button>
-
-                    </StackPanel>
-
+                    
 
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
 
                         <ComboBox Name="ResponseTypeCB" ItemsSource="{Binding Source={x:Static service:ResponseService.ResponseTypes}}" HorizontalAlignment="Left"
-                      cal:Message.Attach="SwitchResponseType($this)" SelectedItem="{Binding SelectedResponseType}" >
+                      cal:Message.Attach="SwitchResponseType($this)" SelectedItem="{Binding SelectedResponseType}" MinWidth="300"  >
 
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
@@ -218,18 +224,19 @@
                         </StackPanel.Resources>
 
                         <Button Name="AddConstraint">Add Constraint</Button>
-                        <Button Name="EditConstraint" cal:Message.Attach="EditConstraint($view)">Edit Constraint</Button>
-                        <Button Name="DeleteConstraint" cal:Message.Attach="DeleteConstraint($view)">Delete Constraint</Button>
+                        <Button Name="EditConstraint" cal:Message.Attach="EditConstraint($this)">Edit Constraint</Button>
+                        <!--<Button Name="DeleteConstraint" cal:Message.Attach="DeleteConstraint($view)">Delete Constraint</Button>-->
 
                     </StackPanel>
                     
 
                     <StackPanel Orientation="Vertical">
-                <TextBlock FontWeight="Bold">Select the condition that makes this question appear during an interview.</TextBlock>
+                <TextBlock FontWeight="Bold" Margin="0,0,0,15">Select the condition that makes this question appear during an interview.</TextBlock>
 
                     <ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Constraints}" 
-                              SelectedItem="{Binding SelectedConstraint}" Visibility="{Binding ConstraintCBVisible, Converter={StaticResource boolToVis}}"
-                              MinWidth="300" HorizontalAlignment="Stretch" 
+                              SelectedItem="{Binding SelectedConstraint}" Margin="-45,0,0,0"
+                              Visibility="{Binding ConstraintCBVisible, Converter={StaticResource boolToVis}}"
+                              MinWidth="300" HorizontalAlignment="Stretch" MaxWidth="700"
                          x:Name="ConstraintList" cal:Message.Attach="SelectedConstraintChanged($this)">
 
                             

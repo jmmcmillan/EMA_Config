@@ -12,6 +12,8 @@ using Microsoft.Win32;
 using EMA_Configuration_Tool.GroupViews;
 using EMA_Configuration_Tool.SettingViews;
 using EMA_Configuration_Tool.Model.Adapters;
+using Avalon.Windows.Dialogs;
+using System.Windows;
 
 namespace EMA_Configuration_Tool
 {
@@ -50,20 +52,112 @@ namespace EMA_Configuration_Tool
          
         }
 
+        private bool canSave()
+        {
+            if (String.IsNullOrEmpty(App.Interview.ParticipantID))
+            {
+                string id = Microsoft.VisualBasic.Interaction.InputBox("Please enter a Participant ID", "Participant ID", string.Empty);
+
+                if (String.IsNullOrEmpty(id))
+                    return false;
+
+                else App.Interview.ParticipantID = id;
+            }
+
+            return true;
+        }
+
+        private bool successfullyAccessedDirectory(string participantFolder)
+        {
+            try
+            {
+                if (!Directory.Exists(participantFolder))
+                    Directory.CreateDirectory(participantFolder);
+
+                string participantBackupConfigFolder = Path.Combine(participantFolder, "backup");
+                if (!Directory.Exists(participantBackupConfigFolder))
+                    Directory.CreateDirectory(participantBackupConfigFolder);
+
+                //create a blank file to try deleting in case there aren't any files in this directory yet
+                string path = Path.Combine(participantFolder, "test.txt");
+                FileStream fs = File.Create(path);
+                fs.Close();
+
+                DirectoryInfo di = new DirectoryInfo(participantFolder);
+                foreach (FileInfo oldContent in di.GetFiles())
+                {
+                    //delete the test file
+                    if (oldContent.Extension == ".txt")
+                        oldContent.Delete();
+
+                    //move previous xml files into the backup folder
+                    else
+                    {
+                        string newFileName = String.Format("{0} {1:MM dd yy - hh mm ss}.xml", oldContent.Name, DateTime.Now);
+                        oldContent.MoveTo(Path.Combine(participantBackupConfigFolder, newFileName));
+                    }
+
+                }             
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not access this directory. Please choose another place to save the configuration files.",
+                    "Couldn't acccess directory", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                Console.Write(ex.ToString());
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private string getConfigDirectory()
+        {
+            FolderBrowserDialog getFolder = new FolderBrowserDialog();
+            getFolder.Title = "Save EMA Configuration Location";
+
+            string fileFolder = String.Empty;
+
+            if (getFolder.ShowDialog() == true)
+            {
+                fileFolder = getFolder.SelectedPath;
+                string participantFolder = Path.Combine(fileFolder, App.Interview.ParticipantID + "_config");
+
+                if (Directory.Exists(participantFolder))
+                {
+                    if (MessageBox.Show(String.Format("This will overwrite previous configuration information for participant {0}. Do you want to continue?", App.Interview.ParticipantID),
+                        "Overwrite Previous Configuration", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                    {
+                        return String.Empty;
+                    }                    
+                }
+
+                if (successfullyAccessedDirectory(participantFolder))
+                    return participantFolder;
+            }
+
+            return String.Empty;
+
+        }
+
         public void SaveInterview()
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.DefaultExt = ".xml";
-            sfd.Filter = "EMA Interview (*.xml)|*.xml";
-            sfd.Title = "Save EMA Interview";
+            if (!canSave())
+                return;
 
-            if ((bool)sfd.ShowDialog())
-            {
-                App.SerializeInterview(sfd.FileName);
+            string saveDirectory = getConfigDirectory();
 
-                if (App.Interview.OutputSalivaScreens)
-                    SaveInterviewWithAdapter(sfd.FileName);
-            }
+            if (String.IsNullOrEmpty(saveDirectory))
+                return;
+
+            string fileName = String.Format("{0}_hourly.xml", App.Interview.ParticipantID);
+            string fullPath = Path.Combine(saveDirectory, fileName);
+
+            App.SerializeInterview(fullPath);
+
+            if (App.Interview.OutputSalivaScreens)
+                SaveInterviewWithAdapter(fullPath);
         }
 
         private void SaveInterviewWithAdapter(string originalFileName)

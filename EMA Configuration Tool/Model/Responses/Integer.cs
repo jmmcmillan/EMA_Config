@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EMA_Configuration_Tool.Model.Responses
 {
-    public class Integer : ResponseBase
+    public class Integer : ResponseBase, IHaveDefault
     {
         public override string ResponseXMLType
         { get { return "Integer"; } }
@@ -30,13 +30,14 @@ namespace EMA_Configuration_Tool.Model.Responses
             }
         }
 
-        public override bool DefaultIsValid
+        public bool DefaultIsValid()
         {
-            get
-            {
+            if (String.IsNullOrEmpty(DefaultInteger))
+                return true;
+
                 int integer;
                 return Int32.TryParse(DefaultInteger, out integer);
-            }
+            
         }
         public string DefaultInteger { get; set; }
 
@@ -50,6 +51,11 @@ namespace EMA_Configuration_Tool.Model.Responses
             Integer ir = new Integer();
             ir.DefaultInteger = DefaultInteger;
             return ir;
+        }
+
+        public string GetBadDefaultMessage()
+        {
+            return String.Format("{0} is not a valid default integer. Please enter a new integer.", DefaultInteger);
         }
     }
 }

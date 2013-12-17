@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EMA_Configuration_Tool.Model.Responses
 {
-    public class Time : ResponseBase
+    public class Time : ResponseBase, IHaveDefault
     {
         public override string ResponseXMLType
         { get { return "Time"; } }
@@ -55,15 +55,19 @@ namespace EMA_Configuration_Tool.Model.Responses
          
         }
 
-        public override bool DefaultIsValid
+        public bool DefaultIsValid()
         {
-            get
-            {
-                DateTime datetime;
-                return DateTime.TryParse(DefaultTime, out datetime);
-            }
+            if (String.IsNullOrEmpty(DefaultTime))
+                return true;
+
+            DateTime datetime;
+            return DateTime.TryParse(DefaultTime, out datetime);
         }
-      
+
+        public string GetBadDefaultMessage()
+        {
+            return String.Format("{0} is not a valid default time. Please enter something like \"7 pm\" or \"9:15 am.\"", DefaultTime);
+        }
 
         public string DefaultTime { get; set; }
 

@@ -3,17 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using System.Collections.ObjectModel;
+using Caliburn.Micro;
 
 namespace EMA_Configuration_Tool.Model
 {
    
-    public class StringResponseSet
+    public class StringResponseSet : PropertyChangedBase
     {
         [XmlIgnore]
         public Guid ID { get; set; }
 
         [XmlIgnore]
-        public List<string> StringResponses { get; set; }
+        private ObservableCollection<string> stringResponses;
+        [XmlIgnore]
+        public ObservableCollection<string> StringResponses
+        {
+            get { return stringResponses; }
+            set
+            {
+                stringResponses = value;
+                NotifyOfPropertyChange(() => stringResponses);
+            }
+        }
+
+       
 
         [XmlAttribute("startsWithZero")]
         public bool IsZeroBased { get; set; }
@@ -29,7 +43,10 @@ namespace EMA_Configuration_Tool.Model
         public StringResponseSet(Guid id, List<string> responses) : this()
         {
             ID = id;
-            StringResponses = responses;
+
+            StringResponses = new ObservableCollection<string>();
+            foreach (String s in responses)
+                StringResponses.Add(s);
         }
 
         [XmlIgnore]
@@ -44,7 +61,7 @@ namespace EMA_Configuration_Tool.Model
 
                 if (StringResponses == null) //returning from serialization
                 {
-                    StringResponses = new List<string>();
+                    StringResponses = new ObservableCollection<string>();
 
                     foreach (string s in xmlContent.Split('|'))
                         StringResponses.Add(s);
@@ -83,7 +100,7 @@ namespace EMA_Configuration_Tool.Model
                     score++;
                 }
 
-                result.Remove(result.Length - 3,2); //strip last comma and space
+                result = result.Remove(result.Length - 2); //strip last comma and space
 
                 return result;
             }
