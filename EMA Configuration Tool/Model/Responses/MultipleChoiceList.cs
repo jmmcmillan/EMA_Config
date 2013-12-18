@@ -20,6 +20,7 @@ namespace EMA_Configuration_Tool.Model.Responses
         public MultipleChoiceList()
             : base()
         {
+            
         }
 
         public override ResponseBase Copy()

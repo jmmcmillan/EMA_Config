@@ -7,6 +7,8 @@ namespace EMA_Configuration_Tool.Model.Responses
 {
     public abstract class StringChoice : ResponseBase
     {
+        
+        
         private StringResponseSet responses { get; set; }
         public StringResponseSet Responses
         {
@@ -18,7 +20,7 @@ namespace EMA_Configuration_Tool.Model.Responses
             }
         }
 
-      
+        
         
         
         public string Description { get; set; }

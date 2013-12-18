@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System;   
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,7 +27,48 @@ namespace EMA_Configuration_Tool.Model
             }
         }
 
-       
+        [XmlIgnore]  //TODO can remove this extraneous
+        private string exclusiveOption { get; set; }
+        [XmlIgnore]
+        public string ExclusiveOption 
+        {
+            get
+            {
+                return exclusiveOption;
+            }
+            set
+            {
+                exclusiveOption = value;
+            }
+        }
+        [XmlIgnore]
+        public  int  xmlExclusiveOption { get; set; }       
+        [XmlAttribute("exclusive")]
+        public int XMLExclusiveOption
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(ExclusiveOption))
+                {
+                    for (int i = 0; i < StringResponses.Count; i++)
+                    {
+                        if (StringResponses.ElementAt(i) == ExclusiveOption)
+                            return i;
+                    }
+                }
+
+                return -1;
+            }
+            set
+            {
+                xmlExclusiveOption = value;
+            }
+        }
+
+        public bool ShouldSerializeXMLExclusiveOption()
+        {
+            return !String.IsNullOrEmpty(ExclusiveOption);
+        }
 
         [XmlAttribute("startsWithZero")]
         public bool IsZeroBased { get; set; }
@@ -38,15 +79,14 @@ namespace EMA_Configuration_Tool.Model
         public StringResponseSet() : base()
         {
             ID = Guid.NewGuid();
+            XMLExclusiveOption = -1;
         }
 
         public StringResponseSet(Guid id, List<string> responses) : this()
         {
             ID = id;
 
-            StringResponses = new List<string>();
-            foreach (String s in responses)
-                StringResponses.Add(s);
+            StringResponses = responses;
         }
 
         [XmlIgnore]

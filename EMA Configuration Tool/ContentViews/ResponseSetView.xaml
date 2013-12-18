@@ -18,10 +18,14 @@
         <Label>Type each response on its own line</Label>
         <TextBox MinLines="10" MinWidth="200" Text="{Binding Responses}" AcceptsReturn="True"></TextBox>
 
+        <StackPanel Orientation="Vertical" Margin="0,15,0,15">
+        <TextBlock MaxWidth="300">If one of these response options is mutually exclusive with all the others, select it here:</TextBlock>
+        <ComboBox ItemsSource="{Binding ExclusiveOptions}" SelectedItem="{Binding ExclusiveOption}"></ComboBox>
+        </StackPanel>
 
-        <StackPanel HorizontalAlignment="Center">
-            <Button  cal:Message.Attach="Save($view)">Save Response Set</Button>
-            <Button  x:Name="Cancel">Cancel</Button>
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button  cal:Message.Attach="Save($view)" Margin="10,0,10,5">Save Response Set</Button>
+            <Button  x:Name="Cancel" Margin="10,5,0,10">Cancel</Button>
         </StackPanel>
 
 

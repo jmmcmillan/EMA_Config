@@ -14,10 +14,35 @@ namespace EMA_Configuration_Tool.ContentViews
         private StringResponseSet unchangedSTS;
         private Question question;
       
-        public string Responses { get; set; }
+        private string responses;
+        public string Responses 
+        {
+            get { return responses; }
+
+            set
+            {
+                responses = value;
+                SetupExclusiveOptions();
+            }
+        }
+
+        private void SetupExclusiveOptions()
+        {
+            ExclusiveOptions = new List<string>();
+            ExclusiveOptions.Add("");
+
+            foreach (string s in Responses.Trim().Split('\n').Select(s => s.Trim()).ToList())
+                ExclusiveOptions.Add(s);
+
+            NotifyOfPropertyChange(() => ExclusiveOptions);
+        }
+
+        public List<string> ExclusiveOptions { get; set; }
+        public string ExclusiveOption { get; set; }
+        
         public bool StartsWithZero { get; set; }
         public bool StartsWithOne { get; set; }
-
+      
         public ResponseSetViewModel(StringResponseSet sts, Question q)
             : this(q)
         {
@@ -30,6 +55,8 @@ namespace EMA_Configuration_Tool.ContentViews
 
             StartsWithZero = sts.IsZeroBased;
             StartsWithOne = !StartsWithZero;
+
+            ExclusiveOption = sts.ExclusiveOption;
         }
 
 
@@ -42,6 +69,9 @@ namespace EMA_Configuration_Tool.ContentViews
             Responses = "";
 
             StartsWithZero = true;
+
+            this.DisplayName = "Add/Edit Response Set";
+            
         }
 
         public void Save(object sender)
@@ -53,6 +83,7 @@ namespace EMA_Configuration_Tool.ContentViews
             {
                 unchangedSTS.StringResponses = responseList;
                 unchangedSTS.IsZeroBased = StartsWithZero;
+                unchangedSTS.ExclusiveOption = ExclusiveOption;
                
                 unchangedSTS.Refresh();  //to update existing Question View listbox
             }
@@ -63,12 +94,11 @@ namespace EMA_Configuration_Tool.ContentViews
                 StringResponseSet responseSet = new StringResponseSet();
                 responseSet.StringResponses = responseList;
                 responseSet.IsZeroBased = StartsWithZero;
+                responseSet.ExclusiveOption = ExclusiveOption;
 
                 App.Interview.StringResponseSets.Add(responseSet);
 
                 (question.Response as StringChoice).Responses = responseSet;
-
-                
             }
 
             TryClose();

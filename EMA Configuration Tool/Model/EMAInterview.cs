@@ -171,8 +171,9 @@ namespace EMA_Configuration_Tool.Model
                     question.Response = EMA_Configuration_Tool.Services.ResponseService.GetMeOneOfThese(question.ResponseType);
 
                     if (question.Response is StringChoice)
-                    {
+                    {   
                         (question.Response as StringChoice).Responses = StringResponseSets.ElementAt(question.ResponseIndex);
+
                     }
 
                     if (question.Response is Integer || question.Response is Time)
@@ -185,7 +186,15 @@ namespace EMA_Configuration_Tool.Model
                         (question.Response as DynamicGroup).ReferenceQuestion = Questions.ElementAt(question.GroupsFromQuestion);                     
                     }
                 }
+            }
 
+            foreach (StringResponseSet sts in StringResponseSets)
+            {
+                if (sts.xmlExclusiveOption > -1)
+                {
+                    if (sts.xmlExclusiveOption < sts.StringResponses.Count - 1)
+                        sts.ExclusiveOption = sts.StringResponses.ElementAt(sts.xmlExclusiveOption);
+                }
             }
 
         }
@@ -218,6 +227,7 @@ namespace EMA_Configuration_Tool.Model
                 ResponseSetsToIndexes.Add(sts.ID, i);
                 sts.Index = i;
 
+              
                 i++;
             }
         }
