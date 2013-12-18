@@ -12,50 +12,23 @@
     
     <UserControl.Resources>
 
-        <DataTemplate DataType="{x:Type response:StringChoice}">
-
-            <StackPanel Orientation="Vertical">
-
-               
-                <ItemsControl ItemsSource="{Binding Responses.StringResponses}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <WrapPanel>
-
-                                <CheckBox cal:Message.Attach="[Event Checked] = [Action Checked($source)]; [Event Unchecked] = [Action Unchecked($source)]">
-                                    <TextBlock Text="{Binding .}"></TextBlock>
-                                </CheckBox>
-                                
-
-                            </WrapPanel>
-                        </DataTemplate>
-
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-               
-
-              
-
-            </StackPanel>
-
-        </DataTemplate>
-
+       
     </UserControl.Resources>
     <StackPanel Orientation="Vertical">
 
 
 
-        <Label>Add Constraint</Label>
+        <TextBlock TextWrapping="Wrap" FontWeight="Bold" Margin="0,0,0,10">Questions with this constraint will only appear in an interview when this question:</TextBlock>
 
         <ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}"
-                         x:Name="QuestionList" cal:Message.Attach="SwitchSelectedQuestion($this)">
+                         x:Name="QuestionList" SelectedItem="{Binding SelectedQuestion}">
 
             <ComboBox.ItemTemplate>
 
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="12" Text="{Binding Label}" FontWeight="Bold"/>
-                        <TextBlock FontSize="12" Text="{Binding Text}" Margin="3,0,0,0"/>
+                        <TextBlock FontSize="12" Text="{Binding PreviewPaneText}" Margin="3,0,0,0"/>
                     </StackPanel>
                 </DataTemplate>
 
@@ -64,12 +37,61 @@
         </ComboBox>
 
 
+        <TextBlock TextWrapping="Wrap" FontWeight="Bold" Margin="0,10,0,0">has one of these responses:</TextBlock>
+       
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20,10,0,0">
+            
+            <ItemsControl ItemsSource="{Binding SelectedResponses}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+
+
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Height="30">
+                            <CheckBox IsChecked="{Binding Value}"  VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl ItemsSource="{Binding ResponseStrings}" Margin="0,5,0,0">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <StackPanel VerticalAlignment="Center" Height="30" >
+                            <TextBlock Text="{Binding .}" VerticalAlignment="Center"></TextBlock>
+                        </StackPanel>
+
+                    </DataTemplate>
+
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            
+        </StackPanel>
         
-        <ContentControl Content="{Binding SelectedQuestion.Response}" x:Name="ReqResponses"/>
+        
+        <StackPanel Orientation="Horizontal" Margin="0,20,0,0" >
 
+            <TextBlock TextWrapping="Wrap" FontWeight="Bold" VerticalAlignment="Center">or the question:</TextBlock>
+            <CheckBox IsChecked="{Binding ShowIfSkipped}" VerticalAlignment="Center">Is Skipped</CheckBox>
 
-        <StackPanel HorizontalAlignment="Center">
-            <Button  cal:Message.Attach="Save($view)">Save Constraint</Button>
+        </StackPanel>
+        
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" >
+            <Button  cal:Message.Attach="Save()">Save Constraint</Button>
             <Button  x:Name="Cancel">Cancel</Button>
         </StackPanel>
 

@@ -229,8 +229,8 @@
                         </StackPanel.Resources>
 
                         <Button Name="AddConstraint">Add Constraint</Button>
-                        <Button Name="EditConstraint" cal:Message.Attach="EditConstraint($this)">Edit Constraint</Button>
-                        <Button Name="DeleteConstraint" cal:Message.Attach="DeleteConstraint($view)">Delete Constraint</Button>
+                        <Button Name="EditConstraint" cal:Message.Attach="EditConstraint()">Edit Constraint</Button>
+                        <Button Name="DeleteConstraint" cal:Message.Attach="DeleteConstraint()">Delete Constraint</Button>
 
                     </StackPanel>
                     

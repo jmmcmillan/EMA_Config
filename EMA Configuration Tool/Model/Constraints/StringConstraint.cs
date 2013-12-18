@@ -40,11 +40,6 @@ namespace EMA_Configuration_Tool.Model.Constraints
             set
             {
                 xmlContent = value;
-
-                if (FollowupValueIndexes == null) //returning from serialization
-                {
-                    
-                }
             }
             get
             {

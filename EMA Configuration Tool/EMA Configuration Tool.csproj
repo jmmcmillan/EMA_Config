@@ -120,6 +120,10 @@
       <DependentUpon>ContentShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ContentViews\ContentShellViewModel.cs" />
+    <Compile Include="ContentViews\DeleteHelperView.xaml.cs">
+      <DependentUpon>DeleteHelperView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ContentViews\DeleteHelperViewModel.cs" />
     <Compile Include="ContentViews\ResponseSetView.xaml.cs">
       <DependentUpon>ResponseSetView.xaml</DependentUpon>
     </Compile>
@@ -148,6 +152,7 @@
     <Compile Include="Model\Responses\Integer.cs" />
     <Compile Include="Model\Responses\MultipleChoiceList.cs" />
     <Compile Include="Model\Responses\Prompt.cs" />
+    <Compile Include="Model\Responses\SampleCode.cs" />
     <Compile Include="Model\Responses\SingleChoiceList.cs" />
     <Compile Include="Model\Responses\Time.cs" />
     <Compile Include="Model\StringResponseSet.cs" />
@@ -170,6 +175,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ContentViews\ContentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ContentViews\DeleteHelperView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -8,86 +8,118 @@ using System.Windows.Controls;
 using System.Windows;
 using EMA_Configuration_Tool.Model.Responses;
 using EMA_Configuration_Tool.Model.Constraints;
+using System.Collections.ObjectModel;
+using EMA_Configuration_Tool.Model.Groups;
 
 namespace EMA_Configuration_Tool.ContentViews
 {
     public class ConstraintViewModel : Screen
     {
-        public ConstraintViewModel()
-        {
-            this.DisplayName = "Add/Edit Constraint";
+        private Constraint unchangedConstraint;
 
-        }
+        public ObservableCollection<BindableBool> SelectedResponses { get; set; }
+        public List<string> ResponseStrings { get; set; }
+
         private Question selectedQuestion;
         public Question SelectedQuestion
         {
-            get {return selectedQuestion;}
+            get { return selectedQuestion; }
             set
             {
                 selectedQuestion = value;
                 NotifyOfPropertyChange(() => SelectedQuestion);
+
+                if (selectedQuestion.Response is StringChoice)
+                {
+                    ResponseStrings = (selectedQuestion.Response as StringChoice).Responses.StringResponses;
+                }
+
+                initData();
+
+                NotifyOfPropertyChange(() => ResponseStrings);
+                NotifyOfPropertyChange(() => SelectedResponses);
+
             }
         }
 
-        private List<string> CheckedItems = new List<string>();
+        public bool ShowIfSkipped { get; set; }
 
-        public void SwitchSelectedQuestion(object q)
+        public ConstraintViewModel(Constraint constraint)
+            :this()
         {
-            if (q is Question)
-                SelectedQuestion = q as Question;
+            unchangedConstraint = constraint;
 
+            SelectedQuestion = App.Interview.Questions.Where(q => q.ID == unchangedConstraint.FollowupForGuid).FirstOrDefault();
+
+            ShowIfSkipped = (constraint as StringConstraint).FollowupValueIndexes.Contains(-1);
+                   
         }
 
-        public void Save(object view)
+        private void initData()
         {
-            if (!(view is Window))
-                return;
+            for (int i = 0; i < (SelectedQuestion.Response as StringChoice).Responses.StringResponses.Count; i++)
+            {
+                if (unchangedConstraint != null)
+                {
+                    if ((unchangedConstraint as StringConstraint).FollowupValueIndexes.Contains(i))
+                    {
+                        SelectedResponses.Add(new BindableBool(true));
+                    }
+                    else SelectedResponses.Add(new BindableBool(false));
+                }
+                else SelectedResponses.Add(new BindableBool(false));
+            }
 
-            ConstraintView cView = (view as Window).Content as ConstraintView;
+            
+        }
 
-            Question question = cView.QuestionList.SelectedItem as Question;
+        public ConstraintViewModel()
+            : base()
+        {
+            this.DisplayName = "Add/Edit Constraint";
 
+            SelectedResponses = new ObservableCollection<BindableBool>();
+            ResponseStrings = new List<string>();
+
+        }
+     
+        
+        public void Save()
+        {  
             List<int> indexList = new List<int>();
             int i = 0;
-            foreach (string s in (question.Response as StringChoice).Responses.StringResponses)
+            foreach (BindableBool b in SelectedResponses)
             {
-                if (CheckedItems.Contains(s))
+                if (b.Value)
                     indexList.Add(i);
 
                 i++;
             }
 
-            StringConstraint sc = new StringConstraint(question.ID, indexList);
-            App.Interview.Constraints.Add(sc);
+            if (ShowIfSkipped)
+                indexList.Insert(0, -1);
+
+            if (unchangedConstraint != null)
+            {
+                (unchangedConstraint as StringConstraint).FollowupForGuid = SelectedQuestion.ID;
+                (unchangedConstraint as StringConstraint).FollowupValueIndexes = indexList;
+            }
+
+            else
+            {
+                StringConstraint sc = new StringConstraint(SelectedQuestion.ID, indexList);
+                App.Interview.Constraints.Add(sc);
+            }
 
             TryClose();
         }
 
+     
         public void Cancel()
         {
             TryClose();
         }
 
-        public void Unchecked(object chkbox)
-        {
-            if (!(chkbox is CheckBox))
-                return;
-
-            CheckBox cb = chkbox as CheckBox;
-            string response = (cb.Content as TextBlock).Text.ToString();
-
-            CheckedItems.RemoveAll(s => s.Equals(response));
-        }
-
-        public void Checked(object chkbox)
-        {
-            if (!(chkbox is CheckBox))
-                return;
-
-            CheckBox cb = chkbox as CheckBox;
-            string response = (cb.Content as TextBlock).Text.ToString();
-
-            CheckedItems.Add(response);
-        }
+    
     }
 }

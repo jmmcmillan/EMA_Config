@@ -19,7 +19,19 @@ namespace EMA_Configuration_Tool.Model
             get
             {
                 if (followupForGuid != null)
-                    return App.Interview.Questions.Where(q => q.ID == FollowupForGuid).First();
+                {
+                    Question question = App.Interview.Questions.Where(q => q.ID == FollowupForGuid).FirstOrDefault();
+
+                    if (question != null)
+                        return question;
+
+                    else
+                    {
+                        Console.Write("Constraint reference question not found", followupForGuid);
+                        return new Question();
+                    }
+
+                }
                 else return new Question();
             }
         }
@@ -33,7 +45,7 @@ namespace EMA_Configuration_Tool.Model
         
         public string FollowUpForText
         {
-            get { return relevantQuestion.Text; }
+            get { return relevantQuestion.PreviewPaneText; }
         }
 
        

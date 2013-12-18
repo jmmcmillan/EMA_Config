@@ -200,13 +200,14 @@ namespace EMA_Configuration_Tool.ContentViews
             NotifyOfPropertyChange(() => ConstraintCBVisible);
         }
 
-        public void EditConstraint(object dataContext)
+        public void EditConstraint()
         {
-           
+            if (SelectedConstraint != null)
+                windowManager.ShowDialog(new ConstraintViewModel(SelectedConstraint));
 
         }
 
-        public void DeleteConstraint(object dataContext)
+        public void DeleteConstraint()
         {
             if (SelectedConstraint == null)
                 return;
