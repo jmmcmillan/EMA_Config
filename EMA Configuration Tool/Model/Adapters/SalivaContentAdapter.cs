@@ -26,9 +26,9 @@ namespace EMA_Configuration_Tool.Model.Adapters
             returnSalivettePrompt.Response = new EMA_Configuration_Tool.Model.Responses.Prompt();
 
             Question salivetteLabel = new Question();
-            salivetteLabel.Label = "p";
-            salivetteLabel.Text = "Record the following number on the salivette tube.";
-            salivetteLabel.Response = new EMA_Configuration_Tool.Model.Responses.Prompt();
+            salivetteLabel.Label = "sample code";
+            salivetteLabel.Text = "Record the following number on the salivette tube:";
+            salivetteLabel.Response = new SampleCode();
 
             Question salivetteQ = new Question();
             salivetteQ.Label = "saliva";
