@@ -47,7 +47,7 @@
 
                     <Button x:Name="AddResponseSet" cal:Message.Attach="AddResponseSet()">Add Response Set</Button>
                     <Button Name="EditResponseSet" cal:Message.Attach="EditResponseSet($dataContext)">Edit Response Set</Button>
-                    <!--<Button Name="DeleteResponseSet" cal:Message.Attach="DeleteResponseSet($dataContext)">Delete Response Set</Button>-->
+                    <Button Name="DeleteResponseSet" cal:Message.Attach="DeleteResponseSet($dataContext)">Delete Response Set</Button>
 
                 </StackPanel>
 
@@ -95,6 +95,11 @@
         <DataTemplate DataType="{x:Type response:Prompt}">
 
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type response:SampleCode}">
+
+        </DataTemplate>
+
 
         <DataTemplate DataType="{x:Type response:DynamicGroup}">
             
@@ -225,7 +230,7 @@
 
                         <Button Name="AddConstraint">Add Constraint</Button>
                         <Button Name="EditConstraint" cal:Message.Attach="EditConstraint($this)">Edit Constraint</Button>
-                        <!--<Button Name="DeleteConstraint" cal:Message.Attach="DeleteConstraint($view)">Delete Constraint</Button>-->
+                        <Button Name="DeleteConstraint" cal:Message.Attach="DeleteConstraint($view)">Delete Constraint</Button>
 
                     </StackPanel>
                     

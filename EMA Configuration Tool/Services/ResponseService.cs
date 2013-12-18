@@ -59,7 +59,27 @@ namespace EMA_Configuration_Tool.Services
             return null;
         }
 
+        public static List<Question> ReponseSetAlsoUsedIn(StringResponseSet srs, Question question)
+        {
+            List<Question> Questions = new List<Question>();
 
+            foreach (Question q in App.Interview.Questions)
+            {
+                if (q.ID == question.ID)
+                    continue;
+
+                if (q.Response is StringChoice)
+                {
+                    if ((q.Response as StringChoice).Responses == srs)
+                    {
+                        Questions.Add(q);
+                        continue;
+                    }
+                }
+            }
+
+            return Questions;
+        }
 
         public static StringResponseSet GetStringResponseSet(List<string> responseLabels)
         {

@@ -47,6 +47,57 @@ namespace EMA_Configuration_Tool.Services
                 App.Interview.Constraints.Add(sc);
             }
         }
+
+        public static List<Question> ConstraintIsAlsoUsedBy(Constraint constraint, Question question)
+        {
+            List<Question> questions = new List<Question>();
+
+            foreach (Question q in App.Interview.Questions)
+            {
+                if (q.ID == question.ID)
+                    continue;
+
+                if (q.HasConstraints)
+                {
+                    foreach (Constraint c in q.Constraints)
+                    {
+                        if (c.ID == constraint.ID)
+                        {
+                            questions.Add(q);
+                            continue;
+                        }
+
+                    }
+                }
+            }
+
+            return questions;
+
+        }
+
+        public static List<Question> ThisQuestionUsedBy(Question question)
+        {
+            List<Question> questions = new List<Question>();
+
+            foreach (Question q in App.Interview.Questions)
+            {   
+                if (q.HasConstraints)
+                {
+                    foreach (Constraint c in q.Constraints)
+                    {
+                        if (c.FollowupForGuid == question.ID)
+                        {
+                            questions.Add(q);
+                            continue;
+                        }
+
+                    }
+                }
+            }
+
+            return questions;
+
+        }
         
 
     }

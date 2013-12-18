@@ -38,6 +38,9 @@ namespace EMA_Configuration_Tool
 
         public void Exit()
         {
+            if (MessageBox.Show("Do you want to exit the configuration tool? All unsaved changes will be lost.", "Exit", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return;
+
             App.Current.Shutdown();
 
         }

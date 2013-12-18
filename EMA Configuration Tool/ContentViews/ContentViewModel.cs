@@ -4,13 +4,17 @@ using System.Linq;
 using System.Text;
 using Caliburn.Micro;
 using EMA_Configuration_Tool.Model;
+using System.Windows;
 
 namespace EMA_Configuration_Tool.ContentViews
 {
     public class ContentViewModel : PropertyChangedBase
     {
+        WindowManager windowManager;
+
         public ContentViewModel() 
-        { 
+        {
+            windowManager = new WindowManager();
         }
         
         private Question selectedQuestion;
@@ -33,33 +37,30 @@ namespace EMA_Configuration_Tool.ContentViews
 
         public void EditQuestion(object view)
         {
-            if (view != null)
-            {
-                ContentView cv = (view as ContentView);
-                object question = cv.QuestionList.SelectedItem;
-
-                if (question is Question)
-                    App.EventAggregator.Publish(new QuestionViewModel(question as Question));
-            }
+            if (SelectedQuestion != null)
+                App.EventAggregator.Publish(new QuestionViewModel(SelectedQuestion));
 
         }
 
         public void DeleteQuestion()
         {
-            App.Interview.Questions.Remove(SelectedQuestion);
-        }
+            if (SelectedQuestion == null)
+                return;
 
-        public void SaveInterview()
-        {
-        }
+            if (MessageBox.Show("Are you sure you want to delete this question?", "Delete Question", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return;
 
-        public void SwitchSelectedQuestion(object sender)
-        {
-            if (sender is Question)
+            List<Question> dependencies = EMA_Configuration_Tool.Services.ConstraintService.ThisQuestionUsedBy(SelectedQuestion);
+
+            if (dependencies.Count > 0)
             {
-                SelectedQuestion = sender as Question;
+                DeleteHelperViewModel deleteHelp = new DeleteHelperViewModel(SelectedQuestion, dependencies);
+
+                windowManager.ShowWindow(deleteHelp);
             }
+            else App.Interview.Questions.Remove(SelectedQuestion);
         }
+
 
         public void AddQuestionBefore()
         {

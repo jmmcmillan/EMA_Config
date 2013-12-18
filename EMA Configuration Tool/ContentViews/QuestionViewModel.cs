@@ -14,7 +14,9 @@ namespace EMA_Configuration_Tool.ContentViews
 {
     
     public class QuestionViewModel : Screen
-    {  
+    {
+        //bad form, but accessing the global one requires jumping through some DI hoops I haven't figured out yet
+        private WindowManager windowManager;
 
         public Constraint SelectedConstraint { get; set; }
         public Question Question { get; set; }
@@ -51,20 +53,23 @@ namespace EMA_Configuration_Tool.ContentViews
             }
         }
 
-        public QuestionViewModel()
+        
+        public QuestionViewModel() : base()
         {
+            windowManager = new WindowManager();
+
             Question = new Question();
 
             this.DisplayName = "Add/Edit Question";
             
         }
 
-        public QuestionViewModel(int index) : base()
+        public QuestionViewModel(int index) : this()
         {
             requestedIndex = index;
-            Question = new Question();           
-
         }
+
+        #region Save Question
 
         private bool okayToSave()
         {
@@ -102,6 +107,8 @@ namespace EMA_Configuration_Tool.ContentViews
             //editing an existing question
             else if (unchangedQuestion != null)
             {
+                Question.ID = unchangedQuestion.ID; // so the constraints can still find this question
+
                 int indexOf = App.Interview.Questions.IndexOf(unchangedQuestion);
                 App.Interview.Questions.RemoveAt(indexOf);
                 App.Interview.Questions.Insert(indexOf, Question);
@@ -114,6 +121,8 @@ namespace EMA_Configuration_Tool.ContentViews
             App.EventAggregator.Publish(new ContentViewModel());
         }
 
+        #endregion
+
         public void Cancel()
         {
             App.EventAggregator.Publish(new ContentViewModel());
@@ -124,11 +133,10 @@ namespace EMA_Configuration_Tool.ContentViews
             Question.Response = (ResponseBase)Activator.CreateInstance(rt as Type);
         }
 
-       
+        #region String Response Sets
+
         public void AddResponseSet()
-        {   
-            //bad form, but accessing the global one requires jumping through some DI hoops I haven't figured out yet
-            WindowManager windowManager = new WindowManager();
+        {
             windowManager.ShowDialog(new ResponseSetViewModel(Question));
         }
 
@@ -137,10 +145,6 @@ namespace EMA_Configuration_Tool.ContentViews
             if (dataContext is StringChoice)
             {
                 StringChoice sc = dataContext as StringChoice;
-
-                //bad form, but accessing the global one requires jumping through some DI hoops I haven't figured out yet
-                WindowManager windowManager = new WindowManager();
-                //windowManager.ShowDialog(new ResponseSetViewModel(sc.Responses));
                 windowManager.ShowDialog(new ResponseSetViewModel(sc.Responses, Question));
                 
             }
@@ -148,16 +152,29 @@ namespace EMA_Configuration_Tool.ContentViews
 
         public void DeleteResponseSet(object dataContext)
         {
+            StringResponseSet srs;
+
             if (!(dataContext is StringChoice))
                 return;
+            else  srs = (dataContext as StringChoice).Responses;
 
-            if (MessageBox.Show("Are you sure you want to delete this set of responses?", "Delete Response Set", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Are you sure you want to delete this set of responses?", "Delete Response Set", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return;
+
+            List<Question> dependencies = EMA_Configuration_Tool.Services.ResponseService.ReponseSetAlsoUsedIn(srs, Question);
+
+            if (dependencies.Count > 0)
             {
-                App.Interview.StringResponseSets.Remove((dataContext as StringChoice).Responses);
+                DeleteHelperViewModel deleteHelp = new DeleteHelperViewModel(srs, dependencies);
+
+                windowManager.ShowWindow(deleteHelp);
             }
+
+            else App.Interview.StringResponseSets.Remove((dataContext as StringChoice).Responses);
         }
 
-      
+        #endregion
+
 
         public void SelectedConstraintChanged(object constraint)
         {
@@ -178,11 +195,8 @@ namespace EMA_Configuration_Tool.ContentViews
         }
 
         public void AddConstraint()
-        {
-            //bad form, but accessing the global one requires jumping through some DI hoops I haven't figured out yet
-            WindowManager windowManager = new WindowManager();
+        {  
             windowManager.ShowDialog(new ConstraintViewModel());
-
             NotifyOfPropertyChange(() => ConstraintCBVisible);
         }
 
@@ -197,11 +211,25 @@ namespace EMA_Configuration_Tool.ContentViews
             if (SelectedConstraint == null)
                 return;
 
-            if (MessageBox.Show("Are you sure you want to delete this constraint?", "Delete Constraint", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Are you sure you want to delete this constraint?", "Delete Constraint", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return;
+
+            List<Question> dependencies = EMA_Configuration_Tool.Services.ConstraintService.ConstraintIsAlsoUsedBy(SelectedConstraint, Question);
+
+            if (dependencies.Count < 1)
             {
                 App.Interview.Constraints.Remove(SelectedConstraint);
+                
+                Question.Constraints = new List<Constraint>();
             }
 
+            else
+            {  
+                DeleteHelperViewModel deleteHelp = new DeleteHelperViewModel(SelectedConstraint, dependencies);
+
+                windowManager.ShowWindow(deleteHelp);
+
+            }
 
         }
 

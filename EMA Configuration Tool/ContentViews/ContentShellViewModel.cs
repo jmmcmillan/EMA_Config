@@ -32,7 +32,7 @@ namespace EMA_Configuration_Tool.ContentViews
             ActivateItem(qvm);
         }
 
-       
+
        
 
     }

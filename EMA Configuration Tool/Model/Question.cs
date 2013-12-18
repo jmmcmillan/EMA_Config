@@ -32,6 +32,15 @@ namespace EMA_Configuration_Tool.Model
             }
         }
 
+        public string PreviewPaneText
+        {
+            get
+            {
+                string oneLine = Text.Replace('\n', ' ');
+                return oneLine;
+            }
+        }
+     
 
         [XmlIgnore]
         private int responseIndex;
