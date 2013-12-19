@@ -192,7 +192,7 @@ namespace EMA_Configuration_Tool.Model
             {
                 if (sts.xmlExclusiveOption > -1)
                 {
-                    if (sts.xmlExclusiveOption < sts.StringResponses.Count - 1)
+                    if (sts.xmlExclusiveOption < sts.StringResponses.Count)
                         sts.ExclusiveOption = sts.StringResponses.ElementAt(sts.xmlExclusiveOption);
                 }
             }

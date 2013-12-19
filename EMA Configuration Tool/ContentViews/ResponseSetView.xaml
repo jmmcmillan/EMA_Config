@@ -19,7 +19,7 @@
         <TextBox MinLines="10" MinWidth="200" Text="{Binding Responses}" AcceptsReturn="True"></TextBox>
 
         <StackPanel Orientation="Vertical" Margin="0,15,0,15">
-        <TextBlock MaxWidth="300">If one of these response options is mutually exclusive with all the others, select it here:</TextBlock>
+        <TextBlock MaxWidth="300" TextWrapping="Wrap">If one of these response options is mutually exclusive with all the others, select it here:</TextBlock>
         <ComboBox ItemsSource="{Binding ExclusiveOptions}" SelectedItem="{Binding ExclusiveOption}"></ComboBox>
         </StackPanel>
 
