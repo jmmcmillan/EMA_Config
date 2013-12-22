@@ -15,6 +15,8 @@ namespace EMA_Configuration_Tool.ContentViews
 {
     public class ConstraintViewModel : Screen
     {
+        public List<Question> StringChoiceQuestions { get; set; }
+        
         private Constraint unchangedConstraint;
 
         public ObservableCollection<BindableBool> SelectedResponses { get; set; }
@@ -29,12 +31,14 @@ namespace EMA_Configuration_Tool.ContentViews
                 selectedQuestion = value;
                 NotifyOfPropertyChange(() => SelectedQuestion);
 
-                if (selectedQuestion.Response is StringChoice)
+                SelectedResponses = new ObservableCollection<BindableBool>();
+                ResponseStrings = new List<string>();
+
+                if (selectedQuestion != null && selectedQuestion.Response is StringChoice)
                 {
                     ResponseStrings = (selectedQuestion.Response as StringChoice).Responses.StringResponses;
+                    initResponseStringData();
                 }
-
-                initData();
 
                 NotifyOfPropertyChange(() => ResponseStrings);
                 NotifyOfPropertyChange(() => SelectedResponses);
@@ -52,12 +56,11 @@ namespace EMA_Configuration_Tool.ContentViews
             SelectedQuestion = App.Interview.Questions.Where(q => q.ID == unchangedConstraint.FollowupForGuid).FirstOrDefault();
 
             ShowIfSkipped = (constraint as StringConstraint).FollowupValueIndexes.Contains(-1);
-                   
         }
 
-        private void initData()
+        private void initResponseStringData()
         {
-            for (int i = 0; i < (SelectedQuestion.Response as StringChoice).Responses.StringResponses.Count; i++)
+            for (int i = 0; i < ResponseStrings.Count; i++)
             {
                 if (unchangedConstraint != null)
                 {
@@ -81,11 +84,41 @@ namespace EMA_Configuration_Tool.ContentViews
             SelectedResponses = new ObservableCollection<BindableBool>();
             ResponseStrings = new List<string>();
 
+            StringChoiceQuestions = new List<Question>();
+            foreach (Question q in App.Interview.Questions)
+            {
+                if (q.Response is StringChoice)
+                    StringChoiceQuestions.Add(q);
+            }
+
+            SelectedQuestion = StringChoiceQuestions.FirstOrDefault();
+
         }
-     
-        
+
+        public Constraint configuredConstraint;
+
+        private bool canSave()
+        {
+            if (SelectedQuestion == null)
+            {
+                MessageBox.Show("Please select a question.", "No Question Selected", MessageBoxButton.OK);
+                return false;
+            }
+
+            if (SelectedResponses.Where(b => b.Value).Count() < 1)
+            {
+                MessageBox.Show("No response options are selected. Please select 1 or more conditions for this constraint.", "No Conditions Selected", MessageBoxButton.OK);
+                return false;
+            }
+
+            return true;
+        }
+
         public void Save()
-        {  
+        {
+            if (!canSave())
+                return;
+
             List<int> indexList = new List<int>();
             int i = 0;
             foreach (BindableBool b in SelectedResponses)
@@ -103,11 +136,16 @@ namespace EMA_Configuration_Tool.ContentViews
             {
                 (unchangedConstraint as StringConstraint).FollowupForGuid = SelectedQuestion.ID;
                 (unchangedConstraint as StringConstraint).FollowupValueIndexes = indexList;
+
+                unchangedConstraint.Refresh();
+
+                configuredConstraint = unchangedConstraint;
             }
 
             else
             {
                 StringConstraint sc = new StringConstraint(SelectedQuestion.ID, indexList);
+                configuredConstraint = sc;
                 App.Interview.Constraints.Add(sc);
             }
 

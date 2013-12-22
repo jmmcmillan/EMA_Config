@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using EMA_Configuration_Tool.Model.Constraints;
+using Caliburn.Micro;
 
 namespace EMA_Configuration_Tool.Model
 {
     
-    public abstract class Constraint
+    public abstract class Constraint : PropertyChangedBase
     {   
        
         public Guid ID { get; set; }
