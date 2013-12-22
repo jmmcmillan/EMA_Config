@@ -47,7 +47,7 @@ namespace EMA_Configuration_Tool.ContentViews
             if (SelectedQuestion == null)
                 return;
 
-            if (MessageBox.Show("Are you sure you want to delete this question?", "Delete Question", MessageBoxButton.YesNo) == MessageBoxResult.No)
+            if (MessageBox.Show("Are you sure you want to delete this question?", "Delete Question", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.No)
                 return;
 
             List<Question> dependencies = EMA_Configuration_Tool.Services.ConstraintService.ThisQuestionUsedBy(SelectedQuestion);
@@ -55,16 +55,24 @@ namespace EMA_Configuration_Tool.ContentViews
             if (dependencies.Count > 0)
             {
                 DeleteHelperViewModel deleteHelp = new DeleteHelperViewModel(SelectedQuestion, dependencies);
-
                 windowManager.ShowWindow(deleteHelp);
             }
-            else App.Interview.Questions.Remove(SelectedQuestion);
+            else
+            {   
+                EMA_Configuration_Tool.Services.ConstraintService.DeleteConstraintsReferencing(SelectedQuestion);
+                App.Interview.Questions.Remove(SelectedQuestion);
+
+                App.Interview.Refresh();
+            }
         }
 
 
         public void AddQuestionBefore()
         {
-            int thisIndex = App.Interview.Questions.FindIndex(q => q.ID == SelectedQuestion.ID);
+            int thisIndex = 0;
+
+            if (SelectedQuestion != null)
+                thisIndex = App.Interview.Questions.IndexOf(SelectedQuestion);
 
             App.EventAggregator.Publish(new QuestionViewModel(thisIndex));
 
@@ -72,9 +80,48 @@ namespace EMA_Configuration_Tool.ContentViews
 
         public void AddQuestionAfter()
         {
-            int thisIndex = App.Interview.Questions.FindIndex(q => q.ID == SelectedQuestion.ID);
+            int thisIndex = App.Interview.Questions.IndexOf(SelectedQuestion);
 
             App.EventAggregator.Publish(new QuestionViewModel(thisIndex + 1));
+
+        }
+
+        public void MoveQuestionUp()
+        {
+            if (SelectedQuestion != null)
+            {   
+                int index = App.Interview.Questions.IndexOf(SelectedQuestion);
+
+                if (index < 1)
+                    return;
+
+                App.Interview.Questions.Insert(index - 1, SelectedQuestion);
+                App.Interview.Questions.RemoveAt(index + 1);
+
+                SelectedQuestion = App.Interview.Questions.ElementAt(index - 1);
+                
+            }
+        }
+
+        public void MoveQuestionDown()
+        {
+            if (SelectedQuestion != null)
+            {
+                int index = App.Interview.Questions.IndexOf(SelectedQuestion);
+
+                if (index >= App.Interview.Questions.Count - 1)
+                    return;
+
+                if (index + 2 > App.Interview.Questions.Count)
+                {
+                    App.Interview.Questions.Add(SelectedQuestion);  //add to the end
+                }
+                else  App.Interview.Questions.Insert(index + 2, SelectedQuestion);
+                App.Interview.Questions.RemoveAt(index);
+
+                SelectedQuestion = App.Interview.Questions.ElementAt(index + 1);
+
+            }
 
         }
     }

@@ -189,11 +189,7 @@ namespace EMA_Configuration_Tool.Model
             }
         }
 
-        public void RefreshResponses()
-        {
-            NotifyOfPropertyChange(() => Response);
-        }
-
+       
         #region dynamic groups
 
         [XmlIgnore]
@@ -206,7 +202,10 @@ namespace EMA_Configuration_Tool.Model
             {
                 if (Response is DynamicGroup)
                 {
-                    return App.Interview.QuestionsToIndexes[(Response as DynamicGroup).ReferenceQuestion.ID];
+                    if (App.Interview.QuestionsToIndexes.Keys.Contains((Response as DynamicGroup).ReferenceQuestion.ID))
+                        return App.Interview.QuestionsToIndexes[(Response as DynamicGroup).ReferenceQuestion.ID];
+
+                    else return -1;
                 }
                 else return -1;
             }
@@ -294,6 +293,8 @@ namespace EMA_Configuration_Tool.Model
         {
             ID = Guid.NewGuid();
             Constraints = new List<Constraint>();
+            Text = String.Empty;
+            Label = String.Empty;
 
             FollowupFor = -1;
             FollowupForValue = "";

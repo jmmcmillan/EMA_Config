@@ -113,7 +113,7 @@ namespace EMA_Configuration_Tool.Model
        
         [XmlArray(ElementName = "questions")]
         [XmlArrayItem("question")]        
-        public List<Question> Questions { get; set; }
+        public ObservableCollection<Question> Questions { get; set; }
 
 
 
@@ -226,8 +226,7 @@ namespace EMA_Configuration_Tool.Model
             {
                 ResponseSetsToIndexes.Add(sts.ID, i);
                 sts.Index = i;
-
-              
+                              
                 i++;
             }
         }
@@ -283,7 +282,7 @@ namespace EMA_Configuration_Tool.Model
 
         public EMAInterview()
         {
-            Questions = new List<Question>();
+            Questions = new ObservableCollection<Question>();
             StringResponseSets = new ObservableCollection<StringResponseSet>();
             People = new ObservableCollection<Person>();
 

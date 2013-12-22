@@ -6,6 +6,7 @@ using EMA_Configuration_Tool.Model.Groups;
 using Caliburn.Micro;
 using EMA_Configuration_Tool.Model;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace EMA_Configuration_Tool.Groups
 {
@@ -48,7 +49,7 @@ namespace EMA_Configuration_Tool.Groups
         {
             if (String.IsNullOrEmpty(Person.Name))
             {
-                System.Windows.MessageBox.Show(String.Format("Please enter a name for the person."));
+                MessageBox.Show(String.Format("Please enter a name for the person."));
                 return false;
             }
 
@@ -58,11 +59,18 @@ namespace EMA_Configuration_Tool.Groups
                 {
                     if (p.ID != Person.ID)
                     {
-                        System.Windows.MessageBox.Show(String.Format("A person named {0} already exists. Please enter a different name.", Person.Name));
+                        MessageBox.Show(String.Format("A person named {0} already exists. Please enter a different name.", Person.Name));
                         return false;
                     }
                 }
             }
+
+            if (GroupsForBinding.Where(b => b.Value).Count() < 1)
+            {
+                MessageBox.Show("No groups are selected. Please select 1 or more groups for this person.", "No Groups Selected", MessageBoxButton.OK);
+                return false;
+            }
+
 
             return true;
 

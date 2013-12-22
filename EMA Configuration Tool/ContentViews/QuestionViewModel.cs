@@ -9,6 +9,8 @@ using System.ComponentModel.Composition;
 using System.Windows.Controls;
 using EMA_Configuration_Tool.Model.Constraints;
 using System.Windows;
+using System.Windows.Threading;
+using System.Windows.Input;
 
 namespace EMA_Configuration_Tool.ContentViews
 {
@@ -18,20 +20,21 @@ namespace EMA_Configuration_Tool.ContentViews
         //bad form, but accessing the global one requires jumping through some DI hoops I haven't figured out yet
         private WindowManager windowManager;
 
-        public Constraint SelectedConstraint { get; set; }
+        public object SelectedConstraint { get; set; }
+        //public Constraint SelectedConstraint { get; set; }
         public Question Question { get; set; }
         public Type SelectedResponseType { get; set; }
 
         private int requestedIndex = -1;
         private Question unchangedQuestion = null;
 
-        public bool ConstraintCBVisible
-        {
-            get
-            {
-                return App.Interview.Constraints.Count > 0;
-            }
-        }
+        //public bool ConstraintCBVisible
+        //{
+        //    get
+        //    {
+        //        return App.Interview.Constraints.Count > 0;
+        //    }
+        //}
 
         public QuestionViewModel(Question q) : this()
         {   
@@ -45,7 +48,9 @@ namespace EMA_Configuration_Tool.ContentViews
             foreach (Constraint c in q.Constraints)
                 Question.Constraints.Add(c);
 
-            SelectedConstraint = Question.Constraints.FirstOrDefault();
+            if (Question.Constraints.Count() > 0)
+                SelectedConstraint = Question.Constraints.FirstOrDefault();
+            else SelectedConstraint = App.Interview.Constraints.FirstOrDefault();
 
             if (Question.Response != null)
             {
@@ -56,11 +61,18 @@ namespace EMA_Configuration_Tool.ContentViews
         
         public QuestionViewModel() : base()
         {
+            this.DisplayName = "Add/Edit Question"; 
             windowManager = new WindowManager();
 
             Question = new Question();
 
-            this.DisplayName = "Add/Edit Question";
+            SelectedResponseType = typeof(Prompt);
+            NotifyOfPropertyChange(() => SelectedResponseType);
+
+            Question.Response = new Prompt();
+            Question.Refresh();
+
+            SelectedConstraint = App.Interview.Constraints.FirstOrDefault();
             
         }
 
@@ -73,9 +85,15 @@ namespace EMA_Configuration_Tool.ContentViews
 
         private bool okayToSave()
         {
+            if (String.IsNullOrEmpty(Question.Label))
+            {
+                System.Windows.MessageBox.Show("Questions must have a label. Please enter a label.", "No Label for Question", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
             if (Question.Label.Contains('_'))
             {
-                System.Windows.MessageBox.Show("Question labels can't contain underscores. Please enter a different label.");
+                System.Windows.MessageBox.Show("Question labels can't contain underscores ('_'). Please enter a different label.", "No Underscores in Question Label", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -158,10 +176,11 @@ namespace EMA_Configuration_Tool.ContentViews
                 return;
             else  srs = (dataContext as StringChoice).Responses;
 
-            if (MessageBox.Show("Are you sure you want to delete this set of responses?", "Delete Response Set", MessageBoxButton.YesNo) == MessageBoxResult.No)
+            if (MessageBox.Show("Are you sure you want to delete this set of responses?", "Delete Response Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.No)
                 return;
 
-            List<Question> dependencies = EMA_Configuration_Tool.Services.ResponseService.ReponseSetAlsoUsedIn(srs, Question);
+            Question exceptThis = (unchangedQuestion == null) ? Question : unchangedQuestion;
+            List<Question> dependencies = EMA_Configuration_Tool.Services.ResponseService.ReponseSetAlsoUsedIn(srs, exceptThis);
 
             if (dependencies.Count > 0)
             {
@@ -170,7 +189,17 @@ namespace EMA_Configuration_Tool.ContentViews
                 windowManager.ShowWindow(deleteHelp);
             }
 
-            else App.Interview.StringResponseSets.Remove((dataContext as StringChoice).Responses);
+            else
+            {
+                App.Interview.StringResponseSets.Remove((dataContext as StringChoice).Responses);
+
+                SelectedResponseType = typeof(Prompt);
+                NotifyOfPropertyChange(() => SelectedResponseType);
+
+                Question.Response = new Prompt();
+                Question.Refresh();
+            }
+
         }
 
         #endregion
@@ -184,7 +213,7 @@ namespace EMA_Configuration_Tool.ContentViews
 
                 //for the moment, only 1 constraint per question
                 Question.Constraints = new List<Constraint>();
-                Question.Constraints.Add(constraint as Constraint);
+                Question.Constraints.Add(constraint as Constraint);                
             }
 
             else
@@ -192,30 +221,49 @@ namespace EMA_Configuration_Tool.ContentViews
                 //they picked the "No constraints" string
                 Question.Constraints = new List<Constraint>();
             }
+
+            Question.Refresh();
         }
 
         public void AddConstraint()
-        {  
-            windowManager.ShowDialog(new ConstraintViewModel());
-            NotifyOfPropertyChange(() => ConstraintCBVisible);
+        {
+            ConstraintViewModel cvm = new ConstraintViewModel();
+            windowManager.ShowDialog(cvm);
+
+            SelectedConstraint = cvm.configuredConstraint;
+            NotifyOfPropertyChange(() => SelectedConstraint);
+
+            //picks up after dialog is closed to autoselect the most recent constraint
+            SelectedConstraintChanged(cvm.configuredConstraint);
+
+         
         }
 
         public void EditConstraint()
         {
-            if (SelectedConstraint != null)
-                windowManager.ShowDialog(new ConstraintViewModel(SelectedConstraint));
+            if (SelectedConstraint != null && (SelectedConstraint is Constraint))
+                windowManager.ShowDialog(new ConstraintViewModel(SelectedConstraint as Constraint));
+
+            else
+            {
+                MessageBox.Show("Please select a constraint to edit.", "No Constraint Selected", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
 
         }
 
         public void DeleteConstraint()
         {
-            if (SelectedConstraint == null)
+            if (SelectedConstraint == null || !(SelectedConstraint is Constraint))
+            {
+                MessageBox.Show("Please select a constraint to delete.", "No Constraint Selected", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            if (MessageBox.Show("Are you sure you want to delete this constraint?", "Delete Constraint", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.No)
                 return;
 
-            if (MessageBox.Show("Are you sure you want to delete this constraint?", "Delete Constraint", MessageBoxButton.YesNo) == MessageBoxResult.No)
-                return;
-
-            List<Question> dependencies = EMA_Configuration_Tool.Services.ConstraintService.ConstraintIsAlsoUsedBy(SelectedConstraint, Question);
+            Question exceptThis = (unchangedQuestion == null) ? Question : unchangedQuestion;
+            List<Question> dependencies = EMA_Configuration_Tool.Services.ConstraintService.ConstraintIsAlsoUsedBy(SelectedConstraint as Constraint, exceptThis);
 
             if (dependencies.Count < 1)
             {
@@ -226,7 +274,7 @@ namespace EMA_Configuration_Tool.ContentViews
 
             else
             {  
-                DeleteHelperViewModel deleteHelp = new DeleteHelperViewModel(SelectedConstraint, dependencies);
+                DeleteHelperViewModel deleteHelp = new DeleteHelperViewModel(SelectedConstraint as Constraint, dependencies);
 
                 windowManager.ShowWindow(deleteHelp);
 
@@ -234,6 +282,12 @@ namespace EMA_Configuration_Tool.ContentViews
 
         }
 
-    
+
+
+
+       
+
     }
+
+    
 }

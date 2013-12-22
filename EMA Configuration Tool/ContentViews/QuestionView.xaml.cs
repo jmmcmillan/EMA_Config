@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace EMA_Configuration_Tool.ContentViews
 {
@@ -22,6 +23,15 @@ namespace EMA_Configuration_Tool.ContentViews
         public QuestionView()
         {
             InitializeComponent();
+
+            this.Loaded += new RoutedEventHandler(QuestionView_Loaded);
         }
+
+        void QuestionView_Loaded(object sender, RoutedEventArgs e)
+        {
+            qlabelTextBox.Focus();
+        }
+
+        
     }
 }

@@ -26,7 +26,9 @@ namespace EMA_Configuration_Tool.Model.Responses
             {
                 if (this is StringChoice)
                 {
-                    return App.Interview.ResponseSetsToIndexes[(this as StringChoice).Responses.ID];
+                    if (App.Interview.ResponseSetsToIndexes.Keys.Contains((this as StringChoice).Responses.ID))
+                        return App.Interview.ResponseSetsToIndexes[(this as StringChoice).Responses.ID];
+                    else return -1;
                 }
 
                 else return -1;

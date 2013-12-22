@@ -80,6 +80,7 @@ namespace EMA_Configuration_Tool.Model
         {
             ID = Guid.NewGuid();
             XMLExclusiveOption = -1;
+            StringResponses = new List<string>();
         }
 
         public StringResponseSet(Guid id, List<string> responses) : this()
@@ -99,7 +100,7 @@ namespace EMA_Configuration_Tool.Model
             { 
                 xmlContent = value;
 
-                if (StringResponses == null) //returning from serialization
+                if (StringResponses == null || StringResponses.Count() < 1) //returning from serialization
                 {
                     StringResponses = new List<string>();
 

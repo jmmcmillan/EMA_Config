@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EMA_Configuration_Tool.Model.Responses;
+using System.Collections.ObjectModel;
 
 namespace EMA_Configuration_Tool.Model.Adapters
 {
@@ -44,8 +45,20 @@ namespace EMA_Configuration_Tool.Model.Adapters
 
         public void AdaptInterview()
         {
-            App.Interview.Questions.InsertRange(0, PreQuestions);
-            App.Interview.Questions.InsertRange(App.Interview.Questions.Count - 1, PostQuestions);
+            //was using the perfectly nice List.InsertRange method until switching to observableCollection 
+            //for the up/down buttons on CV.xaml -- find replacement?
+            ObservableCollection<Question> newQuestions = new ObservableCollection<Question>();
+
+            foreach (Question q in PreQuestions)
+                newQuestions.Add(q);
+
+            foreach (Question q in App.Interview.Questions)
+                newQuestions.Add(q);
+
+            foreach (Question q in PostQuestions)
+                newQuestions.Add(q);
+
+            App.Interview.Questions = newQuestions;
         }
 
         public void RevertInterview()

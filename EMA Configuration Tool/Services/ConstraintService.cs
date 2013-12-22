@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using EMA_Configuration_Tool.Model;
 using EMA_Configuration_Tool.Model.Constraints;
+using EMA_Configuration_Tool.Model.Responses;
 
 namespace EMA_Configuration_Tool.Services
 {
@@ -75,6 +76,28 @@ namespace EMA_Configuration_Tool.Services
 
         }
 
+        public static void DeleteConstraintsReferencing(Question question)
+        {
+            List<Constraint> toRemove = new List<Constraint>();
+
+            foreach (object obj in App.Interview.Constraints)
+            {
+                if (!(obj is Constraint))
+                    continue;
+
+                Constraint c = obj as Constraint;
+
+                if (c is StringConstraint)
+                {
+                    if (c.FollowupForGuid == question.ID)
+                        toRemove.Add(c);
+                }
+            }
+
+            foreach (Constraint c in toRemove)
+                App.Interview.Constraints.Remove(c);
+        }
+
         public static List<Question> ThisQuestionUsedBy(Question question)
         {
             List<Question> questions = new List<Question>();
@@ -98,7 +121,36 @@ namespace EMA_Configuration_Tool.Services
             return questions;
 
         }
-        
+
+        public static List<Constraint> UsesResponseSet(StringResponseSet srs)
+        {
+            List<Constraint> cons = new List<Constraint>();
+
+            foreach (object obj in App.Interview.Constraints)
+            {
+                if (!(obj is Constraint))
+                    continue;
+
+                Constraint c = obj as Constraint;
+
+                if (c is StringConstraint)
+                {
+                    Question question = App.Interview.Questions.Where(q => q.ID == c.FollowupForGuid).FirstOrDefault();
+
+                    if (question == null)
+                        continue;
+
+                    else if (question.Response is StringChoice)
+                    {
+                        if ((question.Response as StringChoice).Responses == srs)
+                            cons.Add(c);
+                    }
+                }
+            }
+
+            return cons;
+
+        }
 
     }
 }

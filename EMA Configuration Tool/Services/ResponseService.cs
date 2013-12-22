@@ -61,6 +61,8 @@ namespace EMA_Configuration_Tool.Services
 
         public static List<Question> ReponseSetAlsoUsedIn(StringResponseSet srs, Question question)
         {
+            List<Constraint> constraints = ConstraintService.UsesResponseSet(srs);
+
             List<Question> Questions = new List<Question>();
 
             foreach (Question q in App.Interview.Questions)
@@ -76,6 +78,9 @@ namespace EMA_Configuration_Tool.Services
                         continue;
                     }
                 }
+
+                if (q.Constraints.Intersect(constraints).Count() > 0)
+                    Questions.Add(q);
             }
 
             return Questions;

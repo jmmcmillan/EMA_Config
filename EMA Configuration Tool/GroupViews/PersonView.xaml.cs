@@ -22,6 +22,13 @@ namespace EMA_Configuration_Tool.Groups
         public PersonView()
         {
             InitializeComponent();
+
+            Loaded += new RoutedEventHandler(PersonView_Loaded);
+        }
+
+        void PersonView_Loaded(object sender, RoutedEventArgs e)
+        {
+            nameTextBox.Focus();
         }
     }
 }

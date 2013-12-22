@@ -17,14 +17,14 @@ namespace EMA_Configuration_Tool.ContentViews
         public DeleteHelperViewModel(Question question, List<Question> affectedQuestions)
             : this(affectedQuestions)
         {
-            Instructions = "This question is being used by one or more constraints. Please change or remove the following questions before deleting this response set:";
+            Instructions = "This question is being used by one or more constraints. Please change or remove the following questions before deleting this question:";
         }
 
 
         public DeleteHelperViewModel(StringResponseSet srs, List<Question> affectedQuestions)
             : this(affectedQuestions)
         {
-            Instructions = "This response set is being used by other questions. Please change or remove the following questions before deleting this response set:";
+            Instructions = "This response set is being used by other questions and/or constraints. Please change or remove the following questions before deleting this response set:";
         }
 
 

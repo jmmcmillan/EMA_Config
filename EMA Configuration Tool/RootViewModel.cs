@@ -64,7 +64,11 @@ namespace EMA_Configuration_Tool
                 if (String.IsNullOrEmpty(id))
                     return false;
 
-                else App.Interview.ParticipantID = id;
+                else
+                {
+                    App.Interview.ParticipantID = id;
+                    App.Interview.Refresh();
+                }
             }
 
             return true;

@@ -24,8 +24,8 @@
         </StackPanel>
 
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-            <Button  cal:Message.Attach="Save($view)" Margin="10,0,10,5">Save Response Set</Button>
-            <Button  x:Name="Cancel" Margin="10,5,0,10">Cancel</Button>
+            <Button  cal:Message.Attach="Save($view)">Save Response Set</Button>
+            <Button  x:Name="Cancel" >Cancel</Button>
         </StackPanel>
 
 

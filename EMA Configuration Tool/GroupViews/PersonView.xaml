@@ -14,9 +14,11 @@
             <Button Name="Cancel" HorizontalAlignment="Center">Cancel</Button>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Top" Margin="20">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Top" Margin="20"
+                    >
             <TextBlock VerticalAlignment="Center" FontWeight="Bold">Name</TextBlock>
-            <TextBox MinWidth="300" Margin="10,0,0,0" Text="{Binding Person.Name}"></TextBox>
+            <TextBox MinWidth="300" Margin="10,0,0,0" Text="{Binding Person.Name}" Name="nameTextBox"
+                     ></TextBox>
         </StackPanel>
 
 

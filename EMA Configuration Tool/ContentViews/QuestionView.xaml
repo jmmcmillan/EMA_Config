@@ -53,7 +53,7 @@
 
 
                 <ListBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.StringResponseSets}" SelectedItem="{Binding Responses}"
-                      MaxHeight="200" Width="700" MaxWidth="700">
+                      MaxHeight="200" MinWidth="200" MaxWidth="700">
 
                 <ListBox.ItemTemplate>
 
@@ -83,10 +83,15 @@
 
         <DataTemplate DataType="{x:Type response:Time}">
 
+            <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
 
                 <Label>Default Time:</Label>
                 <TextBox Text="{Binding DefaultTime}"/>
+
+            </StackPanel>
+                
+                <TextBlock FontStyle="Italic">For example, 6:30 am or 11 pm</TextBlock>
 
             </StackPanel>
 
@@ -118,7 +123,7 @@
                                 
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontWeight="Bold" Text="{Binding Label}"></TextBlock>
-                                    <TextBlock Text="{Binding Text}" Margin="3,0,0,0"></TextBlock>
+                                    <TextBlock Text="{Binding PreviewPaneText}" Margin="3,0,0,0"></TextBlock>
                                 </StackPanel>
                                 
                                 
@@ -135,7 +140,7 @@
 
         </DataTemplate>
     </UserControl.Resources>
-    
+
     <DockPanel>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Bottom">
@@ -151,12 +156,12 @@
                 Question
         </TextBlock>
 
-        <StackPanel Orientation="Horizontal"
+                <StackPanel Orientation="Horizontal" 
                     Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DockPanel}}, Path=ActualWidth}">
-            
+                        
             <Label>Question Label:</Label>
 
-            <TextBox Text="{Binding Question.Label, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch"></TextBox>
+                    <TextBox Text="{Binding Question.Label, UpdateSourceTrigger=PropertyChanged}" x:Name="qlabelTextBox" HorizontalAlignment="Stretch"></TextBox>
             
         </StackPanel>
 
@@ -195,7 +200,7 @@
 
                         </ComboBox>
 
-                        <ContentControl Content="{Binding Question.Response}" Margin="0,10,0,0"></ContentControl>
+                        <ContentControl Content="{Binding Question.Response, UpdateSourceTrigger=PropertyChanged}" Margin="0,10,0,0"></ContentControl>
 
 
                     </StackPanel>
@@ -220,32 +225,37 @@
 
                     <DockPanel LastChildFill="True" Margin="0,-5,0,0">
 
-                    <StackPanel Orientation="Vertical" DockPanel.Dock="Right">
+                        <StackPanel Orientation="Vertical" DockPanel.Dock="Right" Margin="0,0,85,0">
 
-                        <StackPanel.Resources>
-                            <Style TargetType="Button">
-                                <Setter Property="Margin" Value="5"/>
-                            </Style>
-                        </StackPanel.Resources>
+                            <StackPanel.Resources>
+                                <Style TargetType="Button">
+                                    <Setter Property="Margin" Value="5"/>
+                                </Style>
+                            </StackPanel.Resources>
 
-                        <Button Name="AddConstraint">Add Constraint</Button>
-                        <Button Name="EditConstraint" cal:Message.Attach="EditConstraint()">Edit Constraint</Button>
-                        <Button Name="DeleteConstraint" cal:Message.Attach="DeleteConstraint()">Delete Constraint</Button>
+                            <Button Name="AddConstraint">Add Constraint</Button>
+                            <Button Name="EditConstraint" cal:Message.Attach="EditConstraint()">Edit Constraint</Button>
+                            <Button Name="DeleteConstraint" cal:Message.Attach="DeleteConstraint()">Delete Constraint</Button>
 
-                    </StackPanel>
-                    
+                        </StackPanel>
 
-                    <StackPanel Orientation="Vertical">
+                        
+                        
+
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
                 <TextBlock FontWeight="Bold" Margin="0,0,0,15">Select the condition that makes this question appear during an interview.</TextBlock>
 
-                    <ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Constraints}" 
-                              SelectedItem="{Binding SelectedConstraint}" Margin="-45,0,0,0"
-                              Visibility="{Binding ConstraintCBVisible, Converter={StaticResource boolToVis}}"
-                              MinWidth="300" HorizontalAlignment="Stretch" MaxWidth="700"
+                            <!--Visibility="{Binding ConstraintCBVisible, Converter={StaticResource boolToVis}}"-->
+                        
+                            <ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Constraints}" 
+                              HorizontalAlignment="Left" SelectedIndex="0"
+                              SelectedItem="{Binding SelectedConstraint}" 
+                              
+                              Width="645" 
                          x:Name="ConstraintList" cal:Message.Attach="SelectedConstraintChanged($this)">
+                              
 
-                            
-                        </ComboBox>
+                            </ComboBox>
                     </StackPanel>
 
                  
