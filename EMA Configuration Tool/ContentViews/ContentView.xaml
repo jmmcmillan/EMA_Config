@@ -81,6 +81,20 @@
 
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type response:Slider}">
+
+            <StackPanel Orientation="Vertical" Margin="0,0,20,0">
+
+                <Slider Minimum="0" Maximum="100" Value="50"/>
+                <DockPanel LastChildFill="True">
+                    <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Text="{Binding Responses.StringResponses[1]}"></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Text="{Binding Responses.StringResponses[0]}"></TextBlock>
+                </DockPanel>
+                
+            </StackPanel>
+
+        </DataTemplate>
+
 
         <DataTemplate DataType="{x:Type response:Integer}">
 
