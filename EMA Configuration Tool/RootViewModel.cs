@@ -192,8 +192,8 @@ namespace EMA_Configuration_Tool
 
             if ((bool)ofd.ShowDialog())
             {
-                App.DeserializeInterview(ofd.FileName);
-                initAll();
+                if (App.DeserializeInterview(ofd.FileName))
+                    initAll();
             }
         }
 

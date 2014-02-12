@@ -39,14 +39,26 @@ namespace EMA_Configuration_Tool
         }
 
 
-        public static void DeserializeInterview(string fileName)
+        public static bool DeserializeInterview(string fileName)
         {
-            XmlSerializer deserializer = new XmlSerializer(typeof(EMAInterview));
-            TextReader textReader = new StreamReader(fileName);
-            App.Interview = (EMAInterview)deserializer.Deserialize(textReader);
-            textReader.Close();
+            try
+            {
+                XmlSerializer deserializer = new XmlSerializer(typeof(EMAInterview));
+                TextReader textReader = new StreamReader(fileName);
+                App.Interview = (EMAInterview)deserializer.Deserialize(textReader);
+                textReader.Close();
 
-            Interview.RecoverFromSerialization();
+                Interview.RecoverFromSerialization();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                MessageBox.Show("There was a problem opening the interview. Check that the correct file was selected.", "Error Opening Interview", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                return false;
+            }
+
+            return true;
         }
 
         public static void SerializeInterview(string fileName)

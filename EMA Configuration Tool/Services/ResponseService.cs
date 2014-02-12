@@ -102,7 +102,8 @@ namespace EMA_Configuration_Tool.Services
             }
 
             StringResponseSet newSTS = new StringResponseSet();
-            newSTS.StringResponses.Concat(responseLabels);
+            newSTS.StringResponses = newSTS.StringResponses.Concat(responseLabels).ToList();
+            App.Interview.StringResponseSets.Add(newSTS);
             return newSTS;
         }
     }
