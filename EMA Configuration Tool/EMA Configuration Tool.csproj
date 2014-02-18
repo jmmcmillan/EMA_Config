@@ -142,13 +142,16 @@
     <Compile Include="Model\Groups\PersonGroup.cs" />
     <Compile Include="Model\Responses\Dropdown.cs" />
     <Compile Include="Model\Responses\DynamicGroup.cs" />
+    <Compile Include="Model\Responses\GeneratedChoice.cs" />
     <Compile Include="Model\Responses\IHaveDefault.cs" />
     <Compile Include="Model\Responses\Integer.cs" />
     <Compile Include="Model\Responses\MultipleChoiceList.cs" />
+    <Compile Include="Model\Responses\PeopleNamesList.cs" />
     <Compile Include="Model\Responses\Prompt.cs" />
     <Compile Include="Model\Responses\SampleCode.cs" />
     <Compile Include="Model\Responses\SingleChoiceList.cs" />
     <Compile Include="Model\Responses\Slider.cs" />
+    <Compile Include="Model\Responses\SocialGroupsList.cs" />
     <Compile Include="Model\Responses\Time.cs" />
     <Compile Include="Model\StringResponseSet.cs" />
     <Compile Include="RootView.xaml.cs">

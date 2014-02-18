@@ -57,6 +57,9 @@ namespace EMA_Configuration_Tool
 
         private bool canSave()
         {
+            if (App.Interview == null)
+                return false;
+
             if (String.IsNullOrEmpty(App.Interview.ParticipantID))
             {
                 string id = Microsoft.VisualBasic.Interaction.InputBox("Please enter a Participant ID", "Participant ID", string.Empty);

@@ -127,7 +127,16 @@
             <TextBlock FontStyle="Italic" TextWrapping="Wrap">Participants will receive a sample code to record (e.g., to write on their salivette tube).</TextBlock>
         </DataTemplate>
 
-        
+
+        <DataTemplate DataType="{x:Type response:PeopleNamesList}">
+            <TextBlock FontStyle="Italic" TextWrapping="Wrap">Participants will view a list of all names in their social network.</TextBlock>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type response:SocialGroupsList}">
+            <TextBlock FontStyle="Italic" TextWrapping="Wrap">Participants will view a list of the default social network types.</TextBlock>
+        </DataTemplate>
+
+
         <DataTemplate DataType="{x:Type response:DynamicGroup}">
 
             <StackPanel Orientation="Vertical">

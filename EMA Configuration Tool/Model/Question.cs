@@ -150,18 +150,10 @@ namespace EMA_Configuration_Tool.Model
 
                 if (Response is DynamicGroup)
                 {
-                    string result = "";
-                    foreach (Person p in App.Interview.People)
-                    {
-                        result += String.Format("{0}_{1},", Label, Regex.Replace(p.Name, @"\s+", ""));
-                    }
-
-                    if (result.Length > 0)
-                        result = result.Remove(result.Length - 1);
-
+                    string result = String.Format("{0}_{1},{0}_{2},{0}_{3}", Label, "1", "2", "3");
+                    
                     return result;
                 }
-
 
                 else return Label;
             }

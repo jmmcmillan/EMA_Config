@@ -105,6 +105,9 @@
 
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type response:GeneratedChoice}">
+
+        </DataTemplate>
 
         <DataTemplate DataType="{x:Type response:DynamicGroup}">
             

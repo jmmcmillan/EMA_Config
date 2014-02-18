@@ -173,7 +173,11 @@ namespace EMA_Configuration_Tool.Model
                     if (question.Response is StringChoice)
                     {   
                         (question.Response as StringChoice).Responses = StringResponseSets.ElementAt(question.ResponseIndex);
+                    }
 
+                    if (question.Response is GeneratedChoice)
+                    {
+                        (question.Response as GeneratedChoice).Responses = StringResponseSets.ElementAt(question.ResponseIndex);
                     }
 
                     if (question.Response is Integer || question.Response is Time)
@@ -188,6 +192,16 @@ namespace EMA_Configuration_Tool.Model
                 }
             }
 
+            //remove generated string response sets
+            Question removeNames = Questions.Where(q => q.Response is PeopleNamesList).FirstOrDefault();
+            if (removeNames != null)
+                StringResponseSets.Remove((removeNames.Response as PeopleNamesList).Responses);
+
+            Question removeSocialGroups = Questions.Where(q => q.Response is SocialGroupsList).FirstOrDefault();
+            if (removeSocialGroups != null)
+                StringResponseSets.Remove((removeSocialGroups.Response as SocialGroupsList).Responses);
+
+            //convert exclusive indices back into strings
             foreach (StringResponseSet sts in StringResponseSets)
             {
                 if (sts.xmlExclusiveOption > -1)
@@ -230,9 +244,11 @@ namespace EMA_Configuration_Tool.Model
                 i++;
             }
         }
-
+        
         public void PrepareForSerialization()
         {
+            AddContentForGeneratedTypes();
+
             SynchronizeIndices();
             ConstructGroups();
         }
@@ -243,6 +259,39 @@ namespace EMA_Configuration_Tool.Model
             GenerateConstraints();
             GenerateResponses();
             GeneratePeople();
+        }
+
+
+        private void AddContentForGeneratedTypes()
+        {
+            StringResponseSet namesSTS = null;
+            StringResponseSet groupsSTS = null;
+            StringResponseSet customGroupsSTS = null;
+
+            foreach (Question q in Questions)
+            {
+                if (q.Response is PeopleNamesList)
+                {
+                    if (namesSTS == null)
+                    {
+                        namesSTS = new StringResponseSet(Guid.NewGuid(), People.Select(p => p.Name).OrderBy(p => p).ToList());
+                        StringResponseSets.Add(namesSTS);
+                    }
+
+                    (q.Response as PeopleNamesList).Responses = namesSTS;
+                }
+
+                if (q.Response is SocialGroupsList)
+                {
+                    if (groupsSTS == null)
+                    {
+                        groupsSTS = new StringResponseSet(Guid.NewGuid(), SocialGroupNames.ToList());
+                        StringResponseSets.Add(groupsSTS);
+                    }
+
+                    (q.Response as SocialGroupsList).Responses = groupsSTS;
+                }
+            }
         }
 
         public void GeneratePeople()

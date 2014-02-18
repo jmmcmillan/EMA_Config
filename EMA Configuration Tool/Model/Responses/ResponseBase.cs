@@ -31,6 +31,13 @@ namespace EMA_Configuration_Tool.Model.Responses
                     else return -1;
                 }
 
+                if (this is GeneratedChoice)
+                {
+                    if (App.Interview.ResponseSetsToIndexes.Keys.Contains((this as GeneratedChoice).Responses.ID))
+                        return App.Interview.ResponseSetsToIndexes[(this as GeneratedChoice).Responses.ID];
+                    else return -1;
+                }
+
                 else return -1;
             }
         }
