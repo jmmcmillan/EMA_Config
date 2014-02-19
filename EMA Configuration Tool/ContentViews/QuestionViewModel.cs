@@ -205,6 +205,7 @@ namespace EMA_Configuration_Tool.ContentViews
         #endregion
 
 
+        #region Constraints
         public void SelectedConstraintChanged(object constraint)
         {
             if (constraint is Constraint)
@@ -282,10 +283,7 @@ namespace EMA_Configuration_Tool.ContentViews
 
         }
 
-
-
-
-       
+        #endregion
 
     }
 

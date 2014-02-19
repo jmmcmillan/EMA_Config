@@ -12,25 +12,23 @@ namespace EMA_Configuration_Tool.Model.Groups
         public Guid ID { get; set; }
         public string Name { get; set; }
 
+        public List<Group> MyGroups = new List<Group>();
+
         public bool[] GroupMembership
         {
             get;
             set;
         }
 
-        public string Groups
+        public string GroupsString
         {
             get
             {
                 string result = "";
 
-                int i = 0;
-                foreach (bool isMember in GroupMembership)
+                foreach (Group group in MyGroups)
                 {
-                    if (isMember)
-                        result += String.Format("{0},",EMAInterview.SocialGroupNames[i]);
-
-                    i++;
+                    result += String.Format("{0},",group.Label);
                 }
 
                 if (result.Length > 0)
@@ -44,7 +42,7 @@ namespace EMA_Configuration_Tool.Model.Groups
         {
             ID = Guid.NewGuid();
 
-            GroupMembership = new bool[EMAInterview.SocialGroupNames.Count()];
+            GroupMembership = new bool[EMAInterview.TopLevelSocialGroupNames.Count()];
            
             //foreach (string s in EMAInterview.SocialGroupNames)
             //{

@@ -81,7 +81,7 @@ namespace EMA_Configuration_Tool.Groups
             if (!okayToSave())
                 return;
 
-            bool[] newMemberships = new bool[EMAInterview.SocialGroupNames.Count()];
+            bool[] newMemberships = new bool[EMAInterview.TopLevelSocialGroupNames.Count()];
 
             int i = 0;
             foreach (BindableBool b in GroupsForBinding)

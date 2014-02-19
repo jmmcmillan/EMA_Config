@@ -109,7 +109,7 @@
 
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type response:DynamicGroup}">
+        <!--<DataTemplate DataType="{x:Type response:DynamicGroup}">
             
             <StackPanel Orientation="Vertical">
                 
@@ -141,7 +141,65 @@
 
             </StackPanel>
 
+        </DataTemplate>-->
+
+        <DataTemplate DataType="{x:Type response:BasedOnQuestions}">
+
+            <StackPanel Orientation="Vertical">
+
+                <Label>Choose the questions such that will determine the responses for this question</Label>
+
+             
+                    
+                    <ItemsControl ItemsSource="{Binding ReferenceQuestions}" MaxHeight="200" MaxWidth="840" BorderThickness="1" BorderBrush="LightGray">
+
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <ScrollViewer x:Name="ScrollViewer" Padding="{TemplateBinding Padding}">
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <DockPanel LastChildFill="True" VerticalAlignment="Center">
+
+                                    <CheckBox IsChecked="{Binding IsReferenced}"></CheckBox>
+
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock FontWeight="Bold" Text="{Binding Question.Label}" TextWrapping="NoWrap"></TextBlock>
+                                        <TextBlock Text="{Binding Question.PreviewPaneText}" Margin="3,0,0,0" TextWrapping="NoWrap"></TextBlock>
+                                    </StackPanel>
+
+                                </DockPanel>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+               
+                <!--<ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}"
+                              HorizontalAlignment="Left" MinWidth="300" SelectedItem="{Binding ReferenceQuestion}"
+                         x:Name="GroupList">
+
+                    <ComboBox.ItemTemplate>
+
+                        <DataTemplate>
+
+                            
+
+                        </DataTemplate>
+
+                    </ComboBox.ItemTemplate>
+
+
+                </ComboBox>-->
+
+            </StackPanel>
+
         </DataTemplate>
+
     </UserControl.Resources>
 
     <DockPanel>

@@ -144,7 +144,8 @@ namespace EMA_Configuration_Tool.Model
                         result += String.Format("{0}_{1},", Label, Regex.Replace(s, @"\s+", ""));
                     }
 
-                    result.Remove(result.Length - 1);
+                    result = result.Remove(result.Length - 1);
+
                     return result;
                 }
 
@@ -152,6 +153,34 @@ namespace EMA_Configuration_Tool.Model
                 {
                     string result = String.Format("{0}_{1},{0}_{2},{0}_{3}", Label, "1", "2", "3");
                     
+                    return result;
+                }
+
+                if (Response is SelectedResponsesFrom)
+                {
+                    string result = "";
+
+                    List<string> labels = new List<string>();
+
+                    foreach (ReferenceQuestion rq in (Response as SelectedResponsesFrom).ReferenceQuestions.Where(r => r.IsReferenced))
+                    {
+                        if (rq.Question.Response is ChoiceBase)
+                        {
+                            ChoiceBase sc = rq.Question.Response as ChoiceBase;
+
+                            foreach (string s in sc.Responses.StringResponses)
+                            {
+                                string label = String.Format("{0}_{1}", Label, s);
+                                if (labels.Contains(label))
+                                    continue;
+                                else labels.Add(label);
+
+                            }
+                        }
+                    }
+
+                    result = string.Join(",", labels);
+
                     return result;
                 }
 
@@ -181,35 +210,51 @@ namespace EMA_Configuration_Tool.Model
             }
         }
 
-       
-        #region dynamic groups
+        
+        #region dynamic groups and selected responses from question
 
         [XmlIgnore]
-        public int GroupsFromQuestion { get; set; }
+        public List<int> BasedOnQuestions { get; set; }
 
-        [XmlAttribute("groupsFromQuestion")]
-        public int XMLgroupsFromQuestion
+        [XmlAttribute("basedOnQuestions")]
+        public string XMLbasedOnQuestions
         {
             get
             {
-                if (Response is DynamicGroup)
+                if (Response is BasedOnQuestions)
                 {
-                    if (App.Interview.QuestionsToIndexes.Keys.Contains((Response as DynamicGroup).ReferenceQuestion.ID))
-                        return App.Interview.QuestionsToIndexes[(Response as DynamicGroup).ReferenceQuestion.ID];
+                    BasedOnQuestions thisResponse = Response as BasedOnQuestions;
 
-                    else return -1;
+                    string result = "";
+
+                    foreach (ReferenceQuestion rq in thisResponse.ReferenceQuestions)
+                    {
+                        if (rq.IsReferenced)
+                        {
+                            if (App.Interview.QuestionsToIndexes.Keys.Contains(rq.Question.ID))
+                                result += String.Format("{0},", App.Interview.QuestionsToIndexes[rq.Question.ID]);
+                        }
+                    }
+                    
+                    if (result.Length > 0)
+                        result = result.Remove(result.Length - 1);
+
+                    return result;
                 }
-                else return -1;
+                else return "";
             }
             set
             {
-                GroupsFromQuestion = value;
+                if (String.IsNullOrEmpty(value))
+                    return;
+
+                BasedOnQuestions = value.ToString().Split(',').Select(t => Int32.Parse(t)).ToList();
             }
         }
 
-        public bool ShouldSerializeXMLgroupsFromQuestion()
+        public bool ShouldSerializeXMLbasedOnQuestions()
         {
-            return XMLgroupsFromQuestion != -1;
+            return !String.IsNullOrEmpty(XMLbasedOnQuestions);
         }
 
 
@@ -290,6 +335,8 @@ namespace EMA_Configuration_Tool.Model
 
             FollowupFor = -1;
             FollowupForValue = "";
+
+            BasedOnQuestions = new List<int>();
         }
 
         [XmlIgnore]
