@@ -23,6 +23,22 @@ namespace EMA_Configuration_Tool.Model.Responses
         [XmlIgnore]
         public List<ReferenceQuestion> ReferenceQuestions { get; set; }
 
+        [XmlIgnore]
+        public List<Tuple<string, string>> ReferenceQuestionsForDisplay
+        {
+            get
+            {
+                List<Tuple<string, string>> questions = new List<Tuple<string, string>>();
+
+                foreach (ReferenceQuestion rq in ReferenceQuestions.Where(r => r.IsReferenced))
+                {
+                    questions.Add(new Tuple<string,string>(rq.Question.Label, rq.Question.PreviewPaneText));
+                }
+
+                return questions;
+            }
+        }
+
         public BasedOnQuestions()
             : base()
         {

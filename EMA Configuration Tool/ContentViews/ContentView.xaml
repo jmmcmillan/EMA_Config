@@ -11,6 +11,12 @@
              d:DesignHeight="300" d:DesignWidth="300">
     
     <UserControl.Resources>
+        
+        <Style TargetType="TextBlock" x:Key="notificationText">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+        </Style>
 
         <BooleanToVisibilityConverter x:Key="boolToVis" />
 
@@ -21,7 +27,7 @@
                 <Border BorderThickness="1" BorderBrush="#cccccc" Margin="10,10,10,10" CornerRadius="15" 
                         Visibility="{Binding HasConstraints, Converter={StaticResource boolToVis}}" DockPanel.Dock="Bottom">
                     <StackPanel Orientation="Vertical" Margin="5" >
-                        <TextBlock FontStyle="Italic" TextWrapping="Wrap">This question will only appear if the following condition(s) are met:</TextBlock>
+                        <TextBlock Style="{StaticResource notificationText}">This question will only appear if the following condition(s) are met:</TextBlock>
                         <ItemsControl ItemsSource="{Binding Constraints}" Margin="20,10,20,0"></ItemsControl>
                     </StackPanel>
                 </Border>
@@ -124,31 +130,65 @@
 
 
         <DataTemplate DataType="{x:Type response:SampleCode}">
-            <TextBlock FontStyle="Italic" TextWrapping="Wrap">Participants will receive a sample code to record (e.g., to write on their salivette tube).</TextBlock>
+            <TextBlock Style="{StaticResource notificationText}">Participants will receive a sample code to record (e.g., to write on their salivette tube).</TextBlock>
         </DataTemplate>
 
 
         <DataTemplate DataType="{x:Type response:PeopleNamesList}">
-            <TextBlock FontStyle="Italic" TextWrapping="Wrap">Participants will view a list of all names in their social network.</TextBlock>
+            <TextBlock Style="{StaticResource notificationText}">Participants will view a list of all names in their social network.</TextBlock>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type response:SocialGroupsList}">
-            <TextBlock FontStyle="Italic" TextWrapping="Wrap">Participants will view a list of the default social network types.</TextBlock>
+            <TextBlock Style="{StaticResource notificationText}">Participants will view a list of the default social network types.</TextBlock>
         </DataTemplate>
 
 
-        <DataTemplate DataType="{x:Type response:DynamicGroup}">
+        <DataTemplate DataType="{x:Type response:BasedOnQuestions}">
 
             <StackPanel Orientation="Vertical">
-                <TextBlock TextWrapping="Wrap" FontStyle="Italic">Participants will view a list of people who are in the groups they chose in this question:</TextBlock>
                 
-                <StackPanel Orientation="Vertical" Margin="0,5,0,0">
-                    <TextBlock Text="{Binding ReferenceQuestion.Label}" FontWeight="Bold"></TextBlock>
-                    <TextBlock Text="{Binding ReferenceQuestion.PreviewPaneText}" TextWrapping="Wrap" ></TextBlock>
-                </StackPanel>
+                <TextBlock TextWrapping="Wrap" FontStyle="Italic">Participants will view a list of people who are in groups they chose in these questions:
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource notificationText}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ResponseXMLType}" Value="SelectedResponsesFrom">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                     </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                
+                <TextBlock TextWrapping="Wrap" FontStyle="Italic">Participants will view the responses they selected for these previous questions:
+                <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource notificationText}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ResponseXMLType}" Value="DynamicGroup">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                     </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                
+                <ItemsControl ItemsSource="{Binding ReferenceQuestionsForDisplay}">
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                <TextBlock Text="{Binding Item1}" FontWeight="Bold"></TextBlock>
+                                <TextBlock Text="{Binding Item2}" TextWrapping="Wrap" ></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
             </StackPanel>
 
         </DataTemplate>
+
+       
 
 
     </UserControl.Resources>

@@ -136,10 +136,12 @@ namespace EMA_Configuration_Tool.Model
 
             get
             {
-                if (Response is MultipleChoiceList)
-                {
+                
+
+                if (Response is MultipleChoiceList || Response is PeopleNamesList)
+                {                    
                     string result = "";
-                    foreach (string s in (Response as MultipleChoiceList).Responses.StringResponses)
+                    foreach (string s in (Response as ChoiceBase).Responses.StringResponses)
                     {
                         result += String.Format("{0}_{1},", Label, Regex.Replace(s, @"\s+", ""));
                     }

@@ -178,7 +178,8 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-               
+                
+
                 <!--<ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}"
                               HorizontalAlignment="Left" MinWidth="300" SelectedItem="{Binding ReferenceQuestion}"
                          x:Name="GroupList">
