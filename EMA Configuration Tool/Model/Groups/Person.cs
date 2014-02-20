@@ -12,13 +12,13 @@ namespace EMA_Configuration_Tool.Model.Groups
         public Guid ID { get; set; }
         public string Name { get; set; }
 
-        public List<Group> MyGroups = new List<Group>();
+        public List<Group> MyGroups { get; set; }
 
         public string GroupsString
         {
             get
             {
-                string result = string.Join(",", MyGroups.Select(g => g.GroupName));
+                string result = string.Join(", ", MyGroups.Select(g => g.GroupName));
                 return result;
             }
         }
@@ -26,6 +26,7 @@ namespace EMA_Configuration_Tool.Model.Groups
         public Person()
         {
             ID = Guid.NewGuid();
+            MyGroups = new List<Group>();
         }
     }
 }

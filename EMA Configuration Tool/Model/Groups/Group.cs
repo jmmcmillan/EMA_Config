@@ -11,9 +11,7 @@ namespace EMA_Configuration_Tool.Model.Groups
         [XmlAttribute("name")]
         public string GroupName { get; set; }
 
-        [XmlAttribute("isCustom")]
-        public bool IsCustom { get; set; }
-
+        
         [XmlText]
         public string XMLNames
         {
@@ -37,7 +35,6 @@ namespace EMA_Configuration_Tool.Model.Groups
         public Group()
         {
             Names = new List<string>();
-            IsCustom = false;
         }
 
         public Group(string name)

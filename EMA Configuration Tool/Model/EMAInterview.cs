@@ -83,7 +83,9 @@ namespace EMA_Configuration_Tool.Model
         {
             Groups = new List<Group>();
 
-            foreach (Group group in SocialGroups.Concat(CustomSocialGroups))
+            IEnumerable<Group> groupsForXML = SocialGroups.Concat(CustomSocialGroups);
+
+            foreach (Group group in groupsForXML)
             {
                 foreach (Person p in People)
                 {

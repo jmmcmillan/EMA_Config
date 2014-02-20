@@ -109,24 +109,12 @@ namespace EMA_Configuration_Tool.Groups
         public void SavePerson()
         {
             if (!okayToSave())
-                return;            
+                return;
 
-            bool found = false;                       
-            foreach (Person p in App.Interview.People)
-            {
-                if (p.Name == Person.Name)
-                {
-                    SetGroupMembership(p);
-                    found = true;
-                    break;
-                }
-            }
+            SetGroupMembership(Person);
 
-            if (!found)
-            {
-                SetGroupMembership(Person);
+            if (App.Interview.People.Where(p => p.ID == Person.ID).Count() < 1)
                 App.Interview.People.Insert(0, Person);
-            }
 
             App.EventAggregator.Publish(new PeopleViewModel());
         }
@@ -150,7 +138,7 @@ namespace EMA_Configuration_Tool.Groups
 
         public void Cancel()
         {
-            //restore previous person name
+            //restore previous person name; without calling SetGroupMembership the person's original groups haven't been modified
             Person.Name = previousPersonName;
 
             App.EventAggregator.Publish(new PeopleViewModel());
