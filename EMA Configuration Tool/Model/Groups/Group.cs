@@ -19,17 +19,7 @@ namespace EMA_Configuration_Tool.Model.Groups
         {
             get
             {
-                string result = "";
-
-                foreach (string name in Names)
-                {
-                    result += String.Format("{0},", name);
-                }
-
-                int comma = result.IndexOf(',');
-                if (comma > 0)
-                    result = result.Remove(result.Length - 1);
-
+                string result = string.Join(",", Names);
                 return result;
             }
 
@@ -44,9 +34,6 @@ namespace EMA_Configuration_Tool.Model.Groups
         [XmlIgnore]
         public List<string> Names { get; set; }
 
-        [XmlIgnore]
-        public string Label { get; set; }
-
         public Group()
         {
             Names = new List<string>();
@@ -56,7 +43,7 @@ namespace EMA_Configuration_Tool.Model.Groups
         public Group(string name)
             : this()
         {
-            Label = name;
+            GroupName = name;
         }
     }
 }

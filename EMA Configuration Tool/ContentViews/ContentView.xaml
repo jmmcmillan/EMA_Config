@@ -147,7 +147,7 @@
 
             <StackPanel Orientation="Vertical">
                 
-                <TextBlock TextWrapping="Wrap" FontStyle="Italic">Participants will view a list of people who are in groups they chose in these questions:
+                <TextBlock TextWrapping="Wrap" FontStyle="Italic">Participants will view a list of people who belong to groups they chose in these questions:
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource notificationText}">
                             <Style.Triggers>
@@ -159,7 +159,7 @@
                     </TextBlock.Style>
                 </TextBlock>
                 
-                <TextBlock TextWrapping="Wrap" FontStyle="Italic">Participants will view the responses they selected for these previous questions:
+                <TextBlock TextWrapping="Wrap" FontStyle="Italic">Participants will view a list of the responses they selected for these previous questions:
                 <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource notificationText}">
                             <Setter Property="Visibility" Value="Visible"/>

@@ -9,8 +9,14 @@ namespace EMA_Configuration_Tool.Model.Groups
     public class PersonGroup : PropertyChangedBase
     {
 
-        public string GroupName { get; set; }
+        public Group Group { get; set; }
         public bool IsMember { get; set; }
+
+        public PersonGroup(Group group, bool isMember)
+        {
+            Group = group;
+            IsMember = isMember;
+        }
 
     }
         

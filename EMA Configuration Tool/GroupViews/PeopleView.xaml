@@ -36,7 +36,7 @@
                 <DataGridTemplateColumn Header="Groups" Width="80*" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Groups}" Margin="6,3,0,3"/>
+                            <TextBlock Text="{Binding GroupsString}" Margin="6,3,0,3"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

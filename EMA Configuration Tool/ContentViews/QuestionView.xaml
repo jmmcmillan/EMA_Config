@@ -109,40 +109,6 @@
 
         </DataTemplate>
 
-        <!--<DataTemplate DataType="{x:Type response:DynamicGroup}">
-            
-            <StackPanel Orientation="Vertical">
-                
-                <Label>Choose the question where the participant will pick the groups</Label>
-            <ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}"
-                              HorizontalAlignment="Left" MinWidth="300" SelectedItem="{Binding ReferenceQuestion}"
-                         x:Name="GroupList">
-                    
-                    <ComboBox.ItemTemplate>
-                    
-                        <DataTemplate>
-                            
-                            <StackPanel Orientation="Vertical">
-                                
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontWeight="Bold" Text="{Binding Label}"></TextBlock>
-                                    <TextBlock Text="{Binding PreviewPaneText}" Margin="3,0,0,0"></TextBlock>
-                                </StackPanel>
-                                
-                                
-                            </StackPanel>
-                            
-                        </DataTemplate>
-                        
-                    </ComboBox.ItemTemplate>
-
-
-                </ComboBox>
-
-            </StackPanel>
-
-        </DataTemplate>-->
-
         <DataTemplate DataType="{x:Type response:BasedOnQuestions}">
 
             <StackPanel Orientation="Vertical">
@@ -179,24 +145,6 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 
-
-                <!--<ComboBox ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.Questions}"
-                              HorizontalAlignment="Left" MinWidth="300" SelectedItem="{Binding ReferenceQuestion}"
-                         x:Name="GroupList">
-
-                    <ComboBox.ItemTemplate>
-
-                        <DataTemplate>
-
-                            
-
-                        </DataTemplate>
-
-                    </ComboBox.ItemTemplate>
-
-
-                </ComboBox>-->
-
             </StackPanel>
 
         </DataTemplate>

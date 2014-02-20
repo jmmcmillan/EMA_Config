@@ -83,19 +83,17 @@ namespace EMA_Configuration_Tool.Model
         {
             Groups = new List<Group>();
 
-            for (int i = 0; i < TopLevelSocialGroupNames.Count(); i++)
+            foreach (Group group in SocialGroups.Concat(CustomSocialGroups))
             {
-                Group thisGroup = new Group() { GroupName = TopLevelSocialGroupNames[i] };
-
                 foreach (Person p in People)
                 {
-                    if (p.GroupMembership[i] == true)
+                    if (p.MyGroups.Contains(group))
                     {
-                        thisGroup.Names.Add(p.Name);
+                        group.Names.Add(p.Name);
                     }
                 }
 
-                Groups.Add(thisGroup);
+                Groups.Add(group);
             }
         }
 
@@ -104,13 +102,16 @@ namespace EMA_Configuration_Tool.Model
 
         [XmlIgnore]
         public static string[] TopLevelSocialGroupNames = new string[] { "Spouse/partner", "Child", "Parent", "In-law", "Other relative", "Coworker", "Neighbor", "Classmate", "Church/temple/religious group", "Volunteer work group", "Other group", "Service professional", "Friend", "Stranger" };
-            
+        public static string[] SecondLevelGroups = new string[] { "Boss", "Employee", "Other coworker" };
 
         [XmlIgnore]
         private ObservableCollection<StringResponseSet> stringResponseSets;
 
         [XmlIgnore]
         public static List<Group> SocialGroups;
+
+        [XmlIgnore]
+        public static List<Group> CustomSocialGroups;
        
         [XmlArray(ElementName = "questions")]
         [XmlArrayItem("question")]        
@@ -320,17 +321,20 @@ namespace EMA_Configuration_Tool.Model
 
         public void GeneratePeople()
         {
+            SocialGroups = new List<Group>();
+            CustomSocialGroups = new List<Group>();
+
             foreach (Group group in Groups)
             {
-                int thisIndex = 0;
-                foreach (string s in TopLevelSocialGroupNames)
+                if (TopLevelSocialGroupNames.Contains(group.GroupName))
                 {
-                    if (s.Equals(group.GroupName))
-                    {
-                        break;
-                    }
-                    thisIndex++;
+                    SocialGroups.Add(group);
                 }
+                else if (SecondLevelGroups.Contains(group.GroupName))
+                {
+                    SocialGroups.Add(group);
+                }
+                else CustomSocialGroups.Add(group);
 
                 foreach (string personName in group.Names)
                 {
@@ -339,16 +343,13 @@ namespace EMA_Configuration_Tool.Model
                     if (thisPerson == null)
                     {
                         thisPerson = new Person() { Name = personName };
-                        thisPerson.GroupMembership[thisIndex] = true;
+                        thisPerson.MyGroups.Add(group);
                         People.Add(thisPerson);
                     }
                     else
                     {
-                        thisPerson.GroupMembership[thisIndex] = true;
+                        thisPerson.MyGroups.Add(group);
                     }
-                    
-
-
                 }
             }
         }
@@ -362,19 +363,18 @@ namespace EMA_Configuration_Tool.Model
             Constraints = new ObservableCollection<object>();
             Constraints.Add("None (This question always appears.)");
             
-            //SocialGroupNames = new string[] { "Spouse/partner", "Child", "Parent", "In-law", "Other relative", "Coworker", "Neighbor", "Classmate", "Church/temple/religious group", "Volunteer work group", "Other group", "Service professional", "Friend", "Stranger" };
-
-            List<Group> nextLevelGroups = new List<Group>() { new Group("Boss"), new Group("Employee"), new Group("Other coworker")};
-
             SocialGroups = new List<Group>();
             foreach (string groupLabel in TopLevelSocialGroupNames)
             {
                 if (groupLabel.Equals("Coworker"))
                 {
-                    SocialGroups.AddRange(nextLevelGroups);
+                    foreach (string s in SecondLevelGroups)
+                        SocialGroups.Add(new Group(s));
                 }
                 else SocialGroups.Add(new Group(groupLabel));
             }
+
+            CustomSocialGroups = new List<Group>();
 
             OutputSalivaScreens = true;
             Timeout = 900000;

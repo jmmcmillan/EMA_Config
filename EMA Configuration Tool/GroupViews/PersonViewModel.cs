@@ -7,6 +7,7 @@ using Caliburn.Micro;
 using EMA_Configuration_Tool.Model;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Microsoft.VisualBasic;
 
 namespace EMA_Configuration_Tool.Groups
 {
@@ -14,7 +15,8 @@ namespace EMA_Configuration_Tool.Groups
     {
         public Person Person { get; set; }
 
-        public ObservableCollection<BindableBool> GroupsForBinding { get; set; }
+        public ObservableCollection<PersonGroup> DefaultGroups { get; set; }
+        public ObservableCollection<PersonGroup> CustomGroups { get; set; }
 
         private string previousPersonName = "";
 
@@ -34,13 +36,23 @@ namespace EMA_Configuration_Tool.Groups
 
         private void initGroupData()
         {
-            GroupsForBinding = new ObservableCollection<BindableBool>();
+            DefaultGroups = new ObservableCollection<PersonGroup>();
 
-            foreach (bool b in Person.GroupMembership)
+            foreach (Group g in EMAInterview.SocialGroups)
             {
-                GroupsForBinding.Add(new BindableBool(b));
+                if (Person.MyGroups.Contains(g))
+                    DefaultGroups.Add(new PersonGroup(g, true));
+                else DefaultGroups.Add(new PersonGroup(g, false));
             }
 
+            CustomGroups = new ObservableCollection<PersonGroup>();
+
+            foreach (Group g in EMAInterview.CustomSocialGroups)
+            {
+                if (Person.MyGroups.Contains(g))
+                    CustomGroups.Add(new PersonGroup(g, true));
+                else CustomGroups.Add(new PersonGroup(g, false));
+            }
             
 
         }
@@ -65,53 +77,76 @@ namespace EMA_Configuration_Tool.Groups
                 }
             }
 
-            if (GroupsForBinding.Where(b => b.Value).Count() < 1)
+            if (NoGroupsSelected)
             {
                 MessageBox.Show("No groups are selected. Please select 1 or more groups for this person.", "No Groups Selected", MessageBoxButton.OK);
                 return false;
             }
 
-
             return true;
+        }
 
+        private bool NoGroupsSelected
+        {
+            get
+            {
+                foreach (PersonGroup pg in DefaultGroups)
+                {
+                    if (pg.IsMember)
+                        return false;
+                }
+
+                foreach (PersonGroup pg in CustomGroups)
+                {
+                    if (pg.IsMember)
+                        return false;
+                }
+
+                return true;
+            }
         }
 
         public void SavePerson()
         {
             if (!okayToSave())
-                return;
-
-            bool[] newMemberships = new bool[EMAInterview.TopLevelSocialGroupNames.Count()];
-
-            int i = 0;
-            foreach (BindableBool b in GroupsForBinding)
-            {
-                newMemberships[i] = b.Value;
-                i++;
-            }
+                return;            
 
             bool found = false;                       
             foreach (Person p in App.Interview.People)
             {
                 if (p.Name == Person.Name)
                 {
-                    p.GroupMembership = newMemberships;
+                    SetGroupMembership(p);
                     found = true;
                     break;
                 }
-
             }
 
             if (!found)
             {
-                Person.GroupMembership = newMemberships;
+                SetGroupMembership(Person);
                 App.Interview.People.Insert(0, Person);
             }
 
             App.EventAggregator.Publish(new PeopleViewModel());
         }
 
-       
+       private void SetGroupMembership(Person p)
+       {
+           p.MyGroups = new List<Group>();
+
+           foreach (PersonGroup pg in DefaultGroups)
+           {
+               if (pg.IsMember)
+                   p.MyGroups.Add(pg.Group);
+           }
+
+           foreach (PersonGroup pg in CustomGroups)
+           {
+               if (pg.IsMember)
+                   p.MyGroups.Add(pg.Group);
+           }
+       }
 
         public void Cancel()
         {
@@ -119,6 +154,26 @@ namespace EMA_Configuration_Tool.Groups
             Person.Name = previousPersonName;
 
             App.EventAggregator.Publish(new PeopleViewModel());
+        }
+
+        public void AddCustomGroup()
+        {
+            string description = Interaction.InputBox("Enter the name of the custom social group");
+
+            if (description != String.Empty)
+            {
+                Group newGroup = new Group(description);
+
+                EMAInterview.CustomSocialGroups.Add(newGroup);
+
+                CustomGroups.Add(new PersonGroup(newGroup, false));
+                
+            }
+        }
+
+        public void DeleteCustomGroup(object dataContext)
+        {
+            
         }
 
     }
