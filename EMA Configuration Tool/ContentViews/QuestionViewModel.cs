@@ -28,6 +28,9 @@ namespace EMA_Configuration_Tool.ContentViews
         private int requestedIndex = -1;
         private Question unchangedQuestion = null;
 
+
+        public List<ReferenceQuestion> QuestionsForReference { get; set; }
+
         //public bool ConstraintCBVisible
         //{
         //    get
@@ -45,6 +48,7 @@ namespace EMA_Configuration_Tool.ContentViews
             Question.Label = q.Label;
             Question.Response = q.Response.Copy();
             
+            //check for constraints
             foreach (Constraint c in q.Constraints)
                 Question.Constraints.Add(c);
 
@@ -52,9 +56,23 @@ namespace EMA_Configuration_Tool.ContentViews
                 SelectedConstraint = Question.Constraints.FirstOrDefault();
             else SelectedConstraint = App.Interview.Constraints.FirstOrDefault();
 
+            //check for response
             if (Question.Response != null)
             {
                 SelectedResponseType = Question.Response.GetType();
+            }
+
+            //check for question references
+            if (Question.Response is BasedOnQuestions)
+            {
+                BasedOnQuestions boq = Question.Response as BasedOnQuestions;
+                if (boq.HasReferences)
+                {
+                    foreach (Question rq in boq.ReferenceQuestions)
+                    {
+                        QuestionsForReference.Where(t => t.Question.ID.Equals(rq.ID)).First().IsReferenced = true;
+                    }
+                }
             }
         }
 
@@ -73,6 +91,10 @@ namespace EMA_Configuration_Tool.ContentViews
             Question.Refresh();
 
             SelectedConstraint = App.Interview.Constraints.FirstOrDefault();
+
+            QuestionsForReference = new List<ReferenceQuestion>();
+            foreach (Question q in App.Interview.Questions)
+                QuestionsForReference.Add(new ReferenceQuestion(q, false));
             
         }
 
@@ -282,6 +304,25 @@ namespace EMA_Configuration_Tool.ContentViews
             }
 
         }
+
+        #endregion
+
+
+        #region reference questions
+
+
+        public void ReferenceQuestionChange(object dataContext)
+        {
+            ReferenceQuestion referenceQuestion = dataContext as ReferenceQuestion;
+
+            if (referenceQuestion.IsReferenced)
+            {
+                if (!(Question.Response as BasedOnQuestions).ReferenceQuestions.Contains(referenceQuestion.Question))
+                    (Question.Response as BasedOnQuestions).ReferenceQuestions.Add(referenceQuestion.Question);
+            }
+            else (Question.Response as BasedOnQuestions).ReferenceQuestions.Remove(referenceQuestion.Question);
+        }
+
 
         #endregion
 

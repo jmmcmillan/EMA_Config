@@ -54,7 +54,7 @@
 
 
 
-            <Border BorderThickness="1" BorderBrush="#cccccc" Margin="150,30,0,0" CornerRadius="15" MinWidth="100" VerticalAlignment="Center">
+            <Border BorderThickness="1" BorderBrush="#cccccc" Margin="150,30,0,0" CornerRadius="15" MinWidth="100" VerticalAlignment="Top">
                 <StackPanel Orientation="Vertical" Margin="10" >
                     <TextBlock Text="Custom Groups" FontWeight="Bold" Margin="0,0,0,10"></TextBlock>
                     <ItemsControl ItemsSource="{Binding CustomGroups}">

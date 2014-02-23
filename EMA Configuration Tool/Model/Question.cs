@@ -138,7 +138,7 @@ namespace EMA_Configuration_Tool.Model
             {
                 
 
-                if (Response is MultipleChoiceList || Response is PeopleNamesList)
+                if (Response is MultipleChoiceList || Response is PeopleNamesList || Response is SocialGroupsList)
                 {                    
                     string result = "";
                     foreach (string s in (Response as ChoiceBase).Responses.StringResponses)
@@ -146,7 +146,8 @@ namespace EMA_Configuration_Tool.Model
                         result += String.Format("{0}_{1},", Label, Regex.Replace(s, @"\s+", ""));
                     }
 
-                    result = result.Remove(result.Length - 1);
+                    if (result.Length > 1)
+                        result = result.Remove(result.Length - 1);
 
                     return result;
                 }
@@ -164,11 +165,11 @@ namespace EMA_Configuration_Tool.Model
 
                     List<string> labels = new List<string>();
 
-                    foreach (ReferenceQuestion rq in (Response as SelectedResponsesFrom).ReferenceQuestions.Where(r => r.IsReferenced))
+                    foreach (Question rq in (Response as SelectedResponsesFrom).ReferenceQuestions)
                     {
-                        if (rq.Question.Response is ChoiceBase)
+                        if (rq.Response is ChoiceBase)
                         {
-                            ChoiceBase sc = rq.Question.Response as ChoiceBase;
+                            ChoiceBase sc = rq.Response as ChoiceBase;
 
                             foreach (string s in sc.Responses.StringResponses)
                             {
@@ -229,13 +230,10 @@ namespace EMA_Configuration_Tool.Model
 
                     string result = "";
 
-                    foreach (ReferenceQuestion rq in thisResponse.ReferenceQuestions)
+                    foreach (Question rq in thisResponse.ReferenceQuestions)
                     {
-                        if (rq.IsReferenced)
-                        {
-                            if (App.Interview.QuestionsToIndexes.Keys.Contains(rq.Question.ID))
-                                result += String.Format("{0},", App.Interview.QuestionsToIndexes[rq.Question.ID]);
-                        }
+                        if (App.Interview.QuestionsToIndexes.Keys.Contains(rq.ID))
+                            result += String.Format("{0},", App.Interview.QuestionsToIndexes[rq.ID]);
                     }
                     
                     if (result.Length > 0)

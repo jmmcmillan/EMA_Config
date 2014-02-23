@@ -14,7 +14,7 @@ namespace EMA_Configuration_Tool.Model.Responses
 
         public PeopleNamesList() : base()
         {
-            Description = "List of People's Names";
+            Description = "List of People's Names";            
         }
 
        

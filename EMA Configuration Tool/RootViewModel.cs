@@ -60,18 +60,24 @@ namespace EMA_Configuration_Tool
             if (App.Interview == null)
                 return false;
 
-            if (String.IsNullOrEmpty(App.Interview.ParticipantID))
+            string id = Microsoft.VisualBasic.Interaction.InputBox("Please confirm the Participant ID", "Participant ID", App.Interview.ParticipantID);
+
+            if (String.IsNullOrEmpty(App.Interview.InterviewType))
             {
-                string id = Microsoft.VisualBasic.Interaction.InputBox("Please enter a Participant ID", "Participant ID", string.Empty);
+                MessageBox.Show("The interview must have a type specified. Please select the InterviewType on the Settings tab.", "Set Interview Type", MessageBoxButton.OK);
+                return false;
+            }
 
-                if (String.IsNullOrEmpty(id))
-                    return false;
+            if (String.IsNullOrEmpty(id))
+            {
+                MessageBox.Show("The Participant ID cannot be blank.", "Enter Participant ID", MessageBoxButton.OK);
+                return false;
+            }
 
-                else
-                {
-                    App.Interview.ParticipantID = id;
-                    App.Interview.Refresh();
-                }
+            else
+            {
+                App.Interview.ParticipantID = id;
+                App.Interview.Refresh();
             }
 
             return true;
@@ -161,7 +167,7 @@ namespace EMA_Configuration_Tool
             if (String.IsNullOrEmpty(saveDirectory))
                 return;
 
-            string fileName = String.Format("{0}_hourly.xml", App.Interview.ParticipantID);
+            string fileName = String.Format("{0}_{1}.xml", App.Interview.ParticipantID, App.Interview.InterviewType);
             string fullPath = Path.Combine(saveDirectory, fileName);
 
             App.SerializeInterview(fullPath);

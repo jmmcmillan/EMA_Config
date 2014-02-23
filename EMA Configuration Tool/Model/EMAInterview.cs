@@ -43,6 +43,9 @@ namespace EMA_Configuration_Tool.Model
             }
         }
 
+        [XmlAttribute("type")]
+        public string InterviewType { get; set; }
+
         [XmlIgnore]
         public bool CanCancel { get; set; }
 
@@ -77,7 +80,7 @@ namespace EMA_Configuration_Tool.Model
         [XmlArrayItem("group")]
         public List<Group> Groups { get; set; }
 
-       
+        
 
         public void ConstructGroups()
         {
@@ -87,6 +90,8 @@ namespace EMA_Configuration_Tool.Model
 
             foreach (Group group in groupsForXML)
             {
+                group.Names.Clear();
+
                 foreach (Person p in People)
                 {
                     if (p.MyGroups.Contains(group))
@@ -101,9 +106,8 @@ namespace EMA_Configuration_Tool.Model
 
         [XmlIgnore]
         public ObservableCollection<Person> People { get; set; }
-
-        [XmlIgnore]
-        public static string[] TopLevelSocialGroupNames = new string[] { "Spouse/partner", "Child", "Parent", "In-law", "Other relative", "Coworker", "Neighbor", "Classmate", "Church/temple/religious group", "Volunteer work group", "Other group", "Service professional", "Friend", "Stranger" };
+                
+        public static string[] TopLevelSocialGroupNames = new string[] { "Spouse/partner", "Child", "Grandchild", "Parent", "In-law" ,"Other relative", "Coworker", "Neighbor", "Classmate", "Close friend", "Group member", "Service Professional", "Service Recipient (Client/Student)", "Other acquaintance", "Stranger" };
         public static string[] SecondLevelGroups = new string[] { "Boss", "Employee", "Other coworker" };
 
         [XmlIgnore]
@@ -113,7 +117,32 @@ namespace EMA_Configuration_Tool.Model
         public static List<Group> SocialGroups;
 
         [XmlIgnore]
-        public static List<Group> CustomSocialGroups;
+        public ObservableCollection<Group> customGroups;
+        [XmlIgnore]
+        public ObservableCollection<Group> CustomSocialGroups
+        {
+            get 
+            {
+                if (customGroups == null)
+                    customGroups = new ObservableCollection<Group>();
+                return customGroups; 
+            }
+            set 
+            { 
+                customGroups = value;
+            }
+        }
+
+        public void RefreshCustomGroupResponseSet()
+        {            
+            CustomSocialGroupsResponseSet.StringResponses.Clear();
+
+            foreach (Group group in customGroups)
+            {
+                CustomSocialGroupsResponseSet.StringResponses.Add(group.GroupName);
+            }
+        }
+
        
         [XmlArray(ElementName = "questions")]
         [XmlArrayItem("question")]        
@@ -133,6 +162,14 @@ namespace EMA_Configuration_Tool.Model
             }
         }
 
+        [XmlIgnore]
+        public static StringResponseSet TopLevelSocialGroupsResponseSet;
+
+        [XmlIgnore]
+        public static StringResponseSet SecondLevelSocialGroupsResponseSet;
+
+        [XmlIgnore]
+        public static StringResponseSet CustomSocialGroupsResponseSet;
       
 
         [XmlIgnore]
@@ -191,23 +228,27 @@ namespace EMA_Configuration_Tool.Model
 
                     if (question.Response is BasedOnQuestions)
                     {
-                        List<Guid> relevantQuestions = new List<Guid>();
+                        BasedOnQuestions boq = question.Response as BasedOnQuestions;
+
                         foreach (int i in question.BasedOnQuestions)
                         {
-                            relevantQuestions.Add(Questions.ElementAt(i).ID);
+                            boq.ReferenceQuestions.Add(Questions.ElementAt(i));
                         }
+                    }
 
-                        //have to do it this way because can't modify the collection while iterating through it
-                        List<ReferenceQuestion> newReferenceQuestions = new List<ReferenceQuestion>();                        
-                        foreach (ReferenceQuestion rq in (question.Response as BasedOnQuestions).ReferenceQuestions)
-                        {
-                            if (relevantQuestions.Contains(rq.Question.ID))
-                                newReferenceQuestions.Add(new ReferenceQuestion(rq.Question, true));
-                            else newReferenceQuestions.Add(new ReferenceQuestion(rq.Question, false));
-                        }
+                    if (question.Response is SocialGroupsList)
+                    {
+                        (question.Response as SocialGroupsList).Responses = TopLevelSocialGroupsResponseSet;
+                    }
 
-                        (question.Response as BasedOnQuestions).ReferenceQuestions = newReferenceQuestions;
-                     
+                    if (question.Response is CustomSocialGroupsList)
+                    {
+                        (question.Response as CustomSocialGroupsList).Responses = CustomSocialGroupsResponseSet;
+                    }
+
+                    if (question.Response is SecondLevelSocialGroupsList)
+                    {
+                        (question.Response as SecondLevelSocialGroupsList).Responses = SecondLevelSocialGroupsResponseSet;
                     }
                 }
             }
@@ -217,9 +258,11 @@ namespace EMA_Configuration_Tool.Model
             if (removeNames != null)
                 StringResponseSets.Remove((removeNames.Response as PeopleNamesList).Responses);
 
-            Question removeSocialGroups = Questions.Where(q => q.Response is SocialGroupsList).FirstOrDefault();
-            if (removeSocialGroups != null)
-                StringResponseSets.Remove((removeSocialGroups.Response as SocialGroupsList).Responses);
+            List<Question> removeSocialGroups = Questions.Where(q => q.Response is SocialGroupsList).ToList();
+            foreach (Question sg in removeSocialGroups)
+            {
+                StringResponseSets.Remove((sg.Response as SocialGroupsList).Responses);
+            }
 
             //convert exclusive indices back into strings
             foreach (StringResponseSet sts in StringResponseSets)
@@ -285,8 +328,9 @@ namespace EMA_Configuration_Tool.Model
         private void AddContentForGeneratedTypes()
         {
             StringResponseSet namesSTS = null;
-            StringResponseSet groupsSTS = null;
-            StringResponseSet customGroupsSTS = null;
+            //StringResponseSet groupsSTS = null;
+            //StringResponseSet customGroupsSTS = null;
+            
 
             foreach (Question q in Questions)
             {
@@ -310,21 +354,20 @@ namespace EMA_Configuration_Tool.Model
 
                 if (q.Response is SocialGroupsList)
                 {
-                    if (groupsSTS == null)
-                    {   
-                        groupsSTS = new StringResponseSet(Guid.NewGuid(), TopLevelSocialGroupNames.ToList());
-                        StringResponseSets.Add(groupsSTS);
-                    }
-
-                    (q.Response as SocialGroupsList).Responses = groupsSTS;
+                    if (StringResponseSets.Contains((q.Response as SocialGroupsList).Responses))
+                        continue;
+                    else StringResponseSets.Add((q.Response as SocialGroupsList).Responses);
                 }
             }
         }
 
         public void GeneratePeople()
         {
+            if (Groups.Count < 1)
+                return;
+
             SocialGroups = new List<Group>();
-            CustomSocialGroups = new List<Group>();
+            CustomSocialGroups = new ObservableCollection<Group>();
 
             foreach (Group group in Groups)
             {
@@ -354,6 +397,8 @@ namespace EMA_Configuration_Tool.Model
                     }
                 }
             }
+
+            RefreshCustomGroupResponseSet();
         }
 
         public EMAInterview()
@@ -366,17 +411,26 @@ namespace EMA_Configuration_Tool.Model
             Constraints.Add("None (This question always appears.)");
             
             SocialGroups = new List<Group>();
+            TopLevelSocialGroupsResponseSet = new StringResponseSet();
+            SecondLevelSocialGroupsResponseSet = new StringResponseSet();
+
             foreach (string groupLabel in TopLevelSocialGroupNames)
             {
+                TopLevelSocialGroupsResponseSet.StringResponses.Add(groupLabel);
+
                 if (groupLabel.Equals("Coworker"))
                 {
                     foreach (string s in SecondLevelGroups)
+                    {
                         SocialGroups.Add(new Group(s));
+                        SecondLevelSocialGroupsResponseSet.StringResponses.Add(s);
+
+                    }
                 }
                 else SocialGroups.Add(new Group(groupLabel));
             }
 
-            CustomSocialGroups = new List<Group>();
+            CustomSocialGroupsResponseSet = new StringResponseSet();
 
             OutputSalivaScreens = true;
             Timeout = 900000;

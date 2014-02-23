@@ -29,9 +29,16 @@ namespace EMA_Configuration_Tool.SettingViews
             }
         }
 
+        public List<string> InterviewTypes { get; set; }
+        public int InterviewTypeSelectedIndex { get; set; }
+
         public SettingsViewModel()
         {
-            timeoutInMinutes = String.Format("{0}", (App.Interview.Timeout / 1000) / 60);               
+            timeoutInMinutes = String.Format("{0}", (App.Interview.Timeout / 1000) / 60);
+
+            InterviewTypes = new List<string>() { "Hourly", "BOD", "EOD"} ;
+
+            InterviewTypeSelectedIndex = InterviewTypes.IndexOf(App.Interview.InterviewType);
         }
 
         

@@ -21,7 +21,7 @@ namespace EMA_Configuration_Tool.Model.Responses
     public abstract class BasedOnQuestions : ResponseBase
     {
         [XmlIgnore]
-        public List<ReferenceQuestion> ReferenceQuestions { get; set; }
+        public List<Question> ReferenceQuestions { get; set; }
 
         [XmlIgnore]
         public List<Tuple<string, string>> ReferenceQuestionsForDisplay
@@ -30,9 +30,9 @@ namespace EMA_Configuration_Tool.Model.Responses
             {
                 List<Tuple<string, string>> questions = new List<Tuple<string, string>>();
 
-                foreach (ReferenceQuestion rq in ReferenceQuestions.Where(r => r.IsReferenced))
+                foreach (Question rq in ReferenceQuestions)
                 {
-                    questions.Add(new Tuple<string,string>(rq.Question.Label, rq.Question.PreviewPaneText));
+                    questions.Add(new Tuple<string,string>(rq.Label, rq.PreviewPaneText));
                 }
 
                 return questions;
@@ -42,21 +42,18 @@ namespace EMA_Configuration_Tool.Model.Responses
         public BasedOnQuestions()
             : base()
         {
-            ReferenceQuestions = new List<ReferenceQuestion>();
-
-            foreach (Question q in App.Interview.Questions)
-            {
-                ReferenceQuestions.Add(new ReferenceQuestion(q, false));
-            }
+            ReferenceQuestions = new List<Question>();           
         }
 
-        protected List<ReferenceQuestion> CopyReferenceQuestions()
-        {
-            List<ReferenceQuestion> newReferences = new List<ReferenceQuestion>();
+        public bool HasReferences { get { return ReferenceQuestions.Count > 0; } }
 
-            foreach (ReferenceQuestion rq in ReferenceQuestions)
+        protected List<Question> CopyReferenceQuestions()
+        {
+            List<Question> newReferences = new List<Question>();
+
+            foreach (Question rq in ReferenceQuestions)
             {
-                newReferences.Add(new ReferenceQuestion(rq.Question, rq.IsReferenced));
+                newReferences.Add(rq);
             }
 
             return newReferences;

@@ -113,11 +113,11 @@
 
             <StackPanel Orientation="Vertical">
 
-                <Label>Choose the questions such that will determine the responses for this question</Label>
+                <Label>Choose the questions that will determine the response options</Label>
 
-             
-                    
-                    <ItemsControl ItemsSource="{Binding ReferenceQuestions}" MaxHeight="200" MaxWidth="840" BorderThickness="1" BorderBrush="LightGray">
+
+
+                <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.QuestionsForReference}" MaxHeight="200" MaxWidth="840" BorderThickness="1" BorderBrush="LightGray">
 
                         <ItemsControl.Template>
                             <ControlTemplate>
@@ -132,7 +132,7 @@
 
                                 <DockPanel LastChildFill="True" VerticalAlignment="Center">
 
-                                    <CheckBox IsChecked="{Binding IsReferenced}"></CheckBox>
+                                <CheckBox IsChecked="{Binding IsReferenced}" cal:Message.Attach="ReferenceQuestionChange($dataContext)"></CheckBox>
 
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock FontWeight="Bold" Text="{Binding Question.Label}" TextWrapping="NoWrap"></TextBlock>

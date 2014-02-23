@@ -139,9 +139,19 @@
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type response:SocialGroupsList}">
-            <TextBlock Style="{StaticResource notificationText}">Participants will view a list of the default social network types.</TextBlock>
-        </DataTemplate>
 
+            <ItemsControl ItemsSource="{Binding Responses.StringResponses}">
+
+                <ItemsControl.ItemTemplate>
+
+                    <DataTemplate>
+                        <CheckBox Content="{Binding .}"></CheckBox>
+                    </DataTemplate>
+
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </DataTemplate>       
 
         <DataTemplate DataType="{x:Type response:BasedOnQuestions}">
 

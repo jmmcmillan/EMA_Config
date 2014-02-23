@@ -18,7 +18,7 @@ namespace EMA_Configuration_Tool.Model.Constraints
 
                 int i = 0;
 
-                foreach (string s in (relevantQuestion.Response as StringChoice).Responses.StringResponses)
+                foreach (string s in (relevantQuestion.Response as ChoiceBase).Responses.StringResponses)
                 {
                     if (FollowupValueIndexes.Contains(i))
                         result += String.Format("{0}, ", s);

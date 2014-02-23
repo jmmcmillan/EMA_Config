@@ -47,7 +47,7 @@ namespace EMA_Configuration_Tool.Groups
 
             CustomGroups = new ObservableCollection<PersonGroup>();
 
-            foreach (Group g in EMAInterview.CustomSocialGroups)
+            foreach (Group g in App.Interview.CustomSocialGroups)
             {
                 if (Person.MyGroups.Contains(g))
                     CustomGroups.Add(new PersonGroup(g, true));
@@ -152,7 +152,8 @@ namespace EMA_Configuration_Tool.Groups
             {
                 Group newGroup = new Group(description);
 
-                EMAInterview.CustomSocialGroups.Add(newGroup);
+                App.Interview.CustomSocialGroups.Add(newGroup);
+                App.Interview.RefreshCustomGroupResponseSet();
 
                 CustomGroups.Add(new PersonGroup(newGroup, false));
                 
@@ -161,6 +162,18 @@ namespace EMA_Configuration_Tool.Groups
 
         public void DeleteCustomGroup(object dataContext)
         {
+            PersonGroup pg = dataContext as PersonGroup;
+
+            if (MessageBox.Show(String.Format("Are you sure you want to delete the group {0}?", pg.Group.GroupName), "Delete Group", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.No)
+                return;
+
+            foreach (Person p in App.Interview.People)
+                p.MyGroups.Remove(pg.Group);
+
+            App.Interview.CustomSocialGroups.Remove(pg.Group);
+
+            CustomGroups.Remove(pg);
+
             
         }
 

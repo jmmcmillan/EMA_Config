@@ -34,9 +34,9 @@ namespace EMA_Configuration_Tool.ContentViews
                 SelectedResponses = new ObservableCollection<BindableBool>();
                 ResponseStrings = new List<string>();
 
-                if (selectedQuestion != null && selectedQuestion.Response is StringChoice)
+                if (selectedQuestion != null && selectedQuestion.Response is ChoiceBase)
                 {
-                    ResponseStrings = (selectedQuestion.Response as StringChoice).Responses.StringResponses;
+                    ResponseStrings = (selectedQuestion.Response as ChoiceBase).Responses.StringResponses;
                     initResponseStringData();
                 }
 
@@ -87,7 +87,7 @@ namespace EMA_Configuration_Tool.ContentViews
             StringChoiceQuestions = new List<Question>();
             foreach (Question q in App.Interview.Questions)
             {
-                if (q.Response is StringChoice)
+                if (q.Response is ChoiceBase)
                     StringChoiceQuestions.Add(q);
             }
 

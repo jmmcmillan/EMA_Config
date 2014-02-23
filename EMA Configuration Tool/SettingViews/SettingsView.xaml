@@ -27,6 +27,8 @@
 
             <TextBlock VerticalAlignment="Center">Participant ID</TextBlock>
 
+            <TextBlock VerticalAlignment="Center">Interview Type</TextBlock>
+
             <TextBlock VerticalAlignment="Center">Interview Timeout (minutes)</TextBlock>
 
             <TextBlock>Start Message</TextBlock>
@@ -60,10 +62,14 @@
                     <Setter Property="HorizontalAlignment" Value="Left"/>
                 </Style>
 
+
             </StackPanel.Resources>
 
             <TextBox Text="{Binding Source={x:Static Application.Current}, Path=Interview.ParticipantID, UpdateSourceTrigger=PropertyChanged}" MinWidth="120"></TextBox>
 
+            <ComboBox ItemsSource="{Binding InterviewTypes, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="0,15,0,15" HorizontalAlignment="Left" FontSize="16"
+                      SelectedItem="{Binding Source={x:Static Application.Current}, Path=Interview.InterviewType, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+            
             <TextBox Text="{Binding TimeoutInMinutes, UpdateSourceTrigger=PropertyChanged}" MinWidth="40"></TextBox>
 
             <TextBox Text="{Binding Source={x:Static Application.Current}, Path=Interview.StartMessage, UpdateSourceTrigger=PropertyChanged}"
