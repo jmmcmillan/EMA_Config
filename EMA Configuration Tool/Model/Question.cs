@@ -187,7 +187,7 @@ namespace EMA_Configuration_Tool.Model
                     return result;
                 }
 
-                else return Label;
+                else return Regex.Replace(Label, @"\s+", "_");
             }
         }
 

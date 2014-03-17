@@ -113,11 +113,11 @@ namespace EMA_Configuration_Tool.ContentViews
                 return false;
             }
 
-            if (Question.Label.Contains('_'))
-            {
-                System.Windows.MessageBox.Show("Question labels can't contain underscores ('_'). Please enter a different label.", "No Underscores in Question Label", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
+            //if (Question.Label.Contains('_'))
+            //{
+            //    System.Windows.MessageBox.Show("Question labels can't contain underscores ('_'). Please enter a different label.", "No Underscores in Question Label", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    return false;
+            //}
 
             if (Question.Response is IHaveDefault)
             {
