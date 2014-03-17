@@ -36,7 +36,7 @@ namespace EMA_Configuration_Tool.SettingViews
         {
             timeoutInMinutes = String.Format("{0}", (App.Interview.Timeout / 1000) / 60);
 
-            InterviewTypes = new List<string>() { "Hourly", "BOD", "EOD"} ;
+            InterviewTypes = new List<string>() { "Hourly", "BOD", "EOD", "HalfHour"} ;
 
             InterviewTypeSelectedIndex = InterviewTypes.IndexOf(App.Interview.InterviewType);
         }
