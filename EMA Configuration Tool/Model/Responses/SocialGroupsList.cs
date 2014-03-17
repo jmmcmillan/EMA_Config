@@ -16,7 +16,7 @@ namespace EMA_Configuration_Tool.Model.Responses
         {
             Description = "List of Default Social Groups";
 
-            base.Responses = EMAInterview.TopLevelSocialGroupsResponseSet;
+            base.Responses = SocialNetwork.TopLevelSocialGroupsResponseSet;
         }        
 
         public override ResponseBase Copy()
@@ -38,7 +38,7 @@ namespace EMA_Configuration_Tool.Model.Responses
         {
             Description = "List of Default Second Level Social Groups";
 
-            base.Responses = EMAInterview.SecondLevelSocialGroupsResponseSet;
+            base.Responses = SocialNetwork.SecondLevelSocialGroupsResponseSet;
         }        
 
         public override ResponseBase Copy()
@@ -61,7 +61,7 @@ namespace EMA_Configuration_Tool.Model.Responses
         {
             Description = "List of Custom Social Groups";
 
-            base.Responses = EMAInterview.CustomSocialGroupsResponseSet;
+            base.Responses = SocialNetwork.CustomSocialGroupsResponseSet;
         }
 
         public override ResponseBase Copy()

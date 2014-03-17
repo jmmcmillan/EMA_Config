@@ -156,6 +156,7 @@
     <Compile Include="Model\Responses\Slider.cs" />
     <Compile Include="Model\Responses\SocialGroupsList.cs" />
     <Compile Include="Model\Responses\Time.cs" />
+    <Compile Include="Model\SocialNetwork.cs" />
     <Compile Include="Model\StringResponseSet.cs" />
     <Compile Include="RootView.xaml.cs">
       <DependentUpon>RootView.xaml</DependentUpon>

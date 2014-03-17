@@ -46,7 +46,7 @@ namespace EMA_Configuration_Tool.Groups
                 
                 if (MessageBox.Show(String.Format("Are you sure you want to delete {0}?", SelectedPerson.Name), "Delete Person", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    App.Interview.People.Remove(SelectedPerson);
+                    App.Network.People.Remove(SelectedPerson);
                 }
                 
             }

@@ -76,72 +76,12 @@ namespace EMA_Configuration_Tool.Model
         #endregion
 
 
-        [XmlArray(ElementName = "groups")]
-        [XmlArrayItem("group")]
-        public List<Group> Groups { get; set; }
 
         
-
-        public void ConstructGroups()
-        {
-            Groups = new List<Group>();
-
-            IEnumerable<Group> groupsForXML = SocialGroups.Concat(CustomSocialGroups);
-
-            foreach (Group group in groupsForXML)
-            {
-                group.Names.Clear();
-
-                foreach (Person p in People)
-                {
-                    if (p.MyGroups.Contains(group))
-                    {
-                        group.Names.Add(p.Name);
-                    }
-                }
-
-                Groups.Add(group);
-            }
-        }
-
-        [XmlIgnore]
-        public ObservableCollection<Person> People { get; set; }
-                
-        public static string[] TopLevelSocialGroupNames = new string[] { "Spouse/partner", "Child", "Grandchild", "Parent", "In-law" ,"Other relative", "Coworker", "Neighbor", "Classmate", "Close friend", "Group member", "Service Professional", "Service Recipient (Client/Student)", "Other acquaintance", "Stranger" };
-        public static string[] SecondLevelGroups = new string[] { "Boss", "Employee", "Other coworker" };
 
         [XmlIgnore]
         private ObservableCollection<StringResponseSet> stringResponseSets;
 
-        [XmlIgnore]
-        public static List<Group> SocialGroups;
-
-        [XmlIgnore]
-        public ObservableCollection<Group> customGroups;
-        [XmlIgnore]
-        public ObservableCollection<Group> CustomSocialGroups
-        {
-            get 
-            {
-                if (customGroups == null)
-                    customGroups = new ObservableCollection<Group>();
-                return customGroups; 
-            }
-            set 
-            { 
-                customGroups = value;
-            }
-        }
-
-        public void RefreshCustomGroupResponseSet()
-        {            
-            CustomSocialGroupsResponseSet.StringResponses.Clear();
-
-            foreach (Group group in customGroups)
-            {
-                CustomSocialGroupsResponseSet.StringResponses.Add(group.GroupName);
-            }
-        }
 
        
         [XmlArray(ElementName = "questions")]
@@ -162,15 +102,6 @@ namespace EMA_Configuration_Tool.Model
             }
         }
 
-        [XmlIgnore]
-        public static StringResponseSet TopLevelSocialGroupsResponseSet;
-
-        [XmlIgnore]
-        public static StringResponseSet SecondLevelSocialGroupsResponseSet;
-
-        [XmlIgnore]
-        public static StringResponseSet CustomSocialGroupsResponseSet;
-      
 
         [XmlIgnore]
         private ObservableCollection<object> constraints;
@@ -238,17 +169,17 @@ namespace EMA_Configuration_Tool.Model
 
                     if (question.Response is SocialGroupsList)
                     {
-                        (question.Response as SocialGroupsList).Responses = TopLevelSocialGroupsResponseSet;
+                        (question.Response as SocialGroupsList).Responses = SocialNetwork.TopLevelSocialGroupsResponseSet;
                     }
 
                     if (question.Response is CustomSocialGroupsList)
                     {
-                        (question.Response as CustomSocialGroupsList).Responses = CustomSocialGroupsResponseSet;
+                        (question.Response as CustomSocialGroupsList).Responses = SocialNetwork.CustomSocialGroupsResponseSet;
                     }
 
                     if (question.Response is SecondLevelSocialGroupsList)
                     {
-                        (question.Response as SecondLevelSocialGroupsList).Responses = SecondLevelSocialGroupsResponseSet;
+                        (question.Response as SecondLevelSocialGroupsList).Responses = SocialNetwork.SecondLevelSocialGroupsResponseSet;
                     }
                 }
             }
@@ -313,7 +244,7 @@ namespace EMA_Configuration_Tool.Model
             AddContentForGeneratedTypes();
 
             SynchronizeIndices();
-            ConstructGroups();
+            
         }
 
         public void RecoverFromSerialization()
@@ -321,7 +252,7 @@ namespace EMA_Configuration_Tool.Model
             SynchronizeIndices();
             GenerateConstraints();
             GenerateResponses();
-            GeneratePeople();
+           
         }
 
 
@@ -340,7 +271,7 @@ namespace EMA_Configuration_Tool.Model
                     {
                         string nan = "None of the above";
 
-                        List<string> allNames = People.Select(p => p.Name).OrderBy(p => p).ToList();
+                        List<string> allNames = App.Network.People.Select(p => p.Name).OrderBy(p => p).ToList();
                         allNames.Add(nan);
 
                         namesSTS = new StringResponseSet(Guid.NewGuid(), allNames);
@@ -361,76 +292,18 @@ namespace EMA_Configuration_Tool.Model
             }
         }
 
-        public void GeneratePeople()
-        {
-            if (Groups.Count < 1)
-                return;
-
-            SocialGroups = new List<Group>();
-            CustomSocialGroups = new ObservableCollection<Group>();
-
-            foreach (Group group in Groups)
-            {
-                if (TopLevelSocialGroupNames.Contains(group.GroupName))
-                {
-                    SocialGroups.Add(group);
-                }
-                else if (SecondLevelGroups.Contains(group.GroupName))
-                {
-                    SocialGroups.Add(group);
-                }
-                else CustomSocialGroups.Add(group);
-
-                foreach (string personName in group.Names)
-                {
-                    Person thisPerson = People.Where(p => p.Name == personName).FirstOrDefault();
-
-                    if (thisPerson == null)
-                    {
-                        thisPerson = new Person() { Name = personName };
-                        thisPerson.MyGroups.Add(group);
-                        People.Add(thisPerson);
-                    }
-                    else
-                    {
-                        thisPerson.MyGroups.Add(group);
-                    }
-                }
-            }
-
-            RefreshCustomGroupResponseSet();
-        }
+        
 
         public EMAInterview()
         {
             Questions = new ObservableCollection<Question>();
             StringResponseSets = new ObservableCollection<StringResponseSet>();
-            People = new ObservableCollection<Person>();
-
+            
             Constraints = new ObservableCollection<object>();
             Constraints.Add("None (This question always appears.)");
+           
+
             
-            SocialGroups = new List<Group>();
-            TopLevelSocialGroupsResponseSet = new StringResponseSet();
-            SecondLevelSocialGroupsResponseSet = new StringResponseSet();
-
-            foreach (string groupLabel in TopLevelSocialGroupNames)
-            {
-                TopLevelSocialGroupsResponseSet.StringResponses.Add(groupLabel);
-
-                if (groupLabel.Equals("Coworker"))
-                {
-                    foreach (string s in SecondLevelGroups)
-                    {
-                        SocialGroups.Add(new Group(s));
-                        SecondLevelSocialGroupsResponseSet.StringResponses.Add(s);
-
-                    }
-                }
-                else SocialGroups.Add(new Group(groupLabel));
-            }
-
-            CustomSocialGroupsResponseSet = new StringResponseSet();
 
             OutputSalivaScreens = true;
             Timeout = 900000;

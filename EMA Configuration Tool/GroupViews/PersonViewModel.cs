@@ -38,7 +38,7 @@ namespace EMA_Configuration_Tool.Groups
         {
             DefaultGroups = new ObservableCollection<PersonGroup>();
 
-            foreach (Group g in EMAInterview.SocialGroups)
+            foreach (Group g in SocialNetwork.SocialGroups)
             {
                 if (Person.MyGroups.Contains(g))
                     DefaultGroups.Add(new PersonGroup(g, true));
@@ -47,7 +47,7 @@ namespace EMA_Configuration_Tool.Groups
 
             CustomGroups = new ObservableCollection<PersonGroup>();
 
-            foreach (Group g in App.Interview.CustomSocialGroups)
+            foreach (Group g in App.Network.CustomSocialGroups)
             {
                 if (Person.MyGroups.Contains(g))
                     CustomGroups.Add(new PersonGroup(g, true));
@@ -65,7 +65,7 @@ namespace EMA_Configuration_Tool.Groups
                 return false;
             }
 
-            foreach (Person p in App.Interview.People)
+            foreach (Person p in App.Network.People)
             {
                 if (p.Name == Person.Name)
                 {
@@ -113,8 +113,8 @@ namespace EMA_Configuration_Tool.Groups
 
             SetGroupMembership(Person);
 
-            if (App.Interview.People.Where(p => p.ID == Person.ID).Count() < 1)
-                App.Interview.People.Insert(0, Person);
+            if (App.Network.People.Where(p => p.ID == Person.ID).Count() < 1)
+                App.Network.People.Insert(0, Person);
 
             App.EventAggregator.Publish(new PeopleViewModel());
         }
@@ -152,8 +152,8 @@ namespace EMA_Configuration_Tool.Groups
             {
                 Group newGroup = new Group(description);
 
-                App.Interview.CustomSocialGroups.Add(newGroup);
-                App.Interview.RefreshCustomGroupResponseSet();
+                App.Network.CustomSocialGroups.Add(newGroup);
+                App.Network.RefreshCustomGroupResponseSet();
 
                 CustomGroups.Add(new PersonGroup(newGroup, false));
                 
@@ -167,10 +167,10 @@ namespace EMA_Configuration_Tool.Groups
             if (MessageBox.Show(String.Format("Are you sure you want to delete the group {0}?", pg.Group.GroupName), "Delete Group", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.No)
                 return;
 
-            foreach (Person p in App.Interview.People)
+            foreach (Person p in App.Network.People)
                 p.MyGroups.Remove(pg.Group);
 
-            App.Interview.CustomSocialGroups.Remove(pg.Group);
+            App.Network.CustomSocialGroups.Remove(pg.Group);
 
             CustomGroups.Remove(pg);
 

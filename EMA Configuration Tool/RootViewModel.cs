@@ -50,10 +50,12 @@ namespace EMA_Configuration_Tool
         public void NewInterview()
         {
             App.Interview = new EMAInterview();
+            App.Network = new SocialNetwork();
 
             initAll();
          
         }
+        
 
         private bool canSave()
         {
@@ -167,13 +169,20 @@ namespace EMA_Configuration_Tool
             if (String.IsNullOrEmpty(saveDirectory))
                 return;
 
-            string fileName = String.Format("{0}_{1}.xml", App.Interview.ParticipantID, App.Interview.InterviewType);
-            string fullPath = Path.Combine(saveDirectory, fileName);
+            //save interview content
+            string interviewFileName = String.Format("{0}_{1}.xml", App.Interview.ParticipantID, App.Interview.InterviewType);
+            string interviewFullPath = Path.Combine(saveDirectory, interviewFileName);
 
-            App.SerializeInterview(fullPath);
+            App.SerializeInterview(interviewFullPath);
 
             if (App.Interview.OutputSalivaScreens)
-                SaveInterviewWithAdapter(fullPath);
+                SaveInterviewWithAdapter(interviewFullPath);
+
+            //save social network 
+            string socialNetworkFileName = String.Format("{0}_SocialNetwork.xml", App.Interview.ParticipantID);
+            string socialNetworkFullPath = Path.Combine(saveDirectory, socialNetworkFileName);
+
+            App.SerializeSocialNetwork(socialNetworkFullPath);
         }
 
         private void SaveInterviewWithAdapter(string originalFileName)
@@ -201,6 +210,11 @@ namespace EMA_Configuration_Tool
 
             if ((bool)ofd.ShowDialog())
             {
+                if (!App.DeserializeSocialNetwork(ofd.FileName))
+                {
+                    App.Network = new SocialNetwork();
+                }
+
                 if (App.DeserializeInterview(ofd.FileName))
                     initAll();
             }

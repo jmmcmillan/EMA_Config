@@ -18,6 +18,7 @@ namespace EMA_Configuration_Tool
     public partial class App : Application
     {
         public static EMAInterview Interview {get; set;}
+        public static SocialNetwork Network { get; set; }
         
         public App()
             : base()
@@ -78,6 +79,65 @@ namespace EMA_Configuration_Tool
                 Console.WriteLine(ex.ToString());
             }
         }
-     
+
+        public static void SerializeSocialNetwork(string fileName)
+        {
+            Network.PrepareForSerialization();
+
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(SocialNetwork));
+                TextWriter textWriter = new StreamWriter(fileName);
+                serializer.Serialize(textWriter, Network);
+                textWriter.Close();
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            
+        }
+
+        public static bool DeserializeSocialNetwork(string fileName)
+        {
+            string selectedFile = Path.GetFileName(fileName);
+            string selectedFolder = Path.GetDirectoryName(fileName);
+            
+            //check that this file name contains a participant ID
+            string participantID = String.Empty;
+            int underscoreIndex = selectedFile.IndexOf('_');
+            
+            if (underscoreIndex < 0)
+                return false;
+            else participantID = selectedFile.Substring(0, underscoreIndex);
+
+            //check whether we have a social network file for this participant
+            string socialNetworkFileName = String.Format("{0}_SocialNetwork.xml", participantID);
+            string socialNetworkPath = Path.Combine(selectedFolder, socialNetworkFileName);
+            if (!File.Exists(socialNetworkPath))
+                return false;
+
+            //deserialize the file
+            try
+            {
+                XmlSerializer deserializer = new XmlSerializer(typeof(SocialNetwork));
+                TextReader textReader = new StreamReader(socialNetworkPath);
+                App.Network = (SocialNetwork)deserializer.Deserialize(textReader);
+                textReader.Close();
+
+                Network.RecoverFromSerialization();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                MessageBox.Show("There was a problem opening the social network. Check that the correct interview file was selected.", "Error Opening Social Network", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                return false;
+            }
+
+            return true;
+        }
+
     }
 }

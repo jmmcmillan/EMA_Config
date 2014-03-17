@@ -19,7 +19,7 @@
         </StackPanel>
 
 
-        <DataGrid ItemsSource="{Binding Source={x:Static Application.Current}, Path=Interview.People}" Margin="20" Name="PersonDataGrid" 
+        <DataGrid ItemsSource="{Binding Source={x:Static Application.Current}, Path=Network.People}" Margin="20" Name="PersonDataGrid" 
                   AutoGenerateColumns="False" SelectionUnit="FullRow" AlternatingRowBackground="#1100AADE"  AlternationCount="2"
                   SelectedItem="{Binding SelectedPerson}">
 
