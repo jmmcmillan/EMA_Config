@@ -21,6 +21,11 @@ namespace EMA_Configuration_Tool.Model.Adapters
 
             PreQuestions.Add(salivettePrompt);
 
+            Question timerAnchor = new Question();
+            timerAnchor.Label = "p";
+            timerAnchor.Text = "Please wait...";
+            timerAnchor.Response = new EMA_Configuration_Tool.Model.Responses.Prompt();
+
             Question returnSalivettePrompt = new Question();
             returnSalivettePrompt.Label = "p";
             returnSalivettePrompt.Text = "Please return salivette to the tube.";
@@ -38,6 +43,7 @@ namespace EMA_Configuration_Tool.Model.Adapters
             choice.Responses = EMA_Configuration_Tool.Services.ResponseService.GetStringResponseSet(new List<string>() { "No", "Yes"});
             salivetteQ.Response = choice;
 
+            PostQuestions.Add(timerAnchor);
             PostQuestions.Add(returnSalivettePrompt);
             PostQuestions.Add(salivetteLabel);
             PostQuestions.Add(salivetteQ);
