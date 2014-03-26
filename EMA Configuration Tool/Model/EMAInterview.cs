@@ -44,7 +44,7 @@ namespace EMA_Configuration_Tool.Model
         }
 
         [XmlAttribute("type")]
-        public string InterviewType { get; set; }
+        public InterviewType EMAType { get; set; }
 
         [XmlIgnore]
         public bool CanCancel { get; set; }

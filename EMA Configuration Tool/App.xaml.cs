@@ -12,6 +12,8 @@ using System.Xml.Serialization;
 
 namespace EMA_Configuration_Tool
 {
+    public enum InterviewType { Hourly, BOD, EOD, HalfHour };
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>

@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:EMA_Configuration_Tool"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
    
@@ -10,19 +12,17 @@
     
         <StackPanel Orientation="Vertical" DockPanel.Dock="Left" Margin="50,20,0,0" HorizontalAlignment="Right">
         
-        <StackPanel.Resources>
+            <StackPanel.Resources>
             
-            <Style TargetType="{x:Type TextBlock}">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="FontWeight" Value="Bold"/>
-                <Setter Property="Margin" Value="20,20,0,20"/>
-                <Setter Property="FontSize" Value="18"/>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Margin" Value="20,20,0,20"/>
+                    <Setter Property="FontSize" Value="18"/>
                     <Setter Property="HorizontalAlignment" Value="Right"/>
-                </Style>
+                </Style>               
 
-         
-
-        </StackPanel.Resources>
+            </StackPanel.Resources>
 
 
             <TextBlock VerticalAlignment="Center">Participant ID</TextBlock>
@@ -45,8 +45,6 @@
 
             <StackPanel.Resources>
 
-              
-
                 <Style TargetType="{x:Type TextBox}">
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="0,20,0,20"/>
@@ -62,13 +60,19 @@
                     <Setter Property="HorizontalAlignment" Value="Left"/>
                 </Style>
 
+                <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="InterviewTypeValues">
+                    <ObjectDataProvider.MethodParameters>
+                        <x:Type TypeName="local:InterviewType" />
+                    </ObjectDataProvider.MethodParameters>
+                </ObjectDataProvider>
 
             </StackPanel.Resources>
 
             <TextBox Text="{Binding Source={x:Static Application.Current}, Path=Interview.ParticipantID, UpdateSourceTrigger=PropertyChanged}" MinWidth="120"></TextBox>
 
-            <ComboBox ItemsSource="{Binding InterviewTypes, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="0,15,0,15" HorizontalAlignment="Left" FontSize="16"
-                      SelectedItem="{Binding Source={x:Static Application.Current}, Path=Interview.InterviewType, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+            <ComboBox SelectedItem="{Binding Source={x:Static Application.Current}, Path=Interview.EMAType, UpdateSourceTrigger=PropertyChanged}" 
+                      ItemsSource="{Binding Source={StaticResource InterviewTypeValues}}"                
+                      VerticalAlignment="Center" Margin="0,15,0,15" HorizontalAlignment="Left" FontSize="16"></ComboBox>
             
             <TextBox Text="{Binding TimeoutInMinutes, UpdateSourceTrigger=PropertyChanged}" MinWidth="40"></TextBox>
 

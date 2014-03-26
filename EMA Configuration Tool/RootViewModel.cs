@@ -64,7 +64,7 @@ namespace EMA_Configuration_Tool
 
             string id = Microsoft.VisualBasic.Interaction.InputBox("Please confirm the Participant ID", "Participant ID", App.Interview.ParticipantID);
 
-            if (String.IsNullOrEmpty(App.Interview.InterviewType))
+            if (String.IsNullOrEmpty(App.Interview.EMAType.ToString()))
             {
                 MessageBox.Show("The interview must have a type specified. Please select the InterviewType on the Settings tab.", "Set Interview Type", MessageBoxButton.OK);
                 return false;
@@ -191,7 +191,7 @@ namespace EMA_Configuration_Tool
             if (String.IsNullOrEmpty(configDirectory))
                 return;
                         
-            string interviewFileName = String.Format("{0}.xml", App.Interview.InterviewType);
+            string interviewFileName = String.Format("{0}.xml", App.Interview.EMAType);
             string interviewFullPath = Path.Combine(configDirectory, interviewFileName);
 
             if (!backedUpOldFiles(configDirectory, interviewFileName))
@@ -254,6 +254,7 @@ namespace EMA_Configuration_Tool
                         App.Interview.ParticipantID = di.Name.Substring(0, underscoreIndex);
                         Console.WriteLine("Setting Particiapnt ID to " + App.Interview.ParticipantID);
                     }
+                    else App.Interview.ParticipantID = String.Empty;
 
                     initAll();
                 }

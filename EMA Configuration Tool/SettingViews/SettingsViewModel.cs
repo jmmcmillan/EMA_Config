@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EMA_Configuration_Tool.Model;
+
 
 namespace EMA_Configuration_Tool.SettingViews
 {
@@ -29,16 +31,10 @@ namespace EMA_Configuration_Tool.SettingViews
             }
         }
 
-        public List<string> InterviewTypes { get; set; }
-        public int InterviewTypeSelectedIndex { get; set; }
 
         public SettingsViewModel()
         {
             timeoutInMinutes = String.Format("{0}", (App.Interview.Timeout / 1000) / 60);
-
-            InterviewTypes = new List<string>() { "Hourly", "BOD", "EOD", "HalfHour"} ;
-
-            InterviewTypeSelectedIndex = InterviewTypes.IndexOf(App.Interview.InterviewType);
         }
 
         
