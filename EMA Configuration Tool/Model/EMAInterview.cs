@@ -70,14 +70,10 @@ namespace EMA_Configuration_Tool.Model
         [XmlIgnore]
         public bool CanDelay { get; set; }
 
-        [XmlIgnore]
-        public bool OutputSalivaScreens { get; set; }
+        //[XmlIgnore]
+        //public bool OutputSalivaScreens { get; set; }
 
         #endregion
-
-
-
-        
 
         [XmlIgnore]
         private ObservableCollection<StringResponseSet> stringResponseSets;
@@ -302,10 +298,7 @@ namespace EMA_Configuration_Tool.Model
             Constraints = new ObservableCollection<object>();
             Constraints.Add("None (This question always appears.)");
            
-
-            
-
-            OutputSalivaScreens = true;
+            //OutputSalivaScreens = true;
             Timeout = 900000;
         }
     }
