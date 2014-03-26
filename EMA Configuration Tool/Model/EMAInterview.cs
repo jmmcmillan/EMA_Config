@@ -16,7 +16,7 @@ namespace EMA_Configuration_Tool.Model
     {
         #region settings
 
-        [XmlAttribute("participantID")]
+        [XmlIgnore]
         public string ParticipantID { get; set; }
 
         [XmlAttribute("timeout")]

@@ -92,10 +92,6 @@ namespace EMA_Configuration_Tool
                 if (!Directory.Exists(participantFolder))
                     Directory.CreateDirectory(participantFolder);
 
-                string participantBackupConfigFolder = Path.Combine(participantFolder, "backup");
-                if (!Directory.Exists(participantBackupConfigFolder))
-                    Directory.CreateDirectory(participantBackupConfigFolder);
-
                 //create a blank file to try deleting in case there aren't any files in this directory yet
                 string path = Path.Combine(participantFolder, "test.txt");
                 FileStream fs = File.Create(path);
@@ -107,14 +103,6 @@ namespace EMA_Configuration_Tool
                     //delete the test file
                     if (oldContent.Extension == ".txt")
                         oldContent.Delete();
-
-                    //move previous xml files into the backup folder
-                    else
-                    {
-                        string newFileName = String.Format("{0} {1:MM dd yy - hh mm ss}.xml", oldContent.Name, DateTime.Now);
-                        oldContent.MoveTo(Path.Combine(participantBackupConfigFolder, newFileName));
-                    }
-
                 }             
             }
             catch (Exception ex)
@@ -130,6 +118,8 @@ namespace EMA_Configuration_Tool
             return true;
         }
 
+       
+
         private string getConfigDirectory()
         {
             FolderBrowserDialog getFolder = new FolderBrowserDialog();
@@ -140,22 +130,54 @@ namespace EMA_Configuration_Tool
             if (getFolder.ShowDialog() == true)
             {
                 fileFolder = getFolder.SelectedPath;
-                string participantFolder = Path.Combine(fileFolder, App.Interview.ParticipantID + "_config");
 
-                if (Directory.Exists(participantFolder))
+                string configFolder = Path.Combine(fileFolder, App.Interview.ParticipantID + "_config");
+
+                if (Directory.Exists(configFolder))
                 {
-                    if (MessageBox.Show(String.Format("This will overwrite previous configuration information for participant {0}. Do you want to continue?", App.Interview.ParticipantID),
+                    if (MessageBox.Show(String.Format("This could overwrite previous configuration information for participant {0}. Do you want to continue?", App.Interview.ParticipantID),
                         "Overwrite Previous Configuration", MessageBoxButton.YesNo) == MessageBoxResult.No)
                     {
                         return String.Empty;
                     }                    
                 }
 
-                if (successfullyAccessedDirectory(participantFolder))
-                    return participantFolder;
+                if (successfullyAccessedDirectory(configFolder))
+                    return configFolder;
             }
 
             return String.Empty;
+
+        }
+
+        private bool backedUpOldFiles(string participantFolder, string fileName)
+        {
+            try
+            {
+                string backupDirectory = Path.Combine(participantFolder, "backup");
+                if (!Directory.Exists(backupDirectory))
+                    Directory.CreateDirectory(backupDirectory);
+
+                string interviewType = fileName.Substring(0, fileName.IndexOf(".xml"));
+
+                DirectoryInfo di = new DirectoryInfo(participantFolder);
+                foreach (FileInfo oldContent in di.GetFiles())
+                {
+                    if (oldContent.Name.StartsWith(interviewType))  //want to remove any adapted interviews in addition to the base interview (e.g., BOD_saliva.xml as well as BOD.xml)
+                    {
+                        string newFileName = String.Format("{0} {1:MM-dd-yy hh-mm-ss}.xml", oldContent.Name, DateTime.Now);
+                        oldContent.MoveTo(Path.Combine(backupDirectory, newFileName));
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(String.Format("Participant folder: {0}, File name: {1}", participantFolder, fileName));
+                Console.Write(ex.ToString());
+                return false;
+            }
 
         }
 
@@ -164,23 +186,29 @@ namespace EMA_Configuration_Tool
             if (!canSave())
                 return;
 
-            string saveDirectory = getConfigDirectory();
+            string configDirectory = getConfigDirectory();
 
-            if (String.IsNullOrEmpty(saveDirectory))
+            if (String.IsNullOrEmpty(configDirectory))
                 return;
+                        
+            string interviewFileName = String.Format("{0}.xml", App.Interview.InterviewType);
+            string interviewFullPath = Path.Combine(configDirectory, interviewFileName);
+
+            if (!backedUpOldFiles(configDirectory, interviewFileName))
+            {
+                MessageBox.Show("Could not back up old files - NOT writing new content.", "Failed to back up old files", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             //save interview content
-            string interviewFileName = String.Format("{0}_{1}.xml", App.Interview.ParticipantID, App.Interview.InterviewType);
-            string interviewFullPath = Path.Combine(saveDirectory, interviewFileName);
-
             App.SerializeInterview(interviewFullPath);
 
+            //save interview with adapters
             if (App.Interview.OutputSalivaScreens)
                 SaveInterviewWithAdapter(interviewFullPath);
 
-            //save social network 
-            string socialNetworkFileName = String.Format("{0}_SocialNetwork.xml", App.Interview.ParticipantID);
-            string socialNetworkFullPath = Path.Combine(saveDirectory, socialNetworkFileName);
+            //save social network             
+            string socialNetworkFullPath = Path.Combine(configDirectory, "SocialNetwork.xml");
 
             App.SerializeSocialNetwork(socialNetworkFullPath);
         }
@@ -216,7 +244,19 @@ namespace EMA_Configuration_Tool
                 }
 
                 if (App.DeserializeInterview(ofd.FileName))
+                {
+                    //get participant ID from parent folder
+                    DirectoryInfo di = new DirectoryInfo(ofd.FileName).Parent;
+
+                    int underscoreIndex = di.Name.LastIndexOf('_');
+                    if (underscoreIndex > -1)
+                    {
+                        App.Interview.ParticipantID = di.Name.Substring(0, underscoreIndex);
+                        Console.WriteLine("Setting Particiapnt ID to " + App.Interview.ParticipantID);
+                    }
+
                     initAll();
+                }
             }
         }
 

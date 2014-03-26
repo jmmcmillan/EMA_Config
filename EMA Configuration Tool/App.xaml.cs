@@ -103,18 +103,9 @@ namespace EMA_Configuration_Tool
         {
             string selectedFile = Path.GetFileName(fileName);
             string selectedFolder = Path.GetDirectoryName(fileName);
-            
-            //check that this file name contains a participant ID
-            string participantID = String.Empty;
-            int underscoreIndex = selectedFile.IndexOf('_');
-            
-            if (underscoreIndex < 0)
-                return false;
-            else participantID = selectedFile.Substring(0, underscoreIndex);
 
-            //check whether we have a social network file for this participant
-            string socialNetworkFileName = String.Format("{0}_SocialNetwork.xml", participantID);
-            string socialNetworkPath = Path.Combine(selectedFolder, socialNetworkFileName);
+            //check whether we have a social network file for this participant            
+            string socialNetworkPath = Path.Combine(selectedFolder, "SocialNetwork.xml");
             if (!File.Exists(socialNetworkPath))
                 return false;
 
