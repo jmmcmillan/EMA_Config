@@ -70,8 +70,8 @@ namespace EMA_Configuration_Tool.Model
         [XmlIgnore]
         public bool CanDelay { get; set; }
 
-        [XmlIgnore]
-        public bool OutputSalivaScreens { get; set; }
+        //[XmlIgnore]
+        //public bool OutputSalivaScreens { get; set; }
 
         #endregion
 

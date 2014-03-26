@@ -83,7 +83,7 @@
 
             <CheckBox IsChecked="{Binding Source={x:Static Application.Current}, Path=Interview.CanDelay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
 
-            <CheckBox IsChecked="{Binding Source={x:Static Application.Current}, Path=Interview.OutputSalivaScreens, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+            <!--<CheckBox IsChecked="{Binding Source={x:Static Application.Current}, Path=Interview.OutputSalivaScreens, UpdateSourceTrigger=PropertyChanged}"></CheckBox>-->
 
         </StackPanel>
         
