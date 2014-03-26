@@ -134,6 +134,12 @@
       <DependentUpon>PersonView.xaml</DependentUpon>
     </Compile>
     <Compile Include="GroupViews\PersonViewModel.cs" />
+    <Compile Include="Model\Adapters\AdapterBase.cs" />
+    <Compile Include="Model\Adapters\FinalDayAdapter.cs" />
+    <Compile Include="Model\Adapters\MonEODAdapter.cs" />
+    <Compile Include="Model\Adapters\NonMonBODAdapter.cs" />
+    <Compile Include="Model\Adapters\NonMonEODAdapter.cs" />
+    <Compile Include="Model\Adapters\PreexistingKnowledge.cs" />
     <Compile Include="Model\Adapters\SalivaContentAdapter.cs" />
     <Compile Include="Model\Constraints\StringConstraint.cs" />
     <Compile Include="Model\Groups\BindableBool.cs" />

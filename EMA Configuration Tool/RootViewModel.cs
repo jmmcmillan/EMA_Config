@@ -204,13 +204,43 @@ namespace EMA_Configuration_Tool
             App.SerializeInterview(interviewFullPath);
 
             //save interview with adapters
-            if (App.Interview.OutputSalivaScreens)
-                SaveInterviewWithAdapter(interviewFullPath);
+            SaveInterviewWithAdapters(interviewFullPath);
 
             //save social network             
             string socialNetworkFullPath = Path.Combine(configDirectory, "SocialNetwork.xml");
 
             App.SerializeSocialNetwork(socialNetworkFullPath);
+        }
+
+
+        private void SaveInterviewWithAdapters(string originalFilePath)
+        {
+            string directory = Path.GetDirectoryName(originalFilePath);
+            string originalFileName = Path.GetFileNameWithoutExtension(originalFilePath);
+
+            List<List<AdapterBase>> adapaterLists = App.AdapterKnowledge.GetAdapterListsFor(App.Interview.EMAType);
+
+            foreach (List<AdapterBase> adapters in adapaterLists)
+            {
+                string newFileName = originalFileName;
+
+                //add content from the adapters
+                foreach (AdapterBase newContent in adapters)
+                {
+                    newContent.AdaptInterview();
+                    newFileName += newContent.FileSuffix;
+                }
+
+                //save adapted interview
+                string newInterviewPath = Path.Combine(directory, String.Format("{0}.xml", newFileName));
+                App.SerializeInterview(newInterviewPath);
+
+                //remove content from the adapaters
+                foreach (AdapterBase newContent in adapters)
+                {
+                    newContent.RevertInterview();                    
+                }
+            }
         }
 
         private void SaveInterviewWithAdapter(string originalFileName)

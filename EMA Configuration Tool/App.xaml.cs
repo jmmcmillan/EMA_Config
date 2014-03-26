@@ -9,6 +9,7 @@ using Caliburn.Micro;
 using Microsoft.Win32;
 using System.IO;
 using System.Xml.Serialization;
+using EMA_Configuration_Tool.Model.Adapters;
 
 namespace EMA_Configuration_Tool
 {
@@ -41,6 +42,18 @@ namespace EMA_Configuration_Tool
             }
         }
 
+        private static PreexistingKnowledge adapterKnowledge;
+        public static PreexistingKnowledge AdapterKnowledge
+        {
+            get
+            {
+                if (adapterKnowledge == null)
+                    adapterKnowledge = new PreexistingKnowledge();
+
+                return adapterKnowledge;
+            }
+            set { adapterKnowledge = value; }
+        }
 
         public static bool DeserializeInterview(string fileName)
         {
