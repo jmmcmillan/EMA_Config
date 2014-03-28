@@ -140,7 +140,7 @@ namespace EMA_Configuration_Tool.Model
 
                     if (question.Response is StringChoice)
                     {   
-                        (question.Response as StringChoice).Responses = StringResponseSets.ElementAt(question.ResponseIndex);
+                        (question.Response as StringChoice).Responses = StringResponseSets.ElementAt(question.ResponseIndex);                     
                     }
 
                     if (question.Response is GeneratedChoice)

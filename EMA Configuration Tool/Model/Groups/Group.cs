@@ -17,13 +17,16 @@ namespace EMA_Configuration_Tool.Model.Groups
         {
             get
             {
-                string result = string.Join(",", Names);
+                string result = string.Join("|", Names);
                 return result;
             }
 
             set
             {
-                Names = value.Split(',').ToList();
+                Names = value.Split('|').ToList();
+
+                if (Names.Count == 1)
+                    Names = value.Split(',').ToList();
             }
         }
 

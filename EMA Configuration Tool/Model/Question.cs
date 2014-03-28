@@ -136,14 +136,19 @@ namespace EMA_Configuration_Tool.Model
 
             get
             {
-                
+                Label = Regex.Replace(Label, @"\s+", "").Replace(@",", "");
 
                 if (Response is MultipleChoiceList || Response is PeopleNamesList || Response is SocialGroupsList)
                 {                    
                     string result = "";
+
+                    if ((Response as ChoiceBase).Responses.StringResponses.Count < 1)
+                        return Label;
+
                     foreach (string s in (Response as ChoiceBase).Responses.StringResponses)
                     {
-                        result += String.Format("{0}_{1},", Label, Regex.Replace(s, @"\s+", ""));
+                        string cleanLabel = Regex.Replace(s, @"\s+", "").Replace(",","");
+                        result += String.Format("{0}_{1}|", Label, cleanLabel);
                     }
 
                     if (result.Length > 1)
@@ -154,7 +159,7 @@ namespace EMA_Configuration_Tool.Model
 
                 if (Response is DynamicGroup)
                 {
-                    string result = String.Format("{0}_{1},{0}_{2},{0}_{3}", Label, "1", "2", "3");
+                    string result = String.Format("{0}_{1}|{0}_{2}|{0}_{3}", Label, "1", "2", "3");
                     
                     return result;
                 }
@@ -182,12 +187,12 @@ namespace EMA_Configuration_Tool.Model
                         }
                     }
 
-                    result = string.Join(",", labels);
+                    result = string.Join("|", labels);
 
                     return result;
                 }
 
-                else return Regex.Replace(Label, @"\s+", "_");
+                else return Label;
             }
         }
 
