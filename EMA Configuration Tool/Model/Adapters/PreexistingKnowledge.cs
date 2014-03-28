@@ -25,7 +25,7 @@ namespace EMA_Configuration_Tool.Model.Adapters
             {
                 new List<AdapterBase> { saliva },
                 new List<AdapterBase> { nonMonBOD },
-                new List<AdapterBase> { saliva, final }
+                new List<AdapterBase> { final }
             };
             AdapterLists.Add(InterviewType.BOD, bodLists);
 
