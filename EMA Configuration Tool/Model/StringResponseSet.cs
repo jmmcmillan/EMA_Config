@@ -162,5 +162,28 @@ namespace EMA_Configuration_Tool.Model
 
             return result;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is StringResponseSet))
+                return false;
+
+            StringResponseSet sts = obj as StringResponseSet;
+            if (IsZeroBased != sts.IsZeroBased)
+                return false;
+
+
+            int strCount = StringResponses.Count;
+            if (strCount != sts.StringResponses.Count)
+                return false;
+
+            for (int i = 0; i < strCount; i++ )
+            {
+                if (StringResponses[i] != sts.StringResponses[i])
+                    return false;
+            }
+
+            return true;
+        }
     }
 }
