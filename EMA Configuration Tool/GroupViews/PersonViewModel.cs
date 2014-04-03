@@ -40,6 +40,9 @@ namespace EMA_Configuration_Tool.Groups
 
             foreach (Group g in SocialNetwork.SocialGroups)
             {
+                if (g.Names.Equals("Group member"))
+                    continue;
+
                 if (Person.MyGroups.Contains(g))
                     DefaultGroups.Add(new PersonGroup(g, true));
                 else DefaultGroups.Add(new PersonGroup(g, false));
