@@ -149,6 +149,24 @@
 
 
             </TabItem>
+
+            <TabItem>
+
+                <TabItem.Header>
+                    <TextBlock Text="Help Content"  FontSize="18"  Foreground="#00AADE" FontWeight="Bold" Background="White"
+                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="5"/>
+
+
+
+                </TabItem.Header>
+                <TabItem.Content>
+
+                    <ContentControl x:Name="HelpDisplay" />
+
+                </TabItem.Content>
+
+
+            </TabItem>
         </TabControl>
 
 

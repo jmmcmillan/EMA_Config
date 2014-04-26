@@ -10,6 +10,8 @@ using Microsoft.Win32;
 using System.IO;
 using System.Xml.Serialization;
 using EMA_Configuration_Tool.Model.Adapters;
+using EMA_Configuration_Tool.Model.Help;
+using System.Collections.ObjectModel;
 
 namespace EMA_Configuration_Tool
 {
@@ -22,6 +24,8 @@ namespace EMA_Configuration_Tool
     {
         public static EMAInterview Interview {get; set;}
         public static SocialNetwork Network { get; set; }
+
+        public static HelpContent HelpContents { get; set; }
         
         public App()
             : base()
@@ -43,6 +47,55 @@ namespace EMA_Configuration_Tool
         }
 
         public static PreexistingKnowledge AdapterKnowledge;
+
+        public static bool SerializeHelp(string fileName)
+        {
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(HelpContent));
+                TextWriter textWriter = new StreamWriter(fileName);
+                serializer.Serialize(textWriter, HelpContents);
+                textWriter.Close();
+
+                return true;
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            return false;
+        }
+
+        public static bool DeserializeHelp(string fileName)
+        {
+            string selectedFile = Path.GetFileName(fileName);
+            string selectedFolder = Path.GetDirectoryName(fileName);
+
+            //check whether we have a help file for this participant            
+            string helpContentPath = Path.Combine(selectedFolder, "Help.xml");
+            if (!File.Exists(helpContentPath))
+                return false;
+
+            try
+            {
+                XmlSerializer deserializer = new XmlSerializer(typeof(HelpContent));
+                TextReader textReader = new StreamReader(helpContentPath);
+                App.HelpContents = (HelpContent)deserializer.Deserialize(textReader);
+                textReader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                MessageBox.Show("There was a problem opening the help content.", "Error Opening Help Content", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                return false;
+            }
+
+            return true;
+        }
+
 
         public static bool DeserializeInterview(string fileName)
         {

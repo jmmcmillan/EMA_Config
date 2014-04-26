@@ -14,6 +14,8 @@ using EMA_Configuration_Tool.SettingViews;
 using EMA_Configuration_Tool.Model.Adapters;
 using Avalon.Windows.Dialogs;
 using System.Windows;
+using EMA_Configuration_Tool.Model.Help;
+using System.Collections.ObjectModel;
 
 namespace EMA_Configuration_Tool
 {
@@ -24,6 +26,7 @@ namespace EMA_Configuration_Tool
         public ContentShellViewModel ContentDisplay { get; set; }
         public GroupShellViewModel PeopleDisplay { get; set; }
         public SettingsViewModel SettingsDisplay { get; set; }
+        public HelpContentViewModel HelpDisplay { get; set; }
 
 
         public bool HasContent { get; set; }
@@ -51,6 +54,7 @@ namespace EMA_Configuration_Tool
         {
             App.Interview = new EMAInterview();
             App.Network = new SocialNetwork();
+            App.HelpContents = new HelpContent();
 
             initAll();
          
@@ -210,8 +214,11 @@ namespace EMA_Configuration_Tool
 
             //save social network             
             string socialNetworkFullPath = Path.Combine(configDirectory, "SocialNetwork.xml");
-
             App.SerializeSocialNetwork(socialNetworkFullPath);
+
+            //save help content             
+            string helpContentFullPath = Path.Combine(configDirectory, "Help.xml");
+            App.SerializeHelp(helpContentFullPath);
         }
 
 
@@ -275,6 +282,11 @@ namespace EMA_Configuration_Tool
                     App.Network = new SocialNetwork();
                 }
 
+                if (!App.DeserializeHelp(ofd.FileName))
+                {
+                    App.HelpContents = new HelpContent();
+                }
+
                 if (App.DeserializeInterview(ofd.FileName))
                 {
                     //get participant ID from parent folder
@@ -306,6 +318,9 @@ namespace EMA_Configuration_Tool
 
             SettingsDisplay = new SettingsViewModel();
             NotifyOfPropertyChange(() => SettingsDisplay);
+
+            HelpDisplay = new HelpContentViewModel();
+            NotifyOfPropertyChange(() => HelpDisplay);
         }
 
 

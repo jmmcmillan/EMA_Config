@@ -134,6 +134,10 @@
       <DependentUpon>PersonView.xaml</DependentUpon>
     </Compile>
     <Compile Include="GroupViews\PersonViewModel.cs" />
+    <Compile Include="HelpViews\HelpContentView.xaml.cs">
+      <DependentUpon>HelpContentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HelpViews\HelpContentViewModel.cs" />
     <Compile Include="Model\Adapters\AdapterBase.cs" />
     <Compile Include="Model\Adapters\FinalDayAdapter.cs" />
     <Compile Include="Model\Adapters\MonEODAdapter.cs" />
@@ -146,6 +150,8 @@
     <Compile Include="Model\Groups\Group.cs" />
     <Compile Include="Model\Groups\Person.cs" />
     <Compile Include="Model\Groups\PersonGroup.cs" />
+    <Compile Include="Model\Help\HelpContent.cs" />
+    <Compile Include="Model\Help\HelpPage.cs" />
     <Compile Include="Model\Responses\BasedOnQuestions.cs" />
     <Compile Include="Model\Responses\ChoiceBase.cs" />
     <Compile Include="Model\Responses\Dropdown.cs" />
@@ -220,6 +226,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GroupViews\PersonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HelpViews\HelpContentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -304,6 +314,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
