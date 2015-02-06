@@ -90,15 +90,19 @@ namespace EMA_Configuration_Tool.Services
         {
             foreach (StringResponseSet sts in App.Interview.StringResponseSets)
             {
-                bool foundIt = true;
 
-                foreach (string s in responseLabels)
+                if (sts.StringResponses.Count == responseLabels.Count)
                 {
-                    foundIt = foundIt && sts.StringResponses.Contains(s);
-                }
+                    bool foundIt = true;
 
-                if (foundIt)
-                    return sts;
+                    for (int i = 0; i < responseLabels.Count; i++)
+                    {
+                        foundIt = foundIt && sts.StringResponses[i] == responseLabels[i];
+                    }
+
+                    if (foundIt)
+                        return sts;
+                }
             }
 
             StringResponseSet newSTS = new StringResponseSet();
