@@ -200,6 +200,8 @@ namespace EMA_Configuration_Tool
                 return;
             }
 
+            App.AdapterKnowledge = new PreexistingKnowledge();
+
             //save interview content
             App.SerializeInterview(interviewFullPath);
 

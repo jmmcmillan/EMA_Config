@@ -42,18 +42,7 @@ namespace EMA_Configuration_Tool
             }
         }
 
-        private static PreexistingKnowledge adapterKnowledge;
-        public static PreexistingKnowledge AdapterKnowledge
-        {
-            get
-            {
-                if (adapterKnowledge == null)
-                    adapterKnowledge = new PreexistingKnowledge();
-
-                return adapterKnowledge;
-            }
-            set { adapterKnowledge = value; }
-        }
+        public static PreexistingKnowledge AdapterKnowledge;
 
         public static bool DeserializeInterview(string fileName)
         {
