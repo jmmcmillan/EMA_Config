@@ -13,9 +13,20 @@ namespace EMA_Configuration_Tool.Model
 {
     public class Question : PropertyChangedBase
     {
-        
+
+        [XmlIgnore]
+        private string text;
         [XmlText]
-        public string Text { get; set; }
+        public string Text 
+        {
+            get { return text; }
+
+            set
+            {
+                text = value;
+                NotifyOfPropertyChange(() => Text);
+            }
+        }
 
         [XmlAttribute("mapping")]
         public int XMLResponseIndex

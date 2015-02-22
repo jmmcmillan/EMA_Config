@@ -5,22 +5,23 @@ using System.Text;
 
 namespace EMA_Configuration_Tool.Model.Adapters
 {
-    public class FinalDayAdapter : AdapterBase
+    public class FinalDayAdapter : TailAdapterBase
     {
         public override string FileSuffix
         {
             get { return "_final"; }
         }
 
-
-        public FinalDayAdapter()
+        public override string FriendlyName
         {
-            Question finalPrompt = new Question();
-            finalPrompt.Label = "p";
-            finalPrompt.Text = "Thank you! You have completed the study.";
-            finalPrompt.Response = new EMA_Configuration_Tool.Model.Responses.Prompt();
+            get { return "Final Interview"; }
+        }
 
-            PostQuestions.Add(finalPrompt);
+        public override string FinalPromptLabel { get { return "finalk1we"; } }
+
+        public FinalDayAdapter() : base()
+        {
+            FinalPrompt.Text = "Thank you! You have completed the study.";
         }
     }
 }

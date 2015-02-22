@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using EMA_Configuration_Tool.Model.Constraints;
 using EMA_Configuration_Tool.Model.Responses;
 using EMA_Configuration_Tool.Model.Groups;
+using EMA_Configuration_Tool.Model.Adapters;
 
 namespace EMA_Configuration_Tool.Model
 {
@@ -248,7 +249,21 @@ namespace EMA_Configuration_Tool.Model
             SynchronizeIndices();
             GenerateConstraints();
             GenerateResponses();
+            CheckForPreexistingKnowledge();
            
+        }
+
+        public void CheckForPreexistingKnowledge()
+        {
+            foreach (TailAdapterBase ta in App.AdapterKnowledge.TailAdapters)
+            {
+                Question existingTail = Questions.Where(q => q.Label.Equals(ta.FinalPromptLabel)).FirstOrDefault();
+
+                if (existingTail != null)
+                {
+                    ta.FinalPrompt.Text = existingTail.Text;
+                }
+            }
         }
 
 

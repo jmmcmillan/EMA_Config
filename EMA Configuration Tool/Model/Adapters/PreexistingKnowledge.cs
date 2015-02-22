@@ -10,6 +10,8 @@ namespace EMA_Configuration_Tool.Model.Adapters
 
         public Dictionary<InterviewType, List<List<AdapterBase>>> AdapterLists;
 
+        public List<TailAdapterBase> TailAdapters;
+
         public PreexistingKnowledge()
         {
             SalivaContentAdapter saliva = new SalivaContentAdapter();
@@ -17,6 +19,9 @@ namespace EMA_Configuration_Tool.Model.Adapters
             FinalDayAdapter final = new FinalDayAdapter();
             NonMonEODAdapter nmEOD = new NonMonEODAdapter();
             MonEODAdapter mEOD = new MonEODAdapter();
+
+            //refactor so this doesn't need to be updated manually
+            TailAdapters = new List<TailAdapterBase>() { nonMonBOD, final, nmEOD, mEOD };
 
             AdapterLists = new Dictionary<InterviewType, List<List<AdapterBase>>>();
 

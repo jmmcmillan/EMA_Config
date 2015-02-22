@@ -88,6 +88,7 @@ namespace EMA_Configuration_Tool.Services
 
         public static StringResponseSet GetStringResponseSet(List<string> responseLabels)
         {
+            
             foreach (StringResponseSet sts in App.Interview.StringResponseSets)
             {
 

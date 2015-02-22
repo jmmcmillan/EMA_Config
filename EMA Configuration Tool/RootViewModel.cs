@@ -15,7 +15,7 @@ using EMA_Configuration_Tool.Model.Adapters;
 using Avalon.Windows.Dialogs;
 using System.Windows;
 using EMA_Configuration_Tool.Model.Help;
-using System.Collections.ObjectModel;
+using EMA_Configuration_Tool.AdaptersViews;
 
 namespace EMA_Configuration_Tool
 {
@@ -27,7 +27,7 @@ namespace EMA_Configuration_Tool
         public GroupShellViewModel PeopleDisplay { get; set; }
         public SettingsViewModel SettingsDisplay { get; set; }
         public HelpContentViewModel HelpDisplay { get; set; }
-
+        public TailAdaptersViewModel FinalPromptDisplay { get; set; }
 
         public bool HasContent { get; set; }
 
@@ -35,9 +35,7 @@ namespace EMA_Configuration_Tool
         {
             this.DisplayName = "EMA Configuration Tool";
             HasContent = false;
-           
         }
-
 
         public void Exit()
         {
@@ -285,18 +283,38 @@ namespace EMA_Configuration_Tool
                 if (!App.DeserializeHelp(ofd.FileName))
                 {
                     App.HelpContents = new HelpContent();
-                }
+                }                
 
                 if (App.DeserializeInterview(ofd.FileName))
                 {
-                    //get participant ID from parent folder
                     DirectoryInfo di = new DirectoryInfo(ofd.FileName).Parent;
 
+                    //check for custom content in final prompts - these will be located in the adapted interviews
+                    FileInfo fileInfo = new FileInfo(ofd.FileName);
+
+                    string interviewType = Path.GetFileNameWithoutExtension(fileInfo.Name);
+                    
+                    int interviewTypeUnderscore = interviewType.IndexOf('_');
+                    if (interviewTypeUnderscore > -1)
+                    {
+                        interviewType = interviewType.Substring(0, interviewTypeUnderscore);
+                    }
+
+                    foreach (FileInfo f in di.GetFiles())
+                    {
+                        if (f.Name.StartsWith(interviewType))
+                        {
+                            EMAInterview adaptedInterview = App.DeserializeDoNotLoad(f.FullName);
+                            adaptedInterview.CheckForPreexistingKnowledge();
+                        }
+                    }
+
+                    //get participant ID from parent folder
                     int underscoreIndex = di.Name.LastIndexOf('_');
                     if (underscoreIndex > -1)
                     {
                         App.Interview.ParticipantID = di.Name.Substring(0, underscoreIndex);
-                        Console.WriteLine("Setting Particiapnt ID to " + App.Interview.ParticipantID);
+                        Console.WriteLine("Setting Participant ID to " + App.Interview.ParticipantID);
                     }
                     else App.Interview.ParticipantID = String.Empty;
 
@@ -321,8 +339,20 @@ namespace EMA_Configuration_Tool
 
             HelpDisplay = new HelpContentViewModel();
             NotifyOfPropertyChange(() => HelpDisplay);
+
+            FinalPromptDisplay = new TailAdaptersViewModel();
+            NotifyOfPropertyChange(() => FinalPromptDisplay);
         }
 
+        public void TabSelectionChanged()  
+        {
+            if (App.Interview != null)
+            {
+                FinalPromptDisplay = new TailAdaptersViewModel();
+                NotifyOfPropertyChange(() => FinalPromptDisplay);
+            }
+        }
 
+        
     }
 }

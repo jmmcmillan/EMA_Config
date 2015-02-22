@@ -5,22 +5,28 @@ using System.Text;
 
 namespace EMA_Configuration_Tool.Model.Adapters
 {
-    public class MonEODAdapter : AdapterBase
+    public class MonEODAdapter : TailAdapterBase
     {
         public override string FileSuffix
         {
             get { return "_m"; }
         }
 
+       
 
-        public MonEODAdapter()
+        public override string FriendlyName
         {
-            Question finalPrompt = new Question();
-            finalPrompt.Label = "p";
-            finalPrompt.Text = "1. Please plug in the ED phone NOW so that it may charge overnight!!\n\n2. Take the belt with the Actical off.\n\n3. Please keep the BP monitor on.\n\n4. Please keep the Actiwatch on.";
-            finalPrompt.Response = new EMA_Configuration_Tool.Model.Responses.Prompt();
+            get { return "Monitoring End of Day Interview"; }
+        }
 
-            PostQuestions.Add(finalPrompt);
+        public override string FinalPromptLabel { get { return "meodk1we"; } }
+
+        
+
+        public MonEODAdapter() : base()
+        {
+            FinalPrompt.Text = "1. Please plug in the ED phone NOW so that it may charge overnight!!\n\n2. Take the belt with the Actical off.\n\n3. Please keep the BP monitor on.\n\n4. Please keep the Actiwatch on.";
+        
         }
     }
 }

@@ -15,7 +15,7 @@ using System.Collections.ObjectModel;
 
 namespace EMA_Configuration_Tool
 {
-    public enum InterviewType { Hourly, BOD, EOD, HalfHour };
+    public enum InterviewType { Hourly, BOD, EOD, HalfHour, Exercise };
 
     /// <summary>
     /// Interaction logic for App.xaml
@@ -24,13 +24,12 @@ namespace EMA_Configuration_Tool
     {
         public static EMAInterview Interview {get; set;}
         public static SocialNetwork Network { get; set; }
-
         public static HelpContent HelpContents { get; set; }
         
         public App()
             : base()
         {
-           
+            
           
         }
 
@@ -96,6 +95,25 @@ namespace EMA_Configuration_Tool
             return true;
         }
 
+        public static EMAInterview DeserializeDoNotLoad(string fileName)
+        {
+            try
+            {
+                XmlSerializer deserializer = new XmlSerializer(typeof(EMAInterview));
+                TextReader textReader = new StreamReader(fileName);
+                EMAInterview ema = (EMAInterview)deserializer.Deserialize(textReader);
+                textReader.Close();
+
+                return ema;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                MessageBox.Show(String.Format("There was a problem opening the interview {0}. Check that the correct file was selected.", fileName), "Error Opening Interview", MessageBoxButton.OK, MessageBoxImage.Error);                
+            }
+
+            return new EMAInterview();
+        }
 
         public static bool DeserializeInterview(string fileName)
         {
@@ -186,6 +204,8 @@ namespace EMA_Configuration_Tool
 
             return true;
         }
+
+       
 
     }
 }

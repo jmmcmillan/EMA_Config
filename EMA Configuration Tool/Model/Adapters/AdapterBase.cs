@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
+using Caliburn.Micro;
 
 namespace EMA_Configuration_Tool.Model.Adapters
 {
-    public abstract class AdapterBase
+    public abstract class AdapterBase : PropertyChangedBase
     {
-        protected List<Question> PreQuestions = new List<Question>();
-        protected List<Question> PostQuestions = new List<Question>();
+        public List<Question> PreQuestions {get; set;} 
+        public virtual List<Question> PostQuestions {get; set;}
 
         public abstract string FileSuffix { get; }
-        
+
+        public AdapterBase()
+        {
+            PreQuestions = new List<Question>();
+            PostQuestions = new List<Question>();
+        }
+
         public void AdaptInterview()
         {
             //was using the perfectly nice List.InsertRange method until switching to observableCollection 
