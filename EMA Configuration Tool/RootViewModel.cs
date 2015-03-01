@@ -202,8 +202,6 @@ namespace EMA_Configuration_Tool
                 return;
             }
 
-            App.AdapterKnowledge = new PreexistingKnowledge();
-
             //save interview content
             App.SerializeInterview(interviewFullPath);
 
@@ -283,7 +281,7 @@ namespace EMA_Configuration_Tool
                 if (!App.DeserializeHelp(ofd.FileName))
                 {
                     App.HelpContents = new HelpContent();
-                }                
+                }
 
                 if (App.DeserializeInterview(ofd.FileName))
                 {

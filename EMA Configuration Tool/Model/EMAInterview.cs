@@ -255,6 +255,8 @@ namespace EMA_Configuration_Tool.Model
 
         public void CheckForPreexistingKnowledge()
         {
+            App.AdapterKnowledge = new PreexistingKnowledge();
+
             foreach (TailAdapterBase ta in App.AdapterKnowledge.TailAdapters)
             {
                 Question existingTail = Questions.Where(q => q.Label.Equals(ta.FinalPromptLabel)).FirstOrDefault();
