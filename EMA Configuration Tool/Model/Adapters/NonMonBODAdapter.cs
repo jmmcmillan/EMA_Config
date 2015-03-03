@@ -21,7 +21,7 @@ namespace EMA_Configuration_Tool.Model.Adapters
 
         public NonMonBODAdapter() : base()
         {
-            FinalPrompt.Text = "Today is not a full monitoring day- do not wear your Oscar or take your ED with you today.\n\nPlease continue to wear your Actical and Actiwatch.\n\nPlease place your ED by your bed as a reminder to complete an End of Day questionnaire tonight.";
+            FinalPrompt.Text = "Interview completed. Thank you!\n\nReminder: Please don't turn off the ED phone!!";
         }
     }
 }

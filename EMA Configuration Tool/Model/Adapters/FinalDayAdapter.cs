@@ -21,7 +21,7 @@ namespace EMA_Configuration_Tool.Model.Adapters
 
         public FinalDayAdapter() : base()
         {
-            FinalPrompt.Text = "Thank you! You have completed the study.";
+            FinalPrompt.Text = "Interview completed. Thank you!\n\nReminder: Please don't turn off the ED phone!!";
         }
     }
 }
