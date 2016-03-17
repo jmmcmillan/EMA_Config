@@ -101,6 +101,11 @@
 
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type response:FillIn}">
+
+            <TextBox MinLines="5" AcceptsReturn="True" MinWidth="300" IsEnabled="False"></TextBox>
+
+        </DataTemplate>
 
         <DataTemplate DataType="{x:Type response:Integer}">
 

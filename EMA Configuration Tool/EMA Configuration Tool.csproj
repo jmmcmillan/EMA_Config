@@ -161,6 +161,7 @@
     <Compile Include="Model\Responses\ChoiceBase.cs" />
     <Compile Include="Model\Responses\Dropdown.cs" />
     <Compile Include="Model\Responses\DynamicGroup.cs" />
+    <Compile Include="Model\Responses\FillIn.cs" />
     <Compile Include="Model\Responses\GeneratedChoice.cs" />
     <Compile Include="Model\Responses\IHaveDefault.cs" />
     <Compile Include="Model\Responses\Integer.cs" />
