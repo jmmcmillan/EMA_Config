@@ -163,7 +163,7 @@ namespace EMA_Configuration_Tool.Model
             return result;
         }
 
-        public override bool Equals(object obj)
+        public bool Equals(object obj)
         {
             if (!(obj is StringResponseSet))
                 return false;

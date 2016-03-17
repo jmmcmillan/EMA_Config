@@ -29,8 +29,8 @@ namespace EMA_Configuration_Tool.Model.Adapters
             List<List<AdapterBase>> bodLists = new List<List<AdapterBase>>()
             {
                 new List<AdapterBase> { saliva },
-                new List<AdapterBase> { nonMonBOD },
-                new List<AdapterBase> { final }
+                //new List<AdapterBase> { nonMonBOD },
+                //new List<AdapterBase> { final }
             };
             AdapterLists.Add(InterviewType.BOD, bodLists);
 
@@ -38,8 +38,8 @@ namespace EMA_Configuration_Tool.Model.Adapters
             //EOD
             List<List<AdapterBase>> eodLists = new List<List<AdapterBase>>()
             {
-                new List<AdapterBase> { saliva, mEOD },                
-                new List<AdapterBase> { nmEOD }
+                new List<AdapterBase> { saliva },                
+                //new List<AdapterBase> { nmEOD }
             };
             AdapterLists.Add(InterviewType.EOD, eodLists);
 
@@ -64,11 +64,13 @@ namespace EMA_Configuration_Tool.Model.Adapters
 
         public List<List<AdapterBase>> GetAdapterListsFor(InterviewType interviewType)
         {
-            if (AdapterLists.ContainsKey(interviewType))
-            {
-                return AdapterLists[interviewType];
-            }
-            else return new List<List<AdapterBase>>();
+            //if (AdapterLists.ContainsKey(interviewType))
+            //{
+            //    return AdapterLists[interviewType];
+            //}
+            //else return new List<List<AdapterBase>>();
+
+            return new List<List<AdapterBase>>();
         }
 
     }

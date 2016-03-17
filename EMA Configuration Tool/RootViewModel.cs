@@ -193,7 +193,8 @@ namespace EMA_Configuration_Tool
             if (String.IsNullOrEmpty(configDirectory))
                 return;
                         
-            string interviewFileName = String.Format("{0}.xml", App.Interview.EMAType);
+            string fileName = String.IsNullOrEmpty(App.Interview.FileName) ? App.Interview.EMAType.ToString() : App.Interview.FileName;
+            string interviewFileName = String.Format("{0}.xml", fileName);
             string interviewFullPath = Path.Combine(configDirectory, interviewFileName);
 
             if (!backedUpOldFiles(configDirectory, interviewFileName))
@@ -209,8 +210,8 @@ namespace EMA_Configuration_Tool
             SaveInterviewWithAdapters(interviewFullPath);
 
             //save social network             
-            string socialNetworkFullPath = Path.Combine(configDirectory, "SocialNetwork.xml");
-            App.SerializeSocialNetwork(socialNetworkFullPath);
+            //string socialNetworkFullPath = Path.Combine(configDirectory, "SocialNetwork.xml");
+            //App.SerializeSocialNetwork(socialNetworkFullPath);
 
             //save help content             
             string helpContentFullPath = Path.Combine(configDirectory, "Help.xml");
@@ -223,27 +224,30 @@ namespace EMA_Configuration_Tool
             string directory = Path.GetDirectoryName(originalFilePath);
             string originalFileName = Path.GetFileNameWithoutExtension(originalFilePath);
 
-            List<List<AdapterBase>> adapaterLists = App.AdapterKnowledge.GetAdapterListsFor(App.Interview.EMAType);
-
-            foreach (List<AdapterBase> adapters in adapaterLists)
+            if (App.AdapterKnowledge != null)
             {
-                string newFileName = originalFileName;
+                List<List<AdapterBase>> adapaterLists = App.AdapterKnowledge.GetAdapterListsFor(App.Interview.EMAType);
 
-                //add content from the adapters
-                foreach (AdapterBase newContent in adapters)
+                foreach (List<AdapterBase> adapters in adapaterLists)
                 {
-                    newContent.AdaptInterview();
-                    newFileName += newContent.FileSuffix;
-                }
+                    string newFileName = originalFileName;
 
-                //save adapted interview
-                string newInterviewPath = Path.Combine(directory, String.Format("{0}.xml", newFileName));
-                App.SerializeInterview(newInterviewPath);
+                    //add content from the adapters
+                    foreach (AdapterBase newContent in adapters)
+                    {
+                        newContent.AdaptInterview();
+                        newFileName += newContent.FileSuffix;
+                    }
 
-                //remove content from the adapaters
-                foreach (AdapterBase newContent in adapters)
-                {
-                    newContent.RevertInterview();                    
+                    //save adapted interview
+                    string newInterviewPath = Path.Combine(directory, String.Format("{0}.xml", newFileName));
+                    App.SerializeInterview(newInterviewPath);
+
+                    //remove content from the adapaters
+                    foreach (AdapterBase newContent in adapters)
+                    {
+                        newContent.RevertInterview();
+                    }
                 }
             }
         }
@@ -315,6 +319,9 @@ namespace EMA_Configuration_Tool
                         Console.WriteLine("Setting Participant ID to " + App.Interview.ParticipantID);
                     }
                     else App.Interview.ParticipantID = String.Empty;
+
+                    //get file name
+                    App.Interview.FileName = Path.GetFileNameWithoutExtension(fileInfo.FullName);
 
                     initAll();
                 }

@@ -29,6 +29,8 @@
 
             <TextBlock VerticalAlignment="Center">Interview Type</TextBlock>
 
+            <TextBlock VerticalAlignment="Center">File Name</TextBlock>
+
             <TextBlock VerticalAlignment="Center">Interview Timeout (minutes)</TextBlock>
 
             <TextBlock>Start Message</TextBlock>
@@ -73,7 +75,10 @@
             <ComboBox SelectedItem="{Binding Source={x:Static Application.Current}, Path=Interview.EMAType, UpdateSourceTrigger=PropertyChanged}" 
                       ItemsSource="{Binding Source={StaticResource InterviewTypeValues}}"                
                       VerticalAlignment="Center" Margin="0,15,0,15" HorizontalAlignment="Left" FontSize="16"></ComboBox>
-            
+
+            <TextBox Text="{Binding Source={x:Static Application.Current}, Path=Interview.FileName, UpdateSourceTrigger=PropertyChanged}"
+                     MinWidth="450" MaxWidth="450"></TextBox>
+
             <TextBox Text="{Binding TimeoutInMinutes, UpdateSourceTrigger=PropertyChanged}" MinWidth="40"></TextBox>
 
             <TextBox Text="{Binding Source={x:Static Application.Current}, Path=Interview.StartMessage, UpdateSourceTrigger=PropertyChanged}"

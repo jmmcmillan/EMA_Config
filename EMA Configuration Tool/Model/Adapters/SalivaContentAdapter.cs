@@ -18,7 +18,7 @@ namespace EMA_Configuration_Tool.Model.Adapters
         {
             Question salivettePrompt = new Question();
             salivettePrompt.Label = "p";
-            salivettePrompt.Text = "Please place a salivette in your mouth and gently chew.";
+            salivettePrompt.Text = String.Format("Good {0}! Please slide a cotton swab from the tube into your mouth. Place it under your tongue and continue with the interview.", App.Interview.EMAType == InterviewType.BOD ? "morning" : "evening");
             salivettePrompt.Response = new EMA_Configuration_Tool.Model.Responses.Prompt();
 
             PreQuestions.Add(salivettePrompt);
@@ -30,7 +30,7 @@ namespace EMA_Configuration_Tool.Model.Adapters
 
             Question returnSalivettePrompt = new Question();
             returnSalivettePrompt.Label = "p";
-            returnSalivettePrompt.Text = "Please return salivette to the tube.";
+            returnSalivettePrompt.Text = "Please return the cotton swab in your mouth to the tube.";
             returnSalivettePrompt.Response = new EMA_Configuration_Tool.Model.Responses.Prompt();
 
             Question salivetteLabel = new Question();

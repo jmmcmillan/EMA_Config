@@ -50,6 +50,9 @@ namespace EMA_Configuration_Tool.Model
         [XmlIgnore]
         public bool CanCancel { get; set; }
 
+        [XmlIgnore]
+        public string FileName { get; set; }
+        
         [XmlAttribute("canDelay")]
         public string XMLCanDelay
         {

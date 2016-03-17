@@ -14,6 +14,9 @@ namespace EMA_Configuration_Tool.AdaptersViews
         {
             InterviewType interviewType = App.Interview.EMAType;
 
+            if (App.AdapterKnowledge == null)
+                return;
+            
             if (!App.AdapterKnowledge.AdapterLists.ContainsKey(interviewType))
                 return;
 
